@@ -32,11 +32,11 @@ EXPECTED_FIELDS = {
         "challan_details": ["challan", "bsr", "cin"],
     },
     "gst-data": {
-        "gstin": ["gstin", "supplier gstin"],
-        "vendor_name": ["vendor", "supplier", "party"],
-        "invoice_number": ["invoice", "inum", "bill"],
-        "invoice_date": ["invoice date", "date"],
-        "taxable_value": ["taxable", "taxable value"],
+        "gstin": ["gstin", "supplier gstin", "ctin"],
+        "vendor_name": ["vendor", "supplier", "party", "trdnm", "trade name"],
+        "invoice_number": ["invoice", "inum", "bill", "invoice number"],
+        "invoice_date": ["invoice date", "date", "dt"],
+        "taxable_value": ["taxable", "taxable value", "txval"],
         "gst_amount": ["gst", "tax", "igst", "cgst", "sgst"],
         "itc_status": ["itc", "status"],
     },
@@ -49,6 +49,8 @@ EXPECTED_FIELDS = {
     },
     "trial-balance": {
         "ledger_name": ["ledger", "particulars", "account"],
+        "debit_amount": ["debit", "dr"],
+        "credit_amount": ["credit", "cr"],
         "amount": ["amount", "closing", "balance"],
     },
 }
@@ -56,12 +58,16 @@ EXPECTED_FIELDS = {
 
 def suggest_mapping(category: str, columns: list[str]) -> list[dict]:
     expected = EXPECTED_FIELDS.get(category, EXPECTED_FIELDS["expense-ledger"])
+    exact = EXACT_FIELDS.get(category, {})
     suggestions = []
     used_targets = set()
     for column in columns:
         best_target = ""
         best_score = 0
         normalized = column.lower().strip()
+        if normalized in exact:
+            best_target = exact[normalized]
+            best_score = 100
         for target, aliases in expected.items():
             score = max(fuzz.token_sort_ratio(normalized, alias) for alias in aliases + [target])
             if score > best_score:
@@ -73,3 +79,24 @@ def suggest_mapping(category: str, columns: list[str]) -> list[dict]:
         else:
             suggestions.append({"source_column": column, "target_field": "", "confidence": 0})
     return suggestions
+
+
+EXACT_FIELDS = {
+    "trial-balance": {
+        "ledger name": "ledger_name",
+        "particulars": "ledger_name",
+        "debit": "debit_amount",
+        "credit": "credit_amount",
+        "net amount": "amount",
+        "amount": "amount",
+    },
+    "gst-data": {
+        "ctin": "gstin",
+        "trdnm": "vendor_name",
+        "inum": "invoice_number",
+        "dt": "invoice_date",
+        "txval": "taxable_value",
+        "itcavl": "itc_status",
+        "igst": "gst_amount",
+    }
+}

@@ -1,19 +1,16 @@
-import { BarChart3, ClipboardList, FileText, FolderUp, History, Landmark, LayoutDashboard, Scale, ShieldAlert, Users } from "lucide-react";
+import { BookOpen, ClipboardCheck, ClipboardList, FileText, FolderUp, History, LayoutDashboard, Scale, Users } from "lucide-react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 
 const navItems = [
   ["Upload Centre", "/", FolderUp],
   ["Clients", "/clients", Users],
   ["Mapping", "/mapping", ClipboardList],
-  ["Processing", "/processing", Scale],
-  ["Dashboard", "/dashboard", LayoutDashboard],
-  ["Bill Matching", "/bill-matching", FileText],
-  ["High Risk", "/high-risk", ShieldAlert],
-  ["Statutory", "/statutory-alerts", Landmark],
-  ["Vendor Risks", "/vendor-risks", Users],
-  ["Capital Review", "/capital-review", BarChart3],
+  ["Data", "/processing", Scale],
+  ["Audit Worksheet", "/audit-worksheet", ClipboardCheck],
+  ["Audit Dashboard", "/audit-dashboard", LayoutDashboard],
+  ["Rules", "/rules", BookOpen],
   ["Form 3CD", "/form3cd", ClipboardList],
-  ["Queries", "/queries", FileText],
+  ["Client Queries", "/queries", FileText],
   ["Working Paper", "/working-paper", FileText],
   ["Audit Trail", "/audit-trail", History]
 ];

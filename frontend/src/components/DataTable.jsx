@@ -3,7 +3,7 @@ import { ArrowUpDown, Search } from "lucide-react";
 import React from "react";
 import { useMemo, useState } from "react";
 
-export function DataTable({ columns, data, searchPlaceholder = "Search records" }) {
+export function DataTable({ columns, data, searchPlaceholder = "Search records", showSearch = true }) {
   const [globalFilter, setGlobalFilter] = useState("");
   const tableColumns = useMemo(() => columns.map((col) => ({ accessorKey: col.key, header: col.label, cell: (info) => formatValue(info.getValue()) })), [columns]);
   const table = useReactTable({
@@ -18,10 +18,15 @@ export function DataTable({ columns, data, searchPlaceholder = "Search records" 
 
   return (
     <div className="space-y-3">
+      {showSearch && columns.length > 0 && (
       <label className="flex max-w-sm items-center gap-2 rounded border border-ink/15 bg-white px-3 py-2">
         <Search size={16} />
         <input value={globalFilter} onChange={(event) => setGlobalFilter(event.target.value)} placeholder={searchPlaceholder} className="w-full bg-transparent text-sm outline-none" />
       </label>
+      )}
+      {!columns.length ? (
+        <div className="rounded border border-ink/10 bg-white px-3 py-8 text-sm font-semibold text-ink/60">No preview columns available for this file.</div>
+      ) : (
       <div className="overflow-x-auto rounded border border-ink/10 bg-white">
         <table className="min-w-full text-left text-sm">
           <thead className="bg-ink text-white">
@@ -56,6 +61,7 @@ export function DataTable({ columns, data, searchPlaceholder = "Search records" 
           </tbody>
         </table>
       </div>
+      )}
     </div>
   );
 }

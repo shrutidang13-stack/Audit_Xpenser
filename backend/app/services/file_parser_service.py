@@ -1,4 +1,6 @@
+import json
 import re
+import tempfile
 from pathlib import Path
 
 import fitz
@@ -8,12 +10,14 @@ import xmltodict
 from PIL import Image
 
 from app.services.column_mapping_service import suggest_mapping
+from app.services.ocr_service import extract_image_text
 from app.services.utils import clean_text, file_sha256, to_json
 
 
-SUPPORTED_EXTENSIONS = {".xlsx", ".xls", ".csv", ".pdf", ".jpg", ".jpeg", ".png", ".xml"}
+SUPPORTED_EXTENSIONS = {".xlsx", ".xls", ".csv", ".pdf", ".jpg", ".jpeg", ".png", ".xml", ".json"}
 MAX_XML_FULL_PARSE_BYTES = 5 * 1024 * 1024
 MAX_NAME_SCAN_BYTES = 2 * 1024 * 1024
+MAX_OCR_PDF_PAGES = 5
 
 
 def parse_file(path: Path, category: str) -> dict:
@@ -36,10 +40,17 @@ def parse_file(path: Path, category: str) -> dict:
             frame = pd.read_csv(path)
             result.update(_frame_result(frame, category))
         elif ext in {".xlsx", ".xls"}:
-            frame = pd.read_excel(path)
+            if category == "trial-balance":
+                frame = _parse_tally_group_summary_workbook(path)
+            else:
+                frame = pd.read_excel(path)
             result.update(_frame_result(frame, category))
         elif ext == ".xml":
             rows = _parse_xml_rows(path)
+            frame = pd.DataFrame(rows)
+            result.update(_frame_result(frame, category))
+        elif ext == ".json":
+            rows = _parse_json_rows(path)
             frame = pd.DataFrame(rows)
             result.update(_frame_result(frame, category))
         elif ext == ".pdf":
@@ -66,6 +77,49 @@ def _frame_result(frame: pd.DataFrame, category: str) -> dict:
     }
 
 
+def _parse_tally_group_summary_workbook(path: Path) -> pd.DataFrame:
+    sheets = pd.read_excel(path, sheet_name=None, header=None)
+    rows = []
+    for sheet_name, frame in sheets.items():
+        frame = frame.fillna("")
+        for _, row in frame.iterrows():
+            ledger_name = clean_text(row.iloc[0] if len(row) > 0 else "")
+            debit = row.iloc[1] if len(row) > 1 else ""
+            credit = row.iloc[2] if len(row) > 2 else ""
+            if _ignore_tally_group_summary_row(ledger_name, debit, credit):
+                continue
+            rows.append({
+                "Ledger Name": ledger_name,
+                "Debit": debit,
+                "Credit": credit,
+                "Expense Type": clean_text(sheet_name),
+            })
+    return pd.DataFrame(rows, columns=["Ledger Name", "Debit", "Credit", "Expense Type"])
+
+
+def _ignore_tally_group_summary_row(ledger_name, debit, credit) -> bool:
+    name = clean_text(ledger_name)
+    if not name:
+        return True
+    normalized = re.sub(r"[^a-z0-9]+", " ", name.casefold()).strip()
+    ignored = {
+        "grand total",
+        "direct expenses",
+        "indirect expenses",
+        "group summary",
+        "closing balance",
+        "debit",
+        "credit",
+        "particulars",
+    }
+    if normalized in ignored:
+        return True
+    if normalized.startswith(("cin ", "address ", "date ")):
+        return True
+    has_amount = any(str(value).strip() not in {"", "nan", "None"} for value in [debit, credit])
+    return not has_amount
+
+
 def _bill_text_result(text: str) -> dict:
     fields = _extract_invoice_fields(text)
     return {
@@ -87,24 +141,92 @@ def _extract_pdf_text(path: Path) -> str:
     except Exception:
         doc = fitz.open(path)
         pages = [page.get_text() for page in doc]
-    return clean_text("\n".join(pages))
+    text = clean_text("\n".join(pages))
+    if text.strip():
+        return text
+    return _extract_scanned_pdf_text(path)
 
 
 def _image_result(path: Path) -> dict:
     with Image.open(path) as image:
         width, height = image.size
+    text = extract_image_text(path)
+    parsed = _bill_text_result(text)
+    if text.strip():
+        fields = parsed["preview"][0] if parsed["preview"] else {}
+        fields["image_width"] = width
+        fields["image_height"] = height
+        parsed["preview"] = [fields]
+        parsed["columns"] = list(fields.keys())
+        parsed["status"] = "Parsed with OCR"
+        parsed["ca_review_required"] = False
+        parsed["error"] = None
+        return parsed
     return {
         "records": 0,
-        "columns": ["image_width", "image_height"],
-        "preview": [{"image_width": width, "image_height": height, "note": "OCR not configured; CA Review Required"}],
+        "columns": ["image_width", "image_height", "extracted_text"],
+        "preview": [{"image_width": width, "image_height": height, "extracted_text": "", "note": "OCR completed but no readable text was found"}],
         "ca_review_required": True,
         "status": "CA Review Required",
-        "error": "Image stored successfully. OCR is optional and not configured in this MVP.",
+        "error": "OCR completed but no readable text was found.",
     }
 
 
+def _extract_scanned_pdf_text(path: Path) -> str:
+    pages = []
+    doc = fitz.open(path)
+    try:
+        for index, page in enumerate(doc):
+            if index >= MAX_OCR_PDF_PAGES:
+                break
+            pixmap = page.get_pixmap(matrix=fitz.Matrix(2, 2), alpha=False)
+            with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as handle:
+                temp_path = Path(handle.name)
+                handle.write(pixmap.tobytes("png"))
+            try:
+                pages.append(extract_image_text(temp_path))
+            finally:
+                try:
+                    temp_path.unlink()
+                except OSError:
+                    pass
+    finally:
+        doc.close()
+    return clean_text("\n".join(pages))
+
+
+def _parse_json_rows(path: Path) -> list[dict]:
+    data = json.loads(path.read_text(encoding="utf-8", errors="ignore"))
+    rows = _extract_json_rows(data)
+    return rows[:5000] if rows else [_simple_flat(data)]
+
+
+def _extract_json_rows(data) -> list[dict]:
+    if isinstance(data, list):
+        return [_simple_flat(item) for item in data if isinstance(item, dict)]
+    if not isinstance(data, dict):
+        return []
+    preferred_keys = ["b2b", "inv", "invoices", "items", "records", "data", "docs", "documents"]
+    for key in preferred_keys:
+        value = data.get(key)
+        if isinstance(value, list):
+            nested = []
+            for item in value:
+                if isinstance(item, dict):
+                    child_rows = _extract_json_rows(item)
+                    nested.extend(child_rows or [_simple_flat(item)])
+            if nested:
+                return nested
+    rows = []
+    for value in data.values():
+        child_rows = _extract_json_rows(value)
+        if child_rows:
+            rows.extend(child_rows)
+    return rows
+
+
 def _read_xml_text(path: Path) -> str:
-    text = path.read_text(encoding="utf-8", errors="ignore")
+    text = path.read_text(encoding=_detect_text_encoding(path), errors="ignore")
     return _sanitize_xml_text(text)
 
 
@@ -134,7 +256,7 @@ def _parse_xml_rows(path: Path) -> list[dict]:
 def _extract_tally_vouchers_from_path(path: Path) -> list[dict]:
     rows = []
     buffer = ""
-    with path.open("r", encoding="utf-8", errors="ignore") as handle:
+    with path.open("r", encoding=_detect_text_encoding(path), errors="ignore") as handle:
         while True:
             chunk = handle.read(256 * 1024)
             if not chunk:
@@ -163,6 +285,7 @@ def _rows_from_voucher(block: str) -> list[dict]:
     voucher_number = _tag_value(block, "VOUCHERNUMBER") or _tag_value(block, "REFERENCE")
     narration = _tag_value(block, "NARRATION")
     voucher_type = _tag_value(block, "VOUCHERTYPENAME")
+    party_name = _tag_value(block, "PARTYLEDGERNAME") or _tag_value(block, "PARTYNAME")
     for ledger_block in re.findall(r"<ALLLEDGERENTRIES\.LIST[\s\S]*?</ALLLEDGERENTRIES\.LIST>", block, flags=re.I):
         amount = _tag_value(ledger_block, "AMOUNT")
         ledger_name = _tag_value(ledger_block, "LEDGERNAME")
@@ -171,7 +294,7 @@ def _rows_from_voucher(block: str) -> list[dict]:
                 "Date": date_text,
                 "Voucher number": voucher_number,
                 "Ledger name": ledger_name,
-                "Vendor name": ledger_name,
+                "Vendor name": party_name or ledger_name,
                 "Narration": narration or voucher_type,
                 "Amount": amount,
                 "Debit/Credit": "Dr" if str(amount).startswith("-") else "Cr",
@@ -182,7 +305,7 @@ def _rows_from_voucher(block: str) -> list[dict]:
 
 
 def _read_xml_prefix(path: Path, limit: int) -> str:
-    with path.open("r", encoding="utf-8", errors="ignore") as handle:
+    with path.open("r", encoding=_detect_text_encoding(path), errors="ignore") as handle:
         text = handle.read(limit + 1)
     if len(text) > limit:
         return "<rows><row><xml_note>Large XML stored successfully. Please export Day Book as CSV/XLSX if full voucher extraction is not available.</xml_note></row></rows>"
@@ -213,7 +336,7 @@ def extract_party_name(path: Path) -> str:
 
 
 def _extract_xml_party_name(path: Path) -> str:
-    with path.open("r", encoding="utf-8", errors="ignore") as handle:
+    with path.open("r", encoding=_detect_text_encoding(path), errors="ignore") as handle:
         text = _sanitize_xml_text(handle.read(MAX_NAME_SCAN_BYTES))
     tag_priority = [
         "COMPANYNAME",
@@ -270,6 +393,15 @@ def _normal_client_name(value) -> str:
     if re.fullmatch(r"[\d\s./:-]+", text):
         return ""
     return text
+
+
+def _detect_text_encoding(path: Path) -> str:
+    prefix = path.read_bytes()[:4]
+    if prefix.startswith(b"\xff\xfe") or prefix.startswith(b"\xfe\xff"):
+        return "utf-16"
+    if prefix.startswith(b"\xef\xbb\xbf"):
+        return "utf-8-sig"
+    return "utf-8"
 
 
 def _extract_invoice_fields(text: str) -> dict:

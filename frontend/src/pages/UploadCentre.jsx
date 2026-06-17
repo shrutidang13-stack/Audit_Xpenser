@@ -12,6 +12,7 @@ const categories = [
   ["gst-data", "GST Data / GSTR-2B"],
   ["supporting-documents", "Supporting Documents"]
 ];
+const MAX_FILES_PER_BATCH = 500;
 
 export function UploadCentre() {
   const { clientId } = useParams();
@@ -59,8 +60,13 @@ export function UploadCentre() {
   }, [activeClientId]);
   useEffect(() => { load(); }, [activeClientId]);
 
-  const upload = async (category, file) => {
-    if (!file) return;
+  const upload = async (category, selectedFiles) => {
+    const selected = Array.from(selectedFiles || []);
+    const batch = selected.slice(0, MAX_FILES_PER_BATCH);
+    if (!batch.length) return;
+    if (selected.length > MAX_FILES_PER_BATCH) {
+      setMessage(`Selected ${selected.length} files. Uploading first ${MAX_FILES_PER_BATCH} files in this batch.`);
+    }
     let uploadClientId = activeClientId;
     let uploadClientName = activeClientName;
     if (!uploadClientId) {
@@ -74,17 +80,27 @@ export function UploadCentre() {
       window.localStorage.setItem("auditxpenser.activeClientName", uploadClientName);
       navigate(`/client/${uploadClientId}/upload`, { replace: true });
     }
-    const body = new FormData();
-    body.append("file", file);
-    setMessage(`Uploading ${file.name}...`);
-    await api.post(`/api/upload/${uploadClientId}/${category}`, body);
+    const uploadedIds = [];
+    const uploadSessionId = makeUploadSessionId();
+    for (const [index, file] of batch.entries()) {
+      const body = new FormData();
+      body.append("file", file);
+      setMessage(`Uploading ${index + 1} of ${batch.length}: ${file.name}`);
+      const query = `?upload_session_id=${encodeURIComponent(uploadSessionId)}`;
+      const { data: uploaded } = await api.post(`/api/upload/${uploadClientId}/${category}${query}`, body);
+      uploadedIds.push(uploaded.id);
+    }
+    window.localStorage.setItem("auditxpenser.latestUploadFileIds", JSON.stringify(uploadedIds));
+    window.localStorage.setItem("auditxpenser.latestUploadSessionId", uploadSessionId);
+    window.localStorage.setItem("auditxpenser.latestUploadCategory", category);
+    window.localStorage.setItem("auditxpenser.latestUploadClientId", uploadClientId);
     if (category === "expense-ledger") {
       const { data: refreshedClient } = await api.get(`/api/clients/${uploadClientId}`);
       uploadClientName = refreshedClient.name;
       setActiveClientName(uploadClientName);
       window.localStorage.setItem("auditxpenser.activeClientName", uploadClientName);
     }
-    setMessage(`${file.name} uploaded. Client workspace ${uploadClientName || `Client #${uploadClientId}`} is ready.`);
+    setMessage(`${batch.length} file${batch.length === 1 ? "" : "s"} uploaded to ${labelForCategory(category)}. Client workspace ${uploadClientName || `Client #${uploadClientId}`} is ready.`);
     await load(uploadClientId);
   };
 
@@ -98,9 +114,10 @@ export function UploadCentre() {
         {categories.map(([key, label]) => (
           <label key={key} className="flex min-h-32 cursor-pointer flex-col justify-between rounded border border-ink/10 bg-white p-4 hover:border-teal">
             <span className="text-sm font-black">{label}</span>
-            <span className="mt-2 text-xs leading-5 text-ink/60">xlsx, xls, csv, pdf, jpg, jpeg, png, xml</span>
-            <span className="mt-3 inline-flex h-9 items-center gap-2 rounded bg-moss px-3 text-sm font-bold text-white"><Upload size={16} />Upload</span>
-            <input type="file" className="hidden" onChange={(event) => upload(key, event.target.files?.[0])} />
+            <span className="mt-2 text-xs leading-5 text-ink/60">xlsx, xls, csv, pdf, jpg, jpeg, png, xml, json</span>
+            <span className="mt-1 text-xs font-semibold text-teal">Select up to {MAX_FILES_PER_BATCH} files</span>
+            <span className="mt-3 inline-flex h-9 items-center gap-2 rounded bg-moss px-3 text-sm font-bold text-white"><Upload size={16} />Upload Batch</span>
+            <input type="file" multiple className="hidden" onChange={(event) => upload(key, event.target.files)} />
           </label>
         ))}
       </div>
@@ -108,6 +125,7 @@ export function UploadCentre() {
       <DataTable columns={[
         { key: "filename", label: "File Name" },
         { key: "category", label: "Category" },
+        { key: "upload_session_id", label: "Run" },
         { key: "file_type", label: "Type" },
         { key: "parse_status", label: "Parse Status" },
         { key: "records_extracted", label: "Records" },
@@ -116,6 +134,15 @@ export function UploadCentre() {
       ]} data={files.map((f) => ({ ...f, parse_status: <Badge tone={f.ca_review_required ? "medium" : "low"}>{f.parse_status}</Badge> }))} />
     </section>
   );
+}
+
+function makeUploadSessionId() {
+  if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+  return `run-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function labelForCategory(category) {
+  return categories.find(([key]) => key === category)?.[1] || "selected category";
 }
 
 function sanitizeClientId(value) {
