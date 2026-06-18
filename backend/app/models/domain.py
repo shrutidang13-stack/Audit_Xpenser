@@ -19,6 +19,7 @@ class Client(Base, TimestampMixin):
     gstin: Mapped[str | None] = mapped_column(String(20))
     financial_year: Mapped[str] = mapped_column(String(20), default="2025-26")
     files = relationship("UploadedFile", back_populates="client")
+    audit_runs = relationship("AuditRun", back_populates="client")
 
 
 class UploadedFile(Base, TimestampMixin):
@@ -30,6 +31,7 @@ class UploadedFile(Base, TimestampMixin):
     filename: Mapped[str] = mapped_column(String(255))
     stored_path: Mapped[str] = mapped_column(String(500))
     file_type: Mapped[str] = mapped_column(String(20))
+    upload_session_id: Mapped[str | None] = mapped_column(String(80), index=True)
     upload_status: Mapped[str] = mapped_column(String(40), default="Uploaded")
     parse_status: Mapped[str] = mapped_column(String(60), default="Pending")
     records_extracted: Mapped[int] = mapped_column(Integer, default=0)
@@ -86,6 +88,80 @@ class ExpenseTransaction(Base, TimestampMixin):
     invoice_number: Mapped[str | None] = mapped_column(String(120), index=True)
     gst_amount: Mapped[float | None] = mapped_column(Float)
     tds_amount: Mapped[float | None] = mapped_column(Float)
+
+
+class ProcessingExpense(Base, TimestampMixin):
+    __tablename__ = "processing_expenses"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    source_file_id: Mapped[int | None] = mapped_column(ForeignKey("uploaded_files.id"), index=True)
+    schedule_order: Mapped[int] = mapped_column(Integer, default=0, index=True)
+    sub_category: Mapped[str | None] = mapped_column(String(160), index=True)
+    ledger_name: Mapped[str] = mapped_column(String(255), index=True)
+    expense_type: Mapped[str] = mapped_column(String(80), index=True)
+    amount: Mapped[float] = mapped_column(Float, default=0)
+    debit_amount: Mapped[float] = mapped_column(Float, default=0)
+    net_amount: Mapped[float] = mapped_column(Float, default=0)
+    percentage_of_total: Mapped[float] = mapped_column(Float, default=0)
+    source: Mapped[str] = mapped_column(String(120), default="Uploaded Data")
+    validation_status: Mapped[str] = mapped_column(String(80), default="Ready for audit")
+    validation_remarks: Mapped[str | None] = mapped_column(Text)
+
+
+class ExpenseAuditResult(Base, TimestampMixin):
+    __tablename__ = "expense_audit_results"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    ledger_name: Mapped[str] = mapped_column(String(255), index=True)
+    expense_type: Mapped[str] = mapped_column(String(80), index=True)
+    amount_as_per_audit: Mapped[float] = mapped_column(Float, default=0)
+    amount_as_per_gl: Mapped[float | None] = mapped_column(Float)
+    difference_amount: Mapped[float] = mapped_column(Float, default=0)
+    tds_review: Mapped[str] = mapped_column(Text)
+    gst_review: Mapped[str] = mapped_column(Text)
+    payment_40a3_review: Mapped[str] = mapped_column(Text)
+    gl_recording_check: Mapped[str] = mapped_column(Text)
+    finding: Mapped[str] = mapped_column(Text)
+    risk_level: Mapped[str] = mapped_column(String(40), default="Low")
+    ca_review_status: Mapped[str] = mapped_column(String(40), default="Pending")
+    ca_remarks: Mapped[str | None] = mapped_column(Text)
+    statutory_reference_status: Mapped[str] = mapped_column(String(120))
+    statutory_reference_note: Mapped[str | None] = mapped_column(Text)
+
+
+class ReferenceDocument(Base, TimestampMixin):
+    __tablename__ = "reference_documents"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(255), index=True)
+    category: Mapped[str] = mapped_column(String(120), index=True)
+    file_name: Mapped[str] = mapped_column(String(255))
+    file_path: Mapped[str] = mapped_column(String(500))
+    file_type: Mapped[str] = mapped_column(String(20), index=True)
+    effective_date: Mapped[date | None] = mapped_column(Date, index=True)
+    version_label: Mapped[str | None] = mapped_column(String(120))
+    source_type: Mapped[str | None] = mapped_column(String(120))
+    uploaded_by: Mapped[str] = mapped_column(String(80), default="system")
+    parsing_status: Mapped[str] = mapped_column(String(80), default="Pending")
+    indexed_status: Mapped[str] = mapped_column(String(80), default="Pending")
+    notes: Mapped[str | None] = mapped_column(Text)
+    chunks = relationship("ReferenceDocumentChunk", back_populates="document", cascade="all, delete-orphan")
+
+
+class ReferenceDocumentChunk(Base, TimestampMixin):
+    __tablename__ = "reference_document_chunks"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    reference_document_id: Mapped[int] = mapped_column(ForeignKey("reference_documents.id"), index=True)
+    page_number: Mapped[int | None] = mapped_column(Integer, index=True)
+    section_number: Mapped[str | None] = mapped_column(String(80), index=True)
+    rule_number: Mapped[str | None] = mapped_column(String(80), index=True)
+    heading: Mapped[str | None] = mapped_column(String(500))
+    content_text: Mapped[str] = mapped_column(Text)
+    chunk_index: Mapped[int] = mapped_column(Integer, default=0)
+    document = relationship("ReferenceDocument", back_populates="chunks")
 
 
 class Bill(Base, TimestampMixin):
@@ -255,16 +331,21 @@ class ClientQuery(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    exception_id: Mapped[int | None] = mapped_column(ForeignKey("audit_exceptions.id"), index=True)
     query_number: Mapped[str] = mapped_column(String(40))
+    category: Mapped[str | None] = mapped_column(String(120))
     ledger: Mapped[str | None] = mapped_column(String(255))
     vendor: Mapped[str | None] = mapped_column(String(255))
     transaction_date: Mapped[date | None] = mapped_column(Date)
     amount: Mapped[float | None] = mapped_column(Float)
     issue_detected: Mapped[str] = mapped_column(Text)
     required_document: Mapped[str] = mapped_column(Text)
+    documents_required: Mapped[str | None] = mapped_column(Text)
     priority: Mapped[str] = mapped_column(String(40), default="Medium")
     status: Mapped[str] = mapped_column(String(40), default="Open")
     suggested_wording: Mapped[str] = mapped_column(Text)
+    client_response: Mapped[str | None] = mapped_column(Text)
+    ca_note: Mapped[str | None] = mapped_column(Text)
 
 
 class WorkingPaper(Base, TimestampMixin):
@@ -294,5 +375,43 @@ class TrialBalanceLine(Base, TimestampMixin):
     client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
     source_file_id: Mapped[int | None] = mapped_column(ForeignKey("uploaded_files.id"))
     ledger_name: Mapped[str | None] = mapped_column(String(255))
+    debit_amount: Mapped[float | None] = mapped_column(Float)
+    credit_amount: Mapped[float | None] = mapped_column(Float)
     amount: Mapped[float | None] = mapped_column(Float)
 
+
+class AuditRun(Base, TimestampMixin):
+    __tablename__ = "audit_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    run_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    risk_score: Mapped[int] = mapped_column(Integer, default=0)
+    risk_label: Mapped[str] = mapped_column(String(40), default="Low")
+    total_vouchers: Mapped[int] = mapped_column(Integer, default=0)
+    total_exceptions: Mapped[int] = mapped_column(Integer, default=0)
+    indicative_amount: Mapped[float] = mapped_column(Float, default=0)
+    client = relationship("Client", back_populates="audit_runs")
+    exceptions = relationship("AuditException", back_populates="audit_run")
+
+
+class AuditException(Base, TimestampMixin):
+    __tablename__ = "audit_exceptions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    audit_run_id: Mapped[int | None] = mapped_column(ForeignKey("audit_runs.id"), index=True)
+    transaction_id: Mapped[int | None] = mapped_column(ForeignKey("expense_transactions.id"), index=True)
+    voucher_date: Mapped[date | None] = mapped_column(Date)
+    voucher_type: Mapped[str | None] = mapped_column(String(120))
+    voucher_number: Mapped[str | None] = mapped_column(String(120), index=True)
+    party_name: Mapped[str | None] = mapped_column(String(255), index=True)
+    ledger_name: Mapped[str | None] = mapped_column(String(255), index=True)
+    amount: Mapped[float | None] = mapped_column(Float)
+    exception_type: Mapped[str] = mapped_column(String(120), index=True)
+    exception_description: Mapped[str] = mapped_column(Text)
+    risk_level: Mapped[str] = mapped_column(String(40), default="Medium", index=True)
+    form_3cd_clause: Mapped[str | None] = mapped_column(String(80), index=True)
+    status: Mapped[str] = mapped_column(String(40), default="Pending", index=True)
+    ca_remarks: Mapped[str | None] = mapped_column(Text)
+    audit_run = relationship("AuditRun", back_populates="exceptions")

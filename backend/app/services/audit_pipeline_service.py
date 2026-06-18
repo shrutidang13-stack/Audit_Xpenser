@@ -14,6 +14,7 @@ from app.models import (
     ExpenseTransaction,
     Form3CDImpact,
     GSTRecord,
+    ProcessingExpense,
     RiskScore,
     StatutoryAlert,
     TDSRecord,
@@ -22,8 +23,11 @@ from app.models import (
     WorkingPaper,
 )
 from app.services.audit_trail_service import log_event
+from app.services.exception_register_service import create_audit_run, rebuild_exception_register
 from app.services.expense_classification_service import classify_text
-from app.services.normalisation_service import normalise_client_uploads
+from app.services.processing_service import CA_REVIEW_REQUIRED, generate_processing_data, normalise_ledger_name
+from app.services.query_engine import generate_queries_from_exceptions
+from app.services.retention_service import prune_audit_runs
 from app.services.utils import risk_level, valid_gstin, valid_pan
 
 
@@ -32,13 +36,19 @@ RCM_KEYWORDS = ["legal", "gta", "director", "import of services", "security", "s
 BUSINESS_PURPOSE_CATEGORIES = {"Travelling", "Hotel / food", "Staff welfare", "Advertisement / sales promotion", "Director-related payment", "Employee cost"}
 
 
-def run_audit(db: Session, client_id: int) -> dict:
+def run_audit(db: Session, client_id: int, file_ids: list[int] | None = None) -> dict:
     client = db.get(Client, client_id)
     if not client:
         raise ValueError("Client not found")
     _clear_outputs(db, client_id)
-    normalised = normalise_client_uploads(db, client_id)
+    processing = generate_processing_data(db, client_id, file_ids)
+    normalised = processing.get("normalised", {})
+    processing_rows = db.query(ProcessingExpense).filter(ProcessingExpense.client_id == client_id).all()
+    processing_ledgers = {_ledger_key(row.ledger_name) for row in processing_rows}
+    processing_type_by_ledger = {_ledger_key(row.ledger_name): row.expense_type for row in processing_rows}
     expenses = db.query(ExpenseTransaction).filter(ExpenseTransaction.client_id == client_id).all()
+    if processing_ledgers:
+        expenses = [tx for tx in expenses if _ledger_key(tx.ledger_name) in processing_ledgers]
     bills = db.query(Bill).filter(Bill.client_id == client_id).all()
     vendors = db.query(Vendor).filter(Vendor.client_id == client_id).all()
     tds = db.query(TDSRecord).filter(TDSRecord.client_id == client_id).all()
@@ -47,6 +57,19 @@ def run_audit(db: Session, client_id: int) -> dict:
     classifications = {}
     for tx in expenses:
         result = classify_text(tx.ledger_name, tx.narration)
+        processing_type = processing_type_by_ledger.get(_ledger_key(tx.ledger_name))
+        if processing_type == CA_REVIEW_REQUIRED:
+            result = {
+                **result,
+                "category": CA_REVIEW_REQUIRED,
+                "confidence": min(result.get("confidence", 0), 0.5),
+                "basis": "Classification pending review in Processing schedule.",
+            }
+        elif processing_type:
+            result = {
+                **result,
+                "basis": f"{result.get('basis') or 'Automated classification'} Processing schedule: {processing_type}.",
+            }
         item = ExpenseClassification(client_id=client_id, transaction_id=tx.id, **result)
         db.add(item)
         db.flush()
@@ -66,14 +89,36 @@ def run_audit(db: Session, client_id: int) -> dict:
     _queries(db, client_id, expenses)
     _working_paper(db, client, normalised)
     db.commit()
+    audit_run = create_audit_run(db, client_id)
+    canonical = rebuild_exception_register(db, client_id, audit_run.id)
+    generate_queries_from_exceptions(db, client_id, audit_run.id)
+    db.refresh(audit_run)
+    retention = prune_audit_runs(db, client_id)
     log_event(db, client_id, "Audit pipeline completed", "Expense audit completed with indicative risk scores and suggested client queries.")
-    return {"status": "completed", "normalised": normalised, "transactions_reviewed": len(expenses)}
+    return {
+        "status": "completed",
+        "normalised": normalised,
+        "transactions_reviewed": len(expenses),
+        "audit_run_id": audit_run.id,
+        "risk_score": audit_run.risk_score,
+        "risk_label": audit_run.risk_label,
+        "total_vouchers": audit_run.total_vouchers,
+        "total_exceptions": audit_run.total_exceptions,
+        "indicative_amount": audit_run.indicative_amount,
+        "category_summary": canonical["category_summary"],
+        "form_3cd_summary": canonical["form_3cd_summary"],
+        "retention": retention,
+    }
 
 
 def _clear_outputs(db: Session, client_id: int) -> None:
     for model in [BillMatch, ExpenseClassification, VendorRisk, StatutoryAlert, CapitalReview, BusinessPurposeRisk, DuplicateBillFlag, Form3CDImpact, RiskScore, ClientQuery, WorkingPaper]:
         db.execute(delete(model).where(model.client_id == client_id))
     db.commit()
+
+
+def _ledger_key(value: str | None) -> str:
+    return normalise_ledger_name(value).casefold()
 
 
 def _match_bills(db, client_id, expenses, bills):
@@ -115,7 +160,7 @@ def _detect_duplicate_bills(db, client_id, bills):
         if bill.amount and by_amount_date[(bill.vendor_name or "", bill.amount or 0, str(bill.invoice_date or ""))] > 1:
             db.add(DuplicateBillFlag(client_id=client_id, bill_id=bill.id, issue="Possible duplicate bill based on vendor, amount and date.", severity="Medium"))
         if bill.gstin and not valid_gstin(bill.gstin):
-            db.add(DuplicateBillFlag(client_id=client_id, bill_id=bill.id, issue="Invalid GSTIN format captured from bill.", severity="Medium"))
+            db.add(DuplicateBillFlag(client_id=client_id, bill_id=bill.id, issue="GSTIN format requires CA review based on captured bill data.", severity="Medium"))
 
 
 def _vendor_risks(db, client_id, vendors, expenses, gst_records):
@@ -123,9 +168,9 @@ def _vendor_risks(db, client_id, vendors, expenses, gst_records):
     gst_uploaded = bool(gst_records)
     for vendor in vendors:
         if not valid_pan(vendor.pan):
-            db.add(VendorRisk(client_id=client_id, vendor_id=vendor.id, vendor_name=vendor.name, issue="PAN missing or invalid.", severity="Medium", suggested_action="Please verify vendor PAN before final audit conclusion."))
+            db.add(VendorRisk(client_id=client_id, vendor_id=vendor.id, vendor_name=vendor.name, issue="PAN missing or requiring review.", severity="Medium", suggested_action="Please verify vendor PAN before final audit conclusion."))
         if not valid_gstin(vendor.gstin):
-            db.add(VendorRisk(client_id=client_id, vendor_id=vendor.id, vendor_name=vendor.name, issue="GSTIN missing or invalid.", severity="Medium", suggested_action="Please obtain or verify GST registration details where applicable."))
+            db.add(VendorRisk(client_id=client_id, vendor_id=vendor.id, vendor_name=vendor.name, issue="GSTIN missing or requiring review.", severity="Medium", suggested_action="Please obtain or verify GST registration details where applicable."))
         if gst_uploaded and vendor.gstin and not any(g.gstin == vendor.gstin for g in gst_records):
             db.add(VendorRisk(client_id=client_id, vendor_id=vendor.id, vendor_name=vendor.name, issue="GSTR-2B support not identified for vendor GSTIN.", severity="Low-Medium", suggested_action="Please review GST support and ITC eligibility records."))
     for tx in expenses:

@@ -145,6 +145,7 @@ Supported formats:
 - `.jpeg`
 - `.png`
 - `.xml`
+- `.json`
 
 Unreadable or partially readable files are stored and marked for CA review rather than crashing the workflow.
 

@@ -53,9 +53,10 @@ def parse_date(value: Any) -> date | None:
         return value.date()
     if isinstance(value, date):
         return value
-    for fmt in ("%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y", "%m/%d/%Y", "%d.%m.%Y"):
+    for fmt in ("%Y%m%d", "%Y-%m-%d", "%d-%m-%Y", "%d/%m/%Y", "%m/%d/%Y", "%d.%m.%Y"):
         try:
-            return datetime.strptime(str(value).strip()[:10], fmt).date()
+            text = str(value).strip()
+            return datetime.strptime(text[:8] if fmt == "%Y%m%d" else text[:10], fmt).date()
         except ValueError:
             continue
     try:

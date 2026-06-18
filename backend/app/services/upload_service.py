@@ -5,13 +5,14 @@ from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
-from app.models import Client, ColumnMapping, UploadedFile
+from app.models import ColumnMapping, UploadedFile
 from app.services.audit_trail_service import log_event
-from app.services.file_parser_service import extract_party_name, parse_file
+from app.services.file_parser_service import parse_file
+from app.services.retention_service import prune_upload_sessions
 from app.services.utils import to_json
 
 
-def store_upload(db: Session, client_id: int, category: str, upload: UploadFile) -> UploadedFile:
+def store_upload(db: Session, client_id: int, category: str, upload: UploadFile, upload_session_id: str | None = None) -> UploadedFile:
     settings = get_settings()
     upload_root = Path(settings.upload_dir) / str(client_id) / category
     upload_root.mkdir(parents=True, exist_ok=True)
@@ -30,6 +31,7 @@ def store_upload(db: Session, client_id: int, category: str, upload: UploadFile)
         filename=upload.filename,
         stored_path=str(target),
         file_type=target.suffix.lower(),
+        upload_session_id=upload_session_id,
         parse_status=parsed["status"],
         records_extracted=parsed["records"],
         ca_review_required=parsed["ca_review_required"],
@@ -45,20 +47,7 @@ def store_upload(db: Session, client_id: int, category: str, upload: UploadFile)
     for item in parsed.get("mapping", []):
         db.add(ColumnMapping(file_id=record.id, **item))
     db.commit()
-    if category == "expense-ledger":
-        _rename_client_from_day_book(db, client_id, target)
     log_event(db, client_id, "File uploaded", f"{upload.filename} uploaded as {category}; parse status {record.parse_status}.")
+    prune_upload_sessions(db, client_id, category)
+    db.refresh(record)
     return record
-
-
-def _rename_client_from_day_book(db: Session, client_id: int, path: Path) -> None:
-    party_name = extract_party_name(path)
-    if not party_name:
-        return
-    client = db.get(Client, client_id)
-    if not client or client.name == party_name:
-        return
-    old_name = client.name
-    client.name = party_name
-    db.commit()
-    log_event(db, client_id, "Client name detected", f"Client renamed from {old_name} to {party_name} based on Day Book upload.")

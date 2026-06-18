@@ -15,6 +15,12 @@ class MappingItem(BaseModel):
 
 class MappingConfirm(BaseModel):
     mappings: list[MappingItem]
+    file_ids: list[int] | None = None
+    generate_processing: bool = True
+
+
+class AuditRunRequest(BaseModel):
+    file_ids: list[int] | None = None
 
 
 class ReviewPatch(BaseModel):
