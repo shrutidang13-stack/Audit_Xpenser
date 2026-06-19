@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     audit_retention_runs: int = 10
     log_retention_bytes: int = 2_097_152
     smtp_host: str = ""
-    smtp_port: int = 587
+    smtp_port: int = 0
     smtp_username: str = ""
     smtp_password: str = ""
     smtp_from_email: str = ""

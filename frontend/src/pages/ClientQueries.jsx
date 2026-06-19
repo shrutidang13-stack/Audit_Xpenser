@@ -12,7 +12,7 @@ export function ClientQueries() {
   const [page, setPage] = useState(1);
   const [message, setMessage] = useState("");
   const [mailOpen, setMailOpen] = useState(false);
-  const [recipient, setRecipient] = useState("cashrutidang@gmail.com");
+  const [recipient, setRecipient] = useState("");
   const [mailMessage, setMailMessage] = useState("");
   const [sending, setSending] = useState(false);
 
@@ -32,17 +32,22 @@ export function ClientQueries() {
 
   const sendMail = async (event) => {
     event.preventDefault();
+    const toEmail = recipient.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(toEmail)) {
+      setMailMessage("Enter a valid recipient email address.");
+      return;
+    }
     setSending(true);
     setMailMessage("");
     try {
       const { data } = await api.post(`/api/audit/${clientId}/queries/send-email`, {
-        to_email: recipient,
+        to_email: toEmail,
         status
       });
-      setMessage(data.message || "Mail sent successfully.");
+      setMessage(data.message || `Query letter sent successfully to ${toEmail}`);
       setMailOpen(false);
     } catch (error) {
-      setMailMessage(error.response?.data?.detail || "Mail could not be sent.");
+      setMailMessage(error.response?.data?.detail || "Sending failed. Please try again or check SMTP settings.");
     } finally {
       setSending(false);
     }
@@ -57,7 +62,7 @@ export function ClientQueries() {
             {["Pending", "Under Review", "Resolved", "Not Applicable", ""].map((item) => <option key={item} value={item}>{item || "All Statuses"}</option>)}
           </select>
           <button onClick={generate} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-ink px-3 text-sm font-bold text-white"><RefreshCcw size={16} />Generate Queries</button>
-          <button onClick={() => { setMailOpen(true); setMailMessage(""); }} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-teal px-3 text-sm font-bold text-white"><Mail size={16} />Send Mail</button>
+          <button onClick={() => { setRecipient(""); setMailOpen(true); setMailMessage(""); }} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-teal px-3 text-sm font-bold text-white"><Mail size={16} />Send Mail</button>
           <a href={`/api/reports/${clientId}/query-letter?status=${encodeURIComponent(status || "")}`} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-moss px-3 text-sm font-bold text-white"><Download size={16} />Download Query Letter</a>
         </div>
       </div>
@@ -104,8 +109,8 @@ export function ClientQueries() {
             </div>
             <div className="space-y-3 p-4">
               <label className="block text-sm font-bold text-ink">
-                Recipient email
-                <input value={recipient} onChange={(event) => setRecipient(event.target.value)} type="email" required placeholder="cashrutidang@gmail.com" className="mt-2 h-11 w-full rounded border border-ink/15 px-3 text-sm font-semibold outline-none focus:border-teal" />
+                Recipient Email
+                <input value={recipient} onChange={(event) => setRecipient(event.target.value)} type="email" required placeholder="Enter recipient email address" className="mt-2 h-11 w-full rounded border border-ink/15 px-3 text-sm font-semibold outline-none focus:border-teal" />
               </label>
               {mailMessage && <div className="rounded border border-amber/25 bg-amber/10 px-3 py-2 text-sm font-semibold text-ink/75">{mailMessage}</div>}
               <div className="rounded border border-ink/10 bg-paper px-3 py-2 text-xs font-semibold leading-5 text-ink/60">
