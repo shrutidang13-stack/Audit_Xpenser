@@ -469,8 +469,7 @@ def _worksheet_from_sample(path: Path, audit_result: dict, worksheet_type: str) 
     try:
         sheet = workbook.active
         title = sheet.cell(1, 1).value or audit_result.get("ledger_name")
-        columns = [_clean_header(sheet.cell(3, column).value) for column in range(1, sheet.max_column + 1)]
-        columns = [column for column in columns if column]
+        columns = _sample_columns(sheet)
         header_groups = _sample_header_groups(sheet, len(columns))
         rows = []
         notes = []
@@ -519,6 +518,19 @@ def _sample_header_groups(sheet, column_count: int) -> list[dict]:
 
 def _clean_header(value) -> str:
     return " ".join(str(value or "").split())
+
+
+def _sample_columns(sheet) -> list[str]:
+    columns = []
+    seen = {}
+    for column in range(1, sheet.max_column + 1):
+        label = _clean_header(sheet.cell(3, column).value)
+        if not label:
+            continue
+        count = seen.get(label, 0)
+        seen[label] = count + 1
+        columns.append(label if count == 0 else f"{label}{' ' * count}")
+    return columns
 
 
 def _sample_cell_value(value):

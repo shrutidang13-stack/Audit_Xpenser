@@ -1,4 +1,4 @@
-import { BookOpen, ClipboardCheck, ClipboardList, FileText, FolderUp, History, LayoutDashboard, Scale, Users } from "lucide-react";
+import { BookOpen, ClipboardCheck, ClipboardList, FileText, FolderUp, History, LayoutDashboard, ReceiptText, Scale, Users } from "lucide-react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 
 const navItems = [
@@ -8,6 +8,7 @@ const navItems = [
   ["Data", "/processing", Scale],
   ["Audit Worksheet", "/audit-worksheet", ClipboardCheck],
   ["Audit Dashboard", "/audit-dashboard", LayoutDashboard],
+  ["GST Reco", "/gst-reco", ReceiptText],
   ["Rules", "/rules", BookOpen],
   ["Form 3CD", "/form3cd", ClipboardList],
   ["Client Queries", "/queries", FileText],

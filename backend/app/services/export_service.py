@@ -5,6 +5,7 @@ from docx import Document
 from sqlalchemy.orm import Session
 
 from app.models import Client, ClientQuery, Form3CDImpact, RiskScore, StatutoryAlert, WorkingPaper
+from app.services.gst_reco_service import export_rows
 
 
 def client_queries_excel(db: Session, client_id: int) -> BytesIO:
@@ -23,6 +24,10 @@ def exception_report_excel(db: Session, client_id: int) -> BytesIO:
         pd.DataFrame([_to_dict(i, ["source_type", "source_id", "clause_area", "observation", "suggested_review"]) for i in impacts]).to_excel(writer, index=False, sheet_name="Form 3CD Impact")
     output.seek(0)
     return output
+
+
+def gst_reco_excel(db: Session, client_id: int) -> BytesIO:
+    return _excel(export_rows(db, client_id), "GST Reco")
 
 
 def working_paper_docx(db: Session, client_id: int) -> BytesIO:

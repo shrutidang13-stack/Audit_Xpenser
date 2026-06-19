@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pathlib import Path
 
 from app.api.audit import router as audit_router
+from app.api.gst_reco import router as gst_reco_router
 from app.api.reports import router as reports_router
 from app.api.routes import router
 from app.core.database import Base, engine
@@ -31,6 +32,7 @@ app.add_middleware(
 
 app.include_router(router)
 app.include_router(audit_router)
+app.include_router(gst_reco_router)
 app.include_router(reports_router)
 
 

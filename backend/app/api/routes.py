@@ -36,7 +36,7 @@ from app.services.audit_worksheet_service import (
     get_ledger_worksheet_data,
 )
 from app.services.column_mapping_service import suggest_mapping
-from app.services.export_service import client_queries_excel, exception_report_excel, working_paper_docx
+from app.services.export_service import client_queries_excel, exception_report_excel, gst_reco_excel, working_paper_docx
 from app.services.expense_audit_service import get_expense_audit_results, run_expense_audit
 from app.services.file_parser_service import parse_file
 from app.services.form3cd_report_service import get_form3cd_report
@@ -479,6 +479,12 @@ def export_queries(client_id: int, db: Session = Depends(get_db)):
 def export_exceptions(client_id: int, db: Session = Depends(get_db)):
     output = exception_report_excel(db, client_id)
     return StreamingResponse(output, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=exception-report.xlsx"})
+
+
+@router.get("/export/{client_id}/gst-reco")
+def export_gst_reco(client_id: int, db: Session = Depends(get_db)):
+    output = gst_reco_excel(db, client_id)
+    return StreamingResponse(output, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=gst-reco.xlsx"})
 
 
 @router.get("/export/{client_id}/working-paper")
