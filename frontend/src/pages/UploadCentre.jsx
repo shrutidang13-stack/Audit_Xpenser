@@ -6,7 +6,8 @@ import { DataTable } from "../components/DataTable";
 import { api } from "../lib/api";
 
 const categories = [
-  ["expense-ledger", "Day Book"],
+  ["expense-ledger", "Day Book / Tally Day Book"],
+  ["trial-balance", "Tally Book / Trial Balance"],
   ["bills", "Bills / Invoices / Vouchers"],
   ["tds-data", "TDS Challan"],
   ["gst-data", "GST Data / GSTR-2B"],
@@ -106,7 +107,7 @@ export function UploadCentre() {
 
   return (
     <section className="space-y-5">
-      <PageTitle title="Upload Client Data" subtitle="Upload all hackathon data into the seeded Nxtmobility Energy Private Limited workspace." />
+      <PageTitle title="Upload Client Data" subtitle="Upload Day Book, Tally Book, bills and statutory data into the seeded Nxtmobility Energy Private Limited workspace." />
       <div className="rounded border border-teal/20 bg-white px-4 py-3 text-sm font-semibold text-ink/75">
         Active client: {activeClientId ? <span className="text-teal">{activeClientName || `Client #${activeClientId}`}</span> : <span className="text-coral">Loading seeded client workspace</span>}
       </div>

@@ -6,6 +6,7 @@ import { ClientQueries } from "./pages/ClientQueries";
 import { Clients } from "./pages/Clients";
 import { Dashboard } from "./pages/Dashboard";
 import { Exceptions } from "./pages/Exceptions";
+import { Form3CD } from "./pages/Form3CD";
 import { Mapping } from "./pages/Mapping";
 import { Processing } from "./pages/Processing";
 import { ReferenceLibrary } from "./pages/ReferenceLibrary";
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
       { path: "client/:clientId/statutory-alerts", element: <TablePage type="statutory-alerts" /> },
       { path: "client/:clientId/vendor-risks", element: <TablePage type="vendor-risks" /> },
       { path: "client/:clientId/capital-review", element: <TablePage type="capital-review" /> },
-      { path: "client/:clientId/form3cd", element: <TablePage type="form3cd-impact" /> },
+      { path: "client/:clientId/form3cd", element: <Form3CD /> },
       { path: "client/:clientId/queries", element: <ClientQueries /> },
       { path: "client/:clientId/working-paper", element: <WorkingPaper /> },
       { path: "client/:clientId/audit-trail", element: <TablePage type="audit-trail" /> }

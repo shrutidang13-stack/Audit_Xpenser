@@ -1,4 +1,4 @@
-import { Download, RefreshCcw } from "lucide-react";
+import { Download, Mail, RefreshCcw, Send, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../lib/api";
@@ -11,6 +11,10 @@ export function ClientQueries() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [message, setMessage] = useState("");
+  const [mailOpen, setMailOpen] = useState(false);
+  const [recipient, setRecipient] = useState("cashrutidang@gmail.com");
+  const [mailMessage, setMailMessage] = useState("");
+  const [sending, setSending] = useState(false);
 
   const load = async () => {
     const { data } = await api.get(`/api/audit/${clientId}/queries`, { params: { status, page, page_size: 100 } });
@@ -26,6 +30,24 @@ export function ClientQueries() {
     await load();
   };
 
+  const sendMail = async (event) => {
+    event.preventDefault();
+    setSending(true);
+    setMailMessage("");
+    try {
+      const { data } = await api.post(`/api/audit/${clientId}/queries/send-email`, {
+        to_email: recipient,
+        status
+      });
+      setMessage(data.message || "Mail sent successfully.");
+      setMailOpen(false);
+    } catch (error) {
+      setMailMessage(error.response?.data?.detail || "Mail could not be sent.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <section className="space-y-5">
       <div className="flex flex-col gap-3 border-b border-ink/10 pb-4 md:flex-row md:items-end md:justify-between">
@@ -35,6 +57,7 @@ export function ClientQueries() {
             {["Pending", "Under Review", "Resolved", "Not Applicable", ""].map((item) => <option key={item} value={item}>{item || "All Statuses"}</option>)}
           </select>
           <button onClick={generate} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-ink px-3 text-sm font-bold text-white"><RefreshCcw size={16} />Generate Queries</button>
+          <button onClick={() => { setMailOpen(true); setMailMessage(""); }} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-teal px-3 text-sm font-bold text-white"><Mail size={16} />Send Mail</button>
           <a href={`/api/reports/${clientId}/query-letter?status=${encodeURIComponent(status || "")}`} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-moss px-3 text-sm font-bold text-white"><Download size={16} />Download Query Letter</a>
         </div>
       </div>
@@ -69,6 +92,33 @@ export function ClientQueries() {
         <div className="text-sm font-bold">Page {page} of {Math.max(1, Math.ceil(total / 100))} | {total.toLocaleString("en-IN")} queries</div>
         <button disabled={page >= Math.max(1, Math.ceil(total / 100))} onClick={() => setPage((current) => current + 1)} className="rounded border px-3 py-2 text-sm font-bold disabled:opacity-40">Next</button>
       </div>
+      {mailOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 px-4">
+          <form onSubmit={sendMail} className="w-full max-w-lg rounded border border-ink/10 bg-white shadow-xl">
+            <div className="flex items-center justify-between border-b border-ink/10 px-4 py-3">
+              <div>
+                <h2 className="text-lg font-black text-ink">Send Query Letter</h2>
+                <p className="mt-1 text-sm font-semibold text-ink/60">The current query letter will be attached as a Word file.</p>
+              </div>
+              <button type="button" onClick={() => setMailOpen(false)} className="rounded p-2 text-ink/60 hover:bg-ink/5" aria-label="Close mail dialog"><X size={18} /></button>
+            </div>
+            <div className="space-y-3 p-4">
+              <label className="block text-sm font-bold text-ink">
+                Recipient email
+                <input value={recipient} onChange={(event) => setRecipient(event.target.value)} type="email" required placeholder="cashrutidang@gmail.com" className="mt-2 h-11 w-full rounded border border-ink/15 px-3 text-sm font-semibold outline-none focus:border-teal" />
+              </label>
+              {mailMessage && <div className="rounded border border-amber/25 bg-amber/10 px-3 py-2 text-sm font-semibold text-ink/75">{mailMessage}</div>}
+              <div className="rounded border border-ink/10 bg-paper px-3 py-2 text-xs font-semibold leading-5 text-ink/60">
+                Auto-send requires SMTP settings in backend/.env. For Gmail, use an app password instead of your normal password.
+              </div>
+            </div>
+            <div className="flex justify-end gap-2 border-t border-ink/10 px-4 py-3">
+              <button type="button" onClick={() => setMailOpen(false)} className="rounded border border-ink/15 px-3 py-2 text-sm font-bold text-ink/70">Cancel</button>
+              <button disabled={sending} className="focus-ring inline-flex items-center gap-2 rounded bg-teal px-3 py-2 text-sm font-bold text-white disabled:opacity-60"><Send size={16} />{sending ? "Sending..." : "Send"}</button>
+            </div>
+          </form>
+        </div>
+      )}
     </section>
   );
 }
@@ -79,5 +129,5 @@ function Status({ value }) {
 }
 
 function formatInr(value) {
-  return `₹${Number(value || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(Number(value || 0));
 }

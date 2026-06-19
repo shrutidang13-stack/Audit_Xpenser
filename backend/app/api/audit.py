@@ -1,4 +1,7 @@
+import re
+
 from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel
 from sqlalchemy import asc, desc, or_
 from sqlalchemy.orm import Session
 
@@ -8,10 +11,18 @@ from app.schemas.api import AuditRunRequest, ReviewPatch
 from app.services.audit_pipeline_service import run_audit
 from app.services.exception_register_service import latest_audit_run, summarize_exceptions
 from app.services.query_engine import generate_queries_from_exceptions
-from app.services.report_service import get_exception_register_data
+from app.services.email_service import EmailAttachment, send_email
+from app.services.report_service import generate_query_letter_docx, get_exception_register_data
 
 
 router = APIRouter(prefix="/api/audit")
+
+
+class QueryEmailRequest(BaseModel):
+    to_email: str
+    status: str = "Pending"
+    subject: str | None = None
+    message: str | None = None
 
 
 @router.post("/{client_id}/run")
@@ -140,6 +151,45 @@ def list_queries(client_id: int, status: str | None = None, page: int = Query(1,
             for item in items
         ],
     }
+
+
+@router.post("/{client_id}/queries/send-email")
+def send_queries_email(client_id: int, payload: QueryEmailRequest, db: Session = Depends(get_db)):
+    client = db.get(Client, client_id)
+    if not client:
+        raise HTTPException(404, "Client not found")
+    to_email = payload.to_email.strip()
+    if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", to_email):
+        raise HTTPException(400, "Enter a valid recipient email address.")
+
+    generate_queries_from_exceptions(db, client_id)
+    output = generate_query_letter_docx(db, client_id, payload.status)
+    subject = payload.subject or f"Tax Audit Queries - {client.name} FY {client.financial_year}"
+    body = payload.message or (
+        f"Dear Sir / Madam,\n\n"
+        f"Please find attached the client query letter generated from AuditXpenser for {client.name}, FY {client.financial_year}.\n\n"
+        "The queries are indicative and require CA review before final audit reporting.\n\n"
+        "Regards,\nAuditXpenser"
+    )
+    filename = f"ClientQueryLetter_{client.pan or client.id}_FY{(client.financial_year or '2025-26').replace(' ', '')}.docx"
+    try:
+        result = send_email(
+            to_email,
+            subject,
+            body,
+            [
+                EmailAttachment(
+                    filename=filename,
+                    content=output.getvalue(),
+                    content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                )
+            ],
+        )
+    except Exception as exc:
+        raise HTTPException(500, f"Mail could not be sent: {exc}") from exc
+    if result.get("setup_required"):
+        raise HTTPException(400, result["message"])
+    return result
 
 
 def _exception(item: AuditException) -> dict:

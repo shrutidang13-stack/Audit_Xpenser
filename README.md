@@ -20,7 +20,7 @@ AuditXpenser brings those records into one upload-first workflow and creates aud
 ## Key Features
 
 - Upload-first workflow with a seeded client workspace
-- Day Book upload and parsing
+- Day Book / Tally Book upload and parsing
 - Bill, invoice, voucher, TDS challan, GST, and supporting document uploads
 - Column mapping preview for tabular files
 - Rule-based expense classification
@@ -81,6 +81,12 @@ OPENAI_API_KEY=
 GEMINI_API_KEY=
 UPLOAD_DIR=uploads
 APP_ENV=development
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USERNAME=your-email@gmail.com
+SMTP_PASSWORD=your-gmail-app-password
+SMTP_FROM_EMAIL=your-email@gmail.com
+SMTP_USE_TLS=true
 ```
 
 For Docker Compose:
@@ -129,7 +135,8 @@ npm run dev
 
 The current hackathon screen focuses on:
 
-- Day Book
+- Day Book / Tally Day Book
+- Tally Book / Trial Balance
 - Bills / Invoices / Vouchers
 - TDS Challan
 - GST Data / GSTR-2B
@@ -153,7 +160,7 @@ Unreadable or partially readable files are stored and marked for CA review rathe
 
 1. Open the app.
 2. The seeded Nxtmobility client workspace loads automatically.
-3. Upload the Day Book.
+3. Upload the Day Book or Tally Book / Trial Balance.
 4. Upload bills, invoices, vouchers, TDS challan, GST data, and supporting documents.
 5. Review column mapping where applicable.
 6. Run Expense Audit.
@@ -190,7 +197,7 @@ Preferred wording:
 
 ## Future Scope
 
-- Direct Tally integration
+- Direct Tally API integration
 - GST portal integration
 - TDS return reconciliation
 - Bank statement payment proof matching

@@ -1,5 +1,6 @@
 const CATEGORY_ORDER = [
   "expense-ledger",
+  "trial-balance",
   "bills",
   "tds-data",
   "gst-data",
