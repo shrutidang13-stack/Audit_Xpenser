@@ -23,6 +23,13 @@ class AuditRunRequest(BaseModel):
     file_ids: list[int] | None = None
 
 
+class GSTRecoRunRequest(BaseModel):
+    gstr_file_id: int | None = None
+    books_file_id: int | None = None
+    amount_tolerance: float = 2
+    date_tolerance_days: int = 7
+
+
 class ReviewPatch(BaseModel):
     status: str | None = None
     comment: str | None = None

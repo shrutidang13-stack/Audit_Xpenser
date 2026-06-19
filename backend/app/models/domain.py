@@ -415,3 +415,50 @@ class AuditException(Base, TimestampMixin):
     status: Mapped[str] = mapped_column(String(40), default="Pending", index=True)
     ca_remarks: Mapped[str | None] = mapped_column(Text)
     audit_run = relationship("AuditRun", back_populates="exceptions")
+
+
+class GSTRecoRun(Base, TimestampMixin):
+    __tablename__ = "gst_reco_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    gstr_file_id: Mapped[int | None] = mapped_column(ForeignKey("uploaded_files.id"), index=True)
+    books_file_id: Mapped[int | None] = mapped_column(ForeignKey("uploaded_files.id"), index=True)
+    run_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    total_gstr_invoices: Mapped[int] = mapped_column(Integer, default=0)
+    total_books_invoices: Mapped[int] = mapped_column(Integer, default=0)
+    matched_count: Mapped[int] = mapped_column(Integer, default=0)
+    only_in_gstr_count: Mapped[int] = mapped_column(Integer, default=0)
+    only_in_books_count: Mapped[int] = mapped_column(Integer, default=0)
+    amount_mismatch_count: Mapped[int] = mapped_column(Integer, default=0)
+    duplicate_invoices_count: Mapped[int] = mapped_column(Integer, default=0)
+    itc_as_per_gstr: Mapped[float] = mapped_column(Float, default=0)
+    itc_as_per_books: Mapped[float] = mapped_column(Float, default=0)
+    net_itc_difference: Mapped[float] = mapped_column(Float, default=0)
+    amount_tolerance: Mapped[float] = mapped_column(Float, default=2)
+    date_tolerance_days: Mapped[int] = mapped_column(Integer, default=7)
+    results = relationship("GSTRecoResult", back_populates="run", cascade="all, delete-orphan")
+
+
+class GSTRecoResult(Base, TimestampMixin):
+    __tablename__ = "gst_reco_results"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    run_id: Mapped[int] = mapped_column(ForeignKey("gst_reco_runs.id"), index=True)
+    gstr_source_ref: Mapped[str | None] = mapped_column(String(120))
+    books_source_ref: Mapped[str | None] = mapped_column(String(120))
+    vendor_name: Mapped[str | None] = mapped_column(String(255), index=True)
+    gstin: Mapped[str | None] = mapped_column(String(20), index=True)
+    invoice_number: Mapped[str | None] = mapped_column(String(120), index=True)
+    gstr_invoice_date: Mapped[date | None] = mapped_column(Date)
+    books_invoice_date: Mapped[date | None] = mapped_column(Date)
+    gstr_taxable_value: Mapped[float | None] = mapped_column(Float)
+    books_taxable_value: Mapped[float | None] = mapped_column(Float)
+    gstr_tax_amount: Mapped[float | None] = mapped_column(Float)
+    books_tax_amount: Mapped[float | None] = mapped_column(Float)
+    difference_amount: Mapped[float] = mapped_column(Float, default=0)
+    status: Mapped[str] = mapped_column(String(60), index=True)
+    risk_level: Mapped[str] = mapped_column(String(40), default="Low", index=True)
+    suggested_action: Mapped[str] = mapped_column(Text)
+    run = relationship("GSTRecoRun", back_populates="results")

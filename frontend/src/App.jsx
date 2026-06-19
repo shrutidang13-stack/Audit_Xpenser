@@ -6,6 +6,7 @@ import { ClientQueries } from "./pages/ClientQueries";
 import { Clients } from "./pages/Clients";
 import { Dashboard } from "./pages/Dashboard";
 import { Exceptions } from "./pages/Exceptions";
+import { GSTReco } from "./pages/GSTReco";
 import { Mapping } from "./pages/Mapping";
 import { Processing } from "./pages/Processing";
 import { ReferenceLibrary } from "./pages/ReferenceLibrary";
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       { path: "client/:clientId/audit-worksheet", element: <AuditWorksheet /> },
       { path: "client/:clientId/audited-data", element: <AuditWorksheet /> },
       { path: "client/:clientId/audit-dashboard", element: <AuditDashboard /> },
+      { path: "client/:clientId/gst-reco", element: <GSTReco /> },
       { path: "client/:clientId/rules", element: <ReferenceLibrary /> },
       { path: "client/:clientId/reference-library", element: <ReferenceLibrary /> },
       { path: "client/:clientId/exceptions", element: <Exceptions /> },
