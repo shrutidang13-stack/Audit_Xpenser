@@ -14,16 +14,15 @@ class EmailAttachment:
 
 def send_email(to_email: str, subject: str, body: str, attachments: list[EmailAttachment] | None = None) -> dict:
     settings = get_settings()
-    if not settings.smtp_host or not settings.smtp_username or not settings.smtp_password:
+    if not settings.smtp_host or not settings.smtp_port or not settings.smtp_username or not settings.smtp_password or not settings.smtp_from_email:
         return {
             "sent": False,
             "setup_required": True,
-            "message": "SMTP is not configured. Add SMTP_HOST, SMTP_USERNAME, SMTP_PASSWORD and SMTP_FROM_EMAIL in backend/.env.",
+            "message": "SMTP is not configured. Please set SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_FROM_EMAIL in backend/.env",
         }
 
-    from_email = settings.smtp_from_email or settings.smtp_username
     message = EmailMessage()
-    message["From"] = from_email
+    message["From"] = settings.smtp_from_email
     message["To"] = to_email
     message["Subject"] = subject
     message.set_content(body)
@@ -43,4 +42,4 @@ def send_email(to_email: str, subject: str, body: str, attachments: list[EmailAt
         smtp.login(settings.smtp_username, settings.smtp_password)
         smtp.send_message(message)
 
-    return {"sent": True, "setup_required": False, "message": f"Mail sent to {to_email} from {from_email}."}
+    return {"sent": True, "setup_required": False, "message": f"Query letter sent successfully to {to_email}"}
