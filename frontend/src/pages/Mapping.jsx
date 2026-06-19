@@ -133,7 +133,8 @@ function Metric({ label, value }) {
 
 function labelForCategory(category) {
   const labels = {
-    "expense-ledger": "Day Book",
+    "expense-ledger": "Day Book / Tally",
+    "trial-balance": "Tally Book",
     bills: "Bills",
     "tds-data": "TDS Challan",
     "gst-data": "GSTR-2B",

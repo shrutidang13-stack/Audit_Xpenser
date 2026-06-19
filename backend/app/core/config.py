@@ -13,6 +13,12 @@ class Settings(BaseSettings):
     upload_retention_files: int = 900
     audit_retention_runs: int = 10
     log_retention_bytes: int = 2_097_152
+    smtp_host: str = ""
+    smtp_port: int = 587
+    smtp_username: str = ""
+    smtp_password: str = ""
+    smtp_from_email: str = ""
+    smtp_use_tls: bool = True
 
     class Config:
         env_file = ".env"
