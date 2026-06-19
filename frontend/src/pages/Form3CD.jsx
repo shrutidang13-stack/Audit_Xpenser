@@ -72,11 +72,22 @@ const moneyFields = new Set([
 export function Form3CD() {
   const { clientId } = useParams();
   const [report, setReport] = useState(null);
+  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [activeTab, setActiveTab] = useState("disclosures");
 
   useEffect(() => {
-    api.get(`/api/dashboard/${clientId}/form3cd-report`).then(({ data }) => setReport(data));
+    let mounted = true;
+    setError("");
+    setReport(null);
+    api.get(`/api/dashboard/${clientId}/form3cd-report`)
+      .then(({ data }) => {
+        if (mounted) setReport(data);
+      })
+      .catch((err) => {
+        if (mounted) setError(err.response?.data?.detail || err.message || "Could not load Form 3CD report");
+      });
+    return () => { mounted = false; };
   }, [clientId]);
 
   const filteredDisclosures = useMemo(() => filterRows(report?.disclosures || [], query), [report, query]);
@@ -91,7 +102,11 @@ export function Form3CD() {
   }, [report]);
 
   if (!report) {
-    return <div className="rounded border border-ink/10 bg-white p-6 text-sm font-semibold text-ink/60">Loading Form 3CD report...</div>;
+    return (
+      <div className={`rounded border p-6 text-sm font-semibold ${error ? "border-coral/20 bg-coral/10 text-coral" : "border-ink/10 bg-white text-ink/60"}`}>
+        {error || "Loading Form 3CD report..."}
+      </div>
+    );
   }
 
   return (
