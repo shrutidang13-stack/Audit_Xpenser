@@ -179,6 +179,19 @@ class Bill(Base, TimestampMixin):
     pan: Mapped[str | None] = mapped_column(String(20))
     extracted_text: Mapped[str | None] = mapped_column(Text)
     readable: Mapped[bool] = mapped_column(Boolean, default=True)
+    extracted_vendor_name: Mapped[str | None] = mapped_column(String(255), index=True)
+    extracted_vendor_gstin: Mapped[str | None] = mapped_column(String(20), index=True)
+    extracted_invoice_number: Mapped[str | None] = mapped_column(String(120), index=True)
+    extracted_invoice_date: Mapped[date | None] = mapped_column(Date)
+    extracted_taxable_value: Mapped[float | None] = mapped_column(Float)
+    extracted_cgst: Mapped[float | None] = mapped_column(Float)
+    extracted_sgst: Mapped[float | None] = mapped_column(Float)
+    extracted_igst: Mapped[float | None] = mapped_column(Float)
+    extracted_total_gst: Mapped[float | None] = mapped_column(Float)
+    extracted_total_amount: Mapped[float | None] = mapped_column(Float)
+    extraction_confidence: Mapped[float] = mapped_column(Float, default=0)
+    extraction_status: Mapped[str] = mapped_column(String(80), default="Pending")
+    ocr_review_required: Mapped[bool] = mapped_column(Boolean, default=False)
 
 
 class BillMatch(Base, TimestampMixin):
@@ -301,6 +314,70 @@ class DuplicateBillFlag(Base, TimestampMixin):
     bill_id: Mapped[int | None] = mapped_column(ForeignKey("bills.id"))
     issue: Mapped[str] = mapped_column(Text)
     severity: Mapped[str] = mapped_column(String(40))
+    duplicate_group_key: Mapped[str | None] = mapped_column(String(255), index=True)
+    duplicate_reason: Mapped[str | None] = mapped_column(Text)
+    duplicate_score: Mapped[float] = mapped_column(Float, default=0)
+
+
+class BillMatchingRun(Base, TimestampMixin):
+    __tablename__ = "bill_matching_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    status: Mapped[str] = mapped_column(String(40), default="completed")
+    total_bills: Mapped[int] = mapped_column(Integer, default=0)
+    total_book_entries: Mapped[int] = mapped_column(Integer, default=0)
+    matched_count: Mapped[int] = mapped_column(Integer, default=0)
+    probable_match_count: Mapped[int] = mapped_column(Integer, default=0)
+    only_bill_count: Mapped[int] = mapped_column(Integer, default=0)
+    only_books_count: Mapped[int] = mapped_column(Integer, default=0)
+    mismatch_count: Mapped[int] = mapped_column(Integer, default=0)
+    duplicate_count: Mapped[int] = mapped_column(Integer, default=0)
+    high_risk_count: Mapped[int] = mapped_column(Integer, default=0)
+    started_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime)
+    results = relationship("BillMatchingResult", back_populates="run", cascade="all, delete-orphan")
+
+
+class BillMatchingResult(Base, TimestampMixin):
+    __tablename__ = "bill_matching_results"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    run_id: Mapped[int] = mapped_column(ForeignKey("bill_matching_runs.id"), index=True)
+    bill_id: Mapped[int | None] = mapped_column(ForeignKey("bills.id"), index=True)
+    expense_transaction_id: Mapped[int | None] = mapped_column(ForeignKey("expense_transactions.id"), index=True)
+    gst_record_id: Mapped[int | None] = mapped_column(ForeignKey("gst_records.id"), index=True)
+    fixed_asset_id: Mapped[int | None] = mapped_column(ForeignKey("fixed_assets.id"), index=True)
+    match_status: Mapped[str] = mapped_column(String(60), index=True)
+    match_score: Mapped[float] = mapped_column(Float, default=0)
+    risk_level: Mapped[str] = mapped_column(String(40), default="Low", index=True)
+    bill_file_name: Mapped[str | None] = mapped_column(String(255))
+    bill_vendor_name: Mapped[str | None] = mapped_column(String(255))
+    book_vendor_name: Mapped[str | None] = mapped_column(String(255))
+    bill_gstin: Mapped[str | None] = mapped_column(String(20))
+    book_gstin: Mapped[str | None] = mapped_column(String(20))
+    bill_invoice_number: Mapped[str | None] = mapped_column(String(120), index=True)
+    book_invoice_number: Mapped[str | None] = mapped_column(String(120), index=True)
+    bill_invoice_date: Mapped[date | None] = mapped_column(Date)
+    book_invoice_date: Mapped[date | None] = mapped_column(Date)
+    bill_taxable_value: Mapped[float | None] = mapped_column(Float)
+    book_taxable_value: Mapped[float | None] = mapped_column(Float)
+    bill_gst_amount: Mapped[float | None] = mapped_column(Float)
+    book_gst_amount: Mapped[float | None] = mapped_column(Float)
+    bill_total_amount: Mapped[float | None] = mapped_column(Float)
+    book_total_amount: Mapped[float | None] = mapped_column(Float)
+    matched_ledger: Mapped[str | None] = mapped_column(String(255))
+    gl_date: Mapped[date | None] = mapped_column(Date)
+    gl_voucher_number: Mapped[str | None] = mapped_column(String(120))
+    purchase_register_invoice_number: Mapped[str | None] = mapped_column(String(120))
+    purchase_register_amount: Mapped[float | None] = mapped_column(Float)
+    amount_difference: Mapped[float] = mapped_column(Float, default=0)
+    gst_difference: Mapped[float] = mapped_column(Float, default=0)
+    mismatch_reason: Mapped[str | None] = mapped_column(Text)
+    suggested_action: Mapped[str | None] = mapped_column(Text)
+    ca_review_status: Mapped[str] = mapped_column(String(40), default="Pending")
+    run = relationship("BillMatchingRun", back_populates="results")
 
 
 class Form3CDImpact(Base, TimestampMixin):
@@ -415,6 +492,114 @@ class AuditException(Base, TimestampMixin):
     status: Mapped[str] = mapped_column(String(40), default="Pending", index=True)
     ca_remarks: Mapped[str | None] = mapped_column(Text)
     audit_run = relationship("AuditRun", back_populates="exceptions")
+
+
+class FixedAssetClass(Base, TimestampMixin):
+    __tablename__ = "fixed_asset_classes"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(160), unique=True, index=True)
+    schedule_ii_category: Mapped[str | None] = mapped_column(String(255))
+    default_useful_life_years: Mapped[float] = mapped_column(Float, default=10)
+    default_residual_percent: Mapped[float] = mapped_column(Float, default=5)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+
+class FixedAsset(Base, TimestampMixin):
+    __tablename__ = "fixed_assets"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    asset_code: Mapped[str | None] = mapped_column(String(120), index=True)
+    asset_description: Mapped[str | None] = mapped_column(String(500))
+    asset_class_id: Mapped[int | None] = mapped_column(ForeignKey("fixed_asset_classes.id"), index=True)
+    location: Mapped[str | None] = mapped_column(String(255))
+    vendor_name: Mapped[str | None] = mapped_column(String(255), index=True)
+    vendor_gstin: Mapped[str | None] = mapped_column(String(20), index=True)
+    invoice_number: Mapped[str | None] = mapped_column(String(120), index=True)
+    invoice_date: Mapped[date | None] = mapped_column(Date)
+    purchase_date: Mapped[date | None] = mapped_column(Date)
+    put_to_use_date: Mapped[date | None] = mapped_column(Date)
+    original_cost: Mapped[float] = mapped_column(Float, default=0)
+    opening_gross_block: Mapped[float] = mapped_column(Float, default=0)
+    opening_accumulated_depreciation: Mapped[float] = mapped_column(Float, default=0)
+    opening_wdv: Mapped[float] = mapped_column(Float, default=0)
+    residual_value: Mapped[float] = mapped_column(Float, default=0)
+    residual_percent: Mapped[float] = mapped_column(Float, default=5)
+    useful_life_schedule_ii: Mapped[float] = mapped_column(Float, default=10)
+    useful_life_used: Mapped[float] = mapped_column(Float, default=10)
+    depreciation_method: Mapped[str] = mapped_column(String(20), default="SLM")
+    component_accounting_flag: Mapped[bool] = mapped_column(Boolean, default=False)
+    different_useful_life_reason: Mapped[str | None] = mapped_column(Text)
+    source_file_id: Mapped[int | None] = mapped_column(ForeignKey("uploaded_files.id"), index=True)
+    asset_class = relationship("FixedAssetClass")
+
+
+class FixedAssetMovement(Base, TimestampMixin):
+    __tablename__ = "fixed_asset_movements"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    fixed_asset_id: Mapped[int | None] = mapped_column(ForeignKey("fixed_assets.id"), index=True)
+    movement_type: Mapped[str] = mapped_column(String(40), index=True)
+    movement_date: Mapped[date | None] = mapped_column(Date)
+    amount: Mapped[float] = mapped_column(Float, default=0)
+    invoice_number: Mapped[str | None] = mapped_column(String(120), index=True)
+    vendor_name: Mapped[str | None] = mapped_column(String(255))
+    remarks: Mapped[str | None] = mapped_column(Text)
+
+
+class FixedAssetRun(Base, TimestampMixin):
+    __tablename__ = "fixed_asset_runs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    financial_year: Mapped[str] = mapped_column(String(20), default="2025-26", index=True)
+    status: Mapped[str] = mapped_column(String(40), default="completed")
+    total_assets: Mapped[int] = mapped_column(Integer, default=0)
+    total_additions: Mapped[float] = mapped_column(Float, default=0)
+    total_disposals: Mapped[float] = mapped_column(Float, default=0)
+    total_depreciation: Mapped[float] = mapped_column(Float, default=0)
+    total_closing_wdv: Mapped[float] = mapped_column(Float, default=0)
+    review_alerts_count: Mapped[int] = mapped_column(Integer, default=0)
+    started_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime)
+
+
+class FixedAssetDepreciation(Base, TimestampMixin):
+    __tablename__ = "fixed_asset_depreciations"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    fixed_asset_id: Mapped[int] = mapped_column(ForeignKey("fixed_assets.id"), index=True)
+    financial_year: Mapped[str] = mapped_column(String(20), index=True)
+    opening_gross_block: Mapped[float] = mapped_column(Float, default=0)
+    additions: Mapped[float] = mapped_column(Float, default=0)
+    disposals: Mapped[float] = mapped_column(Float, default=0)
+    closing_gross_block: Mapped[float] = mapped_column(Float, default=0)
+    opening_accumulated_depreciation: Mapped[float] = mapped_column(Float, default=0)
+    depreciation_for_year: Mapped[float] = mapped_column(Float, default=0)
+    accumulated_depreciation_on_disposal: Mapped[float] = mapped_column(Float, default=0)
+    closing_accumulated_depreciation: Mapped[float] = mapped_column(Float, default=0)
+    opening_wdv: Mapped[float] = mapped_column(Float, default=0)
+    closing_wdv: Mapped[float] = mapped_column(Float, default=0)
+    profit_loss_on_disposal: Mapped[float] = mapped_column(Float, default=0)
+    calculation_method: Mapped[str] = mapped_column(String(20), default="SLM")
+    calculation_notes: Mapped[str | None] = mapped_column(Text)
+    review_flag: Mapped[str | None] = mapped_column(String(120))
+
+
+class FixedAssetReviewAlert(Base, TimestampMixin):
+    __tablename__ = "fixed_asset_review_alerts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    client_id: Mapped[int] = mapped_column(ForeignKey("clients.id"), index=True)
+    fixed_asset_id: Mapped[int | None] = mapped_column(ForeignKey("fixed_assets.id"), index=True)
+    alert_type: Mapped[str] = mapped_column(String(120), index=True)
+    severity: Mapped[str] = mapped_column(String(40), default="Medium", index=True)
+    message: Mapped[str] = mapped_column(Text)
+    suggested_action: Mapped[str] = mapped_column(Text)
+    status: Mapped[str] = mapped_column(String(40), default="Open", index=True)
 
 
 class GSTRecoRun(Base, TimestampMixin):

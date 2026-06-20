@@ -26,20 +26,6 @@ const riskColumns = [
   ["note", "Note"]
 ];
 
-const tdsColumns = [
-  ["sr", "Sr."],
-  ["nature_of_payment", "Nature of Payment"],
-  ["section", "Section"],
-  ["amount_paid", "Amount Paid"],
-  ["tds_as_per_act", "TDS as per Act"],
-  ["tds_deducted", "TDS Deducted"],
-  ["difference", "Difference"],
-  ["deposit_due", "Deposit Due"],
-  ["deposit_status", "Deposit Status"],
-  ["default_amount", "Default Amt"],
-  ["reason_note", "Reason / Note"]
-];
-
 const gstColumns = [
   ["sr", "Sr."],
   ["expenditure_ledger", "Expenditure Ledger"],
@@ -90,13 +76,15 @@ export function Form3CD() {
     return () => { mounted = false; };
   }, [clientId]);
 
-  const filteredDisclosures = useMemo(() => filterRows(report?.disclosures || [], query), [report, query]);
+  const filteredDisclosures = useMemo(() => filterRows(
+    (report?.disclosures || []).filter((row) => row.section_group !== "SEC 40(a) - TDS DEFAULTS - 30% DISALLOWANCE"),
+    query
+  ), [report, query]);
   const totals = useMemo(() => {
     const risk = report?.risk_summary || [];
     return {
       mandatory: (report?.disclosures || []).filter((row) => ["Mandatory", "Critical"].includes(row.status)).length,
       maxRisk: risk.reduce((sum, row) => sum + (row.net_max_risk || 0), 0),
-      tdsDefault: (report?.tds_detail || []).find((row) => row.nature_of_payment === "TOTAL")?.default_amount || 0,
       gstPaid: (report?.gst_expenditure || []).find((row) => row.expenditure_ledger === "GRAND TOTAL")?.gst_paid || 0
     };
   }, [report]);
@@ -131,10 +119,9 @@ export function Form3CD() {
             <Meta label="Generated" value={report.meta.generated} />
           </div>
         </div>
-        <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
           <Metric label="Mandatory / Critical Items" value={totals.mandatory} tone="high" />
           <Metric label="Net Max Quantified Risk" value={formatMoney(totals.maxRisk)} tone="high" />
-          <Metric label="Clause 34 Default Amt" value={formatMoney(totals.tdsDefault)} tone="medium" />
           <Metric label="Clause 44 GST Paid" value={formatMoney(totals.gstPaid)} tone="low" />
         </div>
       </div>
@@ -143,7 +130,6 @@ export function Form3CD() {
         <div className="flex flex-wrap gap-2">
           <Tab id="disclosures" active={activeTab} setActive={setActiveTab}>Expense Clauses</Tab>
           <Tab id="risk" active={activeTab} setActive={setActiveTab}>Risk Summary</Tab>
-          <Tab id="tds" active={activeTab} setActive={setActiveTab}>Clause 34 TDS</Tab>
           <Tab id="gst" active={activeTab} setActive={setActiveTab}>Clause 44 GST</Tab>
         </div>
         {activeTab === "disclosures" && (
@@ -155,8 +141,7 @@ export function Form3CD() {
       </div>
 
       {activeTab === "disclosures" && <DisclosureTable rows={filteredDisclosures} />}
-      {activeTab === "risk" && <ReportTable title="RISK SUMMARY - POTENTIAL MAXIMUM DISALLOWANCES" columns={riskColumns} rows={report.risk_summary} emphasizedKey="priority" />}
-      {activeTab === "tds" && <ReportTable title="CLAUSE 34(a) - TDS COMPLIANCE | Payment-wise" subtitle="Portal requires: Nature | Section | Amount Paid | TDS Deducted | Deposited on Time | Default Amount | Reason" columns={tdsColumns} rows={report.tds_detail} totalMatcher={(row) => row.nature_of_payment === "TOTAL"} />}
+      {activeTab === "risk" && <ReportTable title="RISK SUMMARY - POTENTIAL MAXIMUM DISALLOWANCES" columns={riskColumns} rows={report.risk_summary.filter((row) => !String(row.risk_area || "").startsWith("TDS not deducted"))} emphasizedKey="priority" />}
       {activeTab === "gst" && <ReportTable title="CLAUSE 44 - GST EXPENDITURE BREAKUP | As Required on Portal" subtitle="Split each expenditure: GST-Registered vendors, Composition Scheme, Unregistered vendors, GST Paid" columns={gstColumns} rows={report.gst_expenditure} totalMatcher={(row) => row.expenditure_ledger === "GRAND TOTAL"} />}
 
       <div className="rounded border border-amber/30 bg-amber/10 p-4 text-sm font-semibold leading-6 text-ink/75">

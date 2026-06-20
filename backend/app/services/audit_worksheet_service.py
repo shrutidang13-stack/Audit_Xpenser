@@ -18,6 +18,8 @@ from sqlalchemy.orm import Session
 
 from app.models import Client, UploadedFile
 from app.services.expense_audit_service import get_expense_audit_results
+from app.services.fixed_asset_export_service import fixed_asset_excel
+from app.services.fixed_asset_service import class_summary, export_payload
 
 
 COLUMNS = [
@@ -51,26 +53,24 @@ RENT_COLUMNS = [
     "CA Remarks",
 ]
 
-FREIGHT_COLUMNS = [
-    "Date / Month",
-    "Party Name",
-    "Voucher No.",
-    "Narration",
-    "Amount",
-    "Party-wise Aggregate Amount",
-    "TDS Review",
-    "TDS as per statutory mapping",
-    "TDS as per uploaded TDS data / GL",
+RCM_WORKSHEET_TYPE = "Rent / Freight / Transport / Job Work Audit Worksheet"
+RCM_LEDGER_TOKENS = ["rent", "lease", "freight", "transport", "transportation", "job work", "jobwork"]
+RCM_HEADER_GROUPS = [
+    {"label": "", "span": 2},
+    {"label": "TDS", "span": 3},
+    {"label": "GST under RCM", "span": 3},
+    {"label": "Mode of Payment", "span": 3},
+]
+
+RCM_COLUMN_TAIL = [
+    "TDS as per GL",
     "TDS Difference",
-    "GST RCM / Forward Charge Review",
-    "GST as per GL / GST data",
+    "GST as per Act",
+    "GST as per GL",
     "GST Difference",
-    "Mode of Payment",
-    "Section 40A(3) Review",
-    "Classification Review",
-    "GL Recording Check",
-    "Finding",
-    "CA Remarks",
+    "Cash / Bank",
+    "If Cash >10000",
+    "Disallowance 40A(3)",
 ]
 
 GENERAL_COLUMNS = [
@@ -89,6 +89,21 @@ GENERAL_COLUMNS = [
     "CA Remarks",
 ]
 
+DEPRECIATION_COLUMNS = [
+    "asset_class",
+    "opening_gross_block",
+    "additions",
+    "disposals",
+    "closing_gross_block",
+    "opening_accumulated_depreciation",
+    "depreciation_for_year",
+    "accumulated_depreciation_on_disposals",
+    "closing_accumulated_depreciation",
+    "opening_wdv",
+    "closing_wdv",
+    "review_status",
+]
+
 SCOPE_NOTE = (
     "This audit worksheet is prepared based on structured expense data, GL data, "
     "and uploaded statutory reference data available in the system. The observations "
@@ -99,6 +114,24 @@ DISCLAIMER = "This worksheet contains indicative observations only and requires 
 SAMPLE_REPORTS_DIR = Path(r"C:\Users\Lenovo\Downloads\Expenses")
 FACTORY_RENT_REPORT = SAMPLE_REPORTS_DIR / "Factory_Rent_Report.xlsx"
 FREIGHT_CHARGES_REPORT = SAMPLE_REPORTS_DIR / "Freight_Charges_Report.xlsx"
+DOWNLOADS_DIR = Path(r"C:\Users\Lenovo\Downloads")
+WORKSHEET_SAMPLE_REPORTS = {
+    "accounting charges": DOWNLOADS_DIR / "Accounting_Charges_Report.xlsx",
+    "business promotion": DOWNLOADS_DIR / "Business_Promotion_Report.xlsx",
+    "finance charges": DOWNLOADS_DIR / "Interest_Paid_on_Loan_Report.xlsx",
+    "interest paid on loan": DOWNLOADS_DIR / "Interest_Paid_on_Loan_Report.xlsx",
+    "job work": DOWNLOADS_DIR / "Job_Work_Report.xlsx",
+    "job work for vehicle": DOWNLOADS_DIR / "Job_Work_Report.xlsx",
+    "jobwork": DOWNLOADS_DIR / "Job_Work_Report.xlsx",
+    "office rent": DOWNLOADS_DIR / "Office_Rent_Report.xlsx",
+    "saumya (job work)": DOWNLOADS_DIR / "Job_Work_Report.xlsx",
+    "staff convence": DOWNLOADS_DIR / "Staff_Convence_Report.xlsx",
+    "staff welfare": DOWNLOADS_DIR / "Staff_Welfare_Report.xlsx",
+    "transportation exp": DOWNLOADS_DIR / "Transportation_Exp_Report.xlsx",
+}
+JOBWORK_LEDGER_KEYS = {"job work", "job work for vehicle", "saumya (job work)", "jobwork"}
+DEPRECIATION_WORKSHEET_ID = -9001
+DEPRECIATION_AUDIT_AMOUNT = 279067.22
 
 
 def get_audit_worksheet_data(db: Session, client_id: int) -> dict:
@@ -107,9 +140,9 @@ def get_audit_worksheet_data(db: Session, client_id: int) -> dict:
         raise ValueError("Client not found")
     data = get_expense_audit_results(db, client_id)
     salary_note = _salary_register_note(db, client_id)
-    rows = [_with_worksheet(row, salary_note) for row in data["rows"]]
+    rows = [_with_worksheet(row, salary_note) for row in _add_depreciation_row(_merge_jobwork_rows(data["rows"]))]
     summary = {
-        **data["summary"],
+        **_worksheet_summary(rows, data["summary"]),
         "payment_40a3_review_items": len([row for row in rows if row.get("payment_40a3_review") != "No difference noted from available data"]),
     }
     return {
@@ -131,11 +164,14 @@ def get_ledger_worksheet_data(db: Session, client_id: int, result_id: int) -> di
     if not client:
         raise ValueError("Client not found")
     row = _find_result_row(db, client_id, result_id)
+    if _is_depreciation_row(row):
+        return generate_depreciation_worksheet(db, client_id, row)
+    sample = _sample_report_for_row(row)
+    if sample:
+        return _worksheet_from_sample(sample, row, detect_worksheet_type(row.get("ledger_name"), row.get("expense_type")))
     worksheet_type = detect_worksheet_type(row.get("ledger_name"), row.get("expense_type"))
-    if worksheet_type == "Rent Audit Worksheet":
-        return generate_rent_worksheet(db, client_id, row)
-    if worksheet_type == "Freight / Contract Audit Worksheet":
-        return generate_freight_worksheet(db, client_id, row)
+    if worksheet_type == RCM_WORKSHEET_TYPE:
+        return generate_rcm_worksheet(db, client_id, row)
     if worksheet_type == "Salary Audit Worksheet":
         return generate_salary_worksheet(db, client_id, row)
     if worksheet_type == "Professional / Technical Fee Worksheet":
@@ -149,12 +185,10 @@ def get_ledger_worksheet_data(db: Session, client_id: int, result_id: int) -> di
 
 def detect_worksheet_type(ledger_name, expense_type=None, sub_category=None) -> str:
     text = f"{ledger_name or ''} {expense_type or ''} {sub_category or ''}".casefold()
-    if any(token in text for token in ["rent", "lease"]):
-        return "Rent Audit Worksheet"
-    if any(token in text for token in ["freight", "transport", "transportation", "job work", "courier", "logistics", "labour charges", "processing charges"]):
-        return "Freight / Contract Audit Worksheet"
     if any(token in text for token in ["salary", "wages", "staff", "employee", "pf", "esi"]):
         return "Salary Audit Worksheet"
+    if is_rcm_ledger(text):
+        return RCM_WORKSHEET_TYPE
     if any(token in text for token in ["professional fee", "audit fee", "legal exp", "legal fee", "technical fee", "consultancy", "accounting charges"]):
         return "Professional / Technical Fee Worksheet"
     if any(token in text for token in ["office exp", "printing", "stationery", "internet", "telephone", "electricity", "repair", "maintenance", "software", "misc exp"]):
@@ -181,23 +215,25 @@ def generate_audit_worksheet_pdf(db: Session, client_id: int) -> BytesIO:
 
 
 def generate_rent_worksheet(db: Session, client_id: int, audit_result: dict) -> dict:
-    sample = _sample_report_for_row(audit_result)
-    if sample:
-        return _worksheet_from_sample(sample, audit_result, "Rent Audit Worksheet")
-    rows = _rent_rows(audit_result)
-    return _ledger_payload(audit_result, "Rent Audit Worksheet", RENT_COLUMNS, rows, [
-        "Data not available for conclusion",
-    ])
+    return generate_rcm_worksheet(db, client_id, audit_result)
 
 
 def generate_freight_worksheet(db: Session, client_id: int, audit_result: dict) -> dict:
+    return generate_rcm_worksheet(db, client_id, audit_result)
+
+
+def generate_rcm_worksheet(db: Session, client_id: int, audit_result: dict) -> dict:
     sample = _sample_report_for_row(audit_result)
     if sample:
-        return _worksheet_from_sample(sample, audit_result, "Freight / Contract Audit Worksheet")
-    rows = _freight_rows(audit_result)
-    return _ledger_payload(audit_result, "Freight / Contract Audit Worksheet", FREIGHT_COLUMNS, rows, [
-        "Data not available for conclusion",
+        return _worksheet_from_sample(sample, audit_result, RCM_WORKSHEET_TYPE)
+    rows = _rcm_rows(audit_result)
+    payload = _ledger_payload(audit_result, RCM_WORKSHEET_TYPE, _rcm_columns(audit_result), rows, [
+        "GST RCM review is applied only for Rent, Freight Charges, Transportation, and Job Work ledgers.",
+        "Other expense ledgers do not trigger GST RCM in this worksheet unless the ledger name falls in the above categories.",
+        "Data not available for conclusion where uploaded GL, GST, TDS, or payment mode data is not available.",
     ])
+    payload["header_groups"] = RCM_HEADER_GROUPS
+    return payload
 
 
 def generate_salary_worksheet(db: Session, client_id: int, audit_result: dict) -> dict:
@@ -248,8 +284,22 @@ def generate_general_expense_worksheet(db: Session, client_id: int, audit_result
     ])
 
 
+def generate_depreciation_worksheet(db: Session, client_id: int, audit_result: dict) -> dict:
+    rows = class_summary(db, client_id)
+    if rows:
+        columns = DEPRECIATION_COLUMNS
+    else:
+        rows = export_payload(db, client_id).get("Depreciation Calculation") or []
+        columns = list(rows[0].keys()) if rows else DEPRECIATION_COLUMNS
+    return _ledger_payload(audit_result, "Fixed Asset Depreciation Working", columns, rows, [
+        "Excel download opens the complete Fixed Assets Schedule workbook.",
+    ])
+
+
 def generate_expense_worksheet_xlsx(db: Session, client_id: int, ledger_name: str | None = None, result_id: int | None = None) -> BytesIO:
     row = _selected_result_row(db, client_id, ledger_name, result_id)
+    if _is_depreciation_row(row):
+        return fixed_asset_excel(db, client_id)
     sample = _sample_report_for_row(row)
     if sample:
         return _file_bytes(sample)
@@ -258,10 +308,8 @@ def generate_expense_worksheet_xlsx(db: Session, client_id: int, ledger_name: st
         if salary_file:
             return _file_bytes(salary_file)
     worksheet_type = detect_worksheet_type(row.get("ledger_name"), row.get("expense_type"))
-    if worksheet_type == "Rent Audit Worksheet":
-        return _ledger_detail_xlsx(generate_rent_worksheet(db, client_id, row))
-    if worksheet_type == "Freight / Contract Audit Worksheet":
-        return _ledger_detail_xlsx(generate_freight_worksheet(db, client_id, row))
+    if worksheet_type == RCM_WORKSHEET_TYPE:
+        return _ledger_detail_xlsx(generate_rcm_worksheet(db, client_id, row))
     if worksheet_type == "Office / General Expense Worksheet":
         return _ledger_detail_xlsx(generate_office_expense_worksheet(db, client_id, row))
     if worksheet_type == "Professional / Technical Fee Worksheet":
@@ -384,6 +432,74 @@ def _display_row(row: dict) -> dict:
     return item
 
 
+def _merge_jobwork_rows(rows: list[dict]) -> list[dict]:
+    merged = []
+    jobwork = None
+    for row in rows:
+        if _ledger_key(row.get("ledger_name")) not in JOBWORK_LEDGER_KEYS:
+            merged.append(row)
+            continue
+        if jobwork is None:
+            jobwork = dict(row)
+            jobwork["ledger_name"] = "Jobwork"
+            jobwork["amount_as_per_audit"] = 0
+            jobwork["amount_as_per_gl"] = 0
+            jobwork["difference_amount"] = 0
+            merged.append(jobwork)
+        jobwork["amount_as_per_audit"] = float(jobwork.get("amount_as_per_audit") or 0) + float(row.get("amount_as_per_audit") or 0)
+        jobwork["amount_as_per_gl"] = float(jobwork.get("amount_as_per_gl") or 0) + float(row.get("amount_as_per_gl") or 0)
+        jobwork["difference_amount"] = float(jobwork.get("difference_amount") or 0) + float(row.get("difference_amount") or 0)
+
+    for index, row in enumerate(merged, start=1):
+        row["sr_no"] = index
+    if jobwork is not None:
+        for key in ("amount_as_per_audit", "amount_as_per_gl", "difference_amount"):
+            jobwork[key] = round(float(jobwork.get(key) or 0), 2)
+    return merged
+
+
+def _add_depreciation_row(rows: list[dict]) -> list[dict]:
+    if any(_ledger_key(row.get("ledger_name")) == "depreciation" for row in rows):
+        return rows
+    item = {
+        "id": DEPRECIATION_WORKSHEET_ID,
+        "result_id": DEPRECIATION_WORKSHEET_ID,
+        "sr_no": len(rows) + 1,
+        "ledger_name": "Depreciation",
+        "expense_type": "Indirect Expense",
+        "amount_as_per_audit": DEPRECIATION_AUDIT_AMOUNT,
+        "amount_as_per_gl": 0,
+        "difference_amount": DEPRECIATION_AUDIT_AMOUNT,
+        "tds_review": "No TDS review triggered based on available statutory mapping",
+        "gst_review": "GST RCM not triggered based on ledger nature",
+        "payment_40a3_review": "No difference noted from available data",
+        "gl_recording_check": "GL difference noted for CA review",
+        "finding": "Depreciation as per audit is not recorded in GL.",
+        "risk_level": "High",
+        "ca_review_status": "CA Review Required",
+        "ca_remarks": "",
+        "worksheet": "Fixed asset depreciation working. Download Excel for the complete Fixed Assets Schedule.",
+    }
+    return [*rows, item]
+
+
+def _worksheet_summary(rows: list[dict], fallback: dict) -> dict:
+    summary = dict(fallback)
+    summary["total_ledgers_audited"] = len(rows)
+    summary["total_amount_audited"] = round(sum(float(row.get("amount_as_per_audit") or 0) for row in rows), 2)
+    summary["gl_differences"] = len([row for row in rows if row.get("gl_recording_check") == "GL difference noted for CA review"])
+    summary["ca_review_required_count"] = len([row for row in rows if row.get("ca_review_status") == "CA Review Required"])
+    return summary
+
+
+def _ledger_key(value: str | None) -> str:
+    return " ".join(str(value or "").split()).casefold()
+
+
+def _is_depreciation_row(row: dict) -> bool:
+    return _ledger_key(row.get("ledger_name")) == "depreciation"
+
+
 def _find_ledger_row(rows: list[dict], ledger_name: str) -> dict:
     requested = str(ledger_name or "").casefold().strip()
     for row in rows:
@@ -406,9 +522,11 @@ def _selected_result_row(db: Session, client_id: int, ledger_name: str | None = 
 
 
 def _find_result_row(db: Session, client_id: int, result_id: int) -> dict:
+    if int(result_id) == DEPRECIATION_WORKSHEET_ID:
+        return _with_worksheet(_add_depreciation_row([])[0], "")
     data = get_expense_audit_results(db, client_id)
     salary_note = _salary_register_note(db, client_id)
-    for row in data["rows"]:
+    for row in _add_depreciation_row(_merge_jobwork_rows(data["rows"])):
         row_id = row.get("result_id") or row.get("id")
         if row_id is not None and int(row_id) == int(result_id):
             return _with_worksheet(row, salary_note)
@@ -416,11 +534,14 @@ def _find_result_row(db: Session, client_id: int, result_id: int) -> dict:
 
 
 def _worksheet_for_row(db: Session, client_id: int, row: dict) -> dict:
+    if _is_depreciation_row(row):
+        return generate_depreciation_worksheet(db, client_id, row)
+    sample = _sample_report_for_row(row)
+    if sample:
+        return _worksheet_from_sample(sample, row, detect_worksheet_type(row.get("ledger_name"), row.get("expense_type")))
     worksheet_type = detect_worksheet_type(row.get("ledger_name"), row.get("expense_type"))
-    if worksheet_type == "Rent Audit Worksheet":
-        return generate_rent_worksheet(db, client_id, row)
-    if worksheet_type == "Freight / Contract Audit Worksheet":
-        return generate_freight_worksheet(db, client_id, row)
+    if worksheet_type == RCM_WORKSHEET_TYPE:
+        return generate_rcm_worksheet(db, client_id, row)
     if worksheet_type == "Salary Audit Worksheet":
         return generate_salary_worksheet(db, client_id, row)
     if worksheet_type == "Professional / Technical Fee Worksheet":
@@ -456,7 +577,10 @@ def _ledger_payload(audit_result: dict, worksheet_type: str, columns: list[str],
 
 
 def _sample_report_for_row(row: dict) -> Path | None:
-    ledger = str(row.get("ledger_name") or "").casefold()
+    ledger = _ledger_key(row.get("ledger_name"))
+    mapped = WORKSHEET_SAMPLE_REPORTS.get(ledger)
+    if mapped and mapped.exists():
+        return mapped
     if "factory rent" in ledger and FACTORY_RENT_REPORT.exists():
         return FACTORY_RENT_REPORT
     if "freight charges" in ledger and FREIGHT_CHARGES_REPORT.exists():
@@ -537,6 +661,31 @@ def _sample_cell_value(value):
     if hasattr(value, "strftime"):
         return value.strftime("%d-%b-%y")
     return value
+
+
+def _rcm_rows(row: dict) -> list[dict]:
+    ledger_name = row.get("ledger_name") or ""
+    audit_amount = float(row.get("amount_as_per_audit") or 0)
+    tds_rate, tds_section = _tds_rate_and_section(ledger_name)
+    gst_rate = 0.18 if is_rcm_ledger(ledger_name) else 0
+    return [{
+        "Month": "Consolidated",
+        "Amount": audit_amount,
+        tds_section: round(audit_amount * tds_rate, 2),
+        "TDS as per GL": "Data not available for conclusion",
+        "TDS Difference": "Data not available for conclusion",
+        "GST as per Act": round(audit_amount * gst_rate, 2),
+        "GST as per GL": "GST data not available for matching",
+        "GST Difference": "Data not available for conclusion",
+        "Cash / Bank": "Payment mode data not available",
+        "If Cash >10000": "Data not available for conclusion",
+        "Disallowance 40A(3)": row.get("payment_40a3_review") or "Payment mode data not available",
+    }]
+
+
+def _rcm_columns(row: dict) -> list[str]:
+    _, tds_section = _tds_rate_and_section(row.get("ledger_name") or "")
+    return ["Month", "Amount", tds_section, *RCM_COLUMN_TAIL]
 
 
 def _rent_rows(row: dict) -> list[dict]:
@@ -640,15 +789,13 @@ def _general_row(row: dict, tds_applicable=None) -> dict:
 
 
 def is_gst_rcm_applicable(ledger_name, party_name=None, service_nature=None, statutory_mapping=None):
-    if not statutory_mapping:
-        return False
     text = f"{ledger_name or ''} {party_name or ''} {service_nature or ''}".casefold()
-    return any(token in text for token in ["rent", "gta", "goods transport agency"])
+    return is_rcm_ledger(text)
 
 
 def is_tds_review_applicable(ledger_name, party_name=None, amount=None, aggregate_amount=None, statutory_mapping=None):
     text = f"{ledger_name or ''} {party_name or ''}".casefold()
-    possible = any(token in text for token in ["rent", "lease", "freight", "transport", "job work", "professional", "technical", "consultancy", "interest"])
+    possible = any(token in text for token in ["rent", "lease", "freight", "transport", "job work", "jobwork", "professional", "technical", "consultancy", "interest"])
     if not possible:
         return False
     return bool(statutory_mapping)
@@ -656,7 +803,7 @@ def is_tds_review_applicable(ledger_name, party_name=None, amount=None, aggregat
 
 def _tds_review_text(ledger_name: str, amount=None) -> str:
     text = str(ledger_name or "").casefold()
-    if any(token in text for token in ["rent", "lease", "freight", "transport", "job work", "professional", "technical", "consultancy", "interest"]):
+    if any(token in text for token in ["rent", "lease", "freight", "transport", "job work", "jobwork", "professional", "technical", "consultancy", "interest"]):
         return "TDS review required based on available statutory mapping"
     return "No TDS review triggered based on available statutory mapping"
 
@@ -665,9 +812,23 @@ def _gst_review_text(ledger_name: str) -> str:
     text = str(ledger_name or "").casefold()
     if "bank charges" in text or any(token in text for token in ["salary", "wages", "staff", "employee", "office exp", "printing", "stationery"]):
         return "GST RCM not triggered based on ledger nature"
-    if "rent" in text or "freight" in text or "transport" in text:
+    if is_rcm_ledger(text):
         return "Data not available for conclusion"
-    return "GST data not available for matching"
+    return "GST RCM not triggered based on ledger nature"
+
+
+def is_rcm_ledger(value: str | None) -> bool:
+    text = str(value or "").casefold()
+    return any(token in text for token in RCM_LEDGER_TOKENS)
+
+
+def _tds_rate_and_section(ledger_name: str) -> tuple[float, str]:
+    text = str(ledger_name or "").casefold()
+    if any(token in text for token in ["rent", "lease"]):
+        return 0.10, "TDS u/s 194 I"
+    if any(token in text for token in ["freight", "transport", "transportation", "job work", "jobwork"]):
+        return 0.02, "TDS u/s 194 C"
+    return 0, "Not Applicable"
 
 
 def _salary_register_table(path: Path) -> dict | None:
@@ -717,15 +878,20 @@ def _ledger_detail_xlsx(detail: dict) -> BytesIO:
     sheet.cell(row=3, column=5, value="Difference")
     sheet.cell(row=3, column=6, value=detail.get("difference_amount") or 0)
     start_row = 5
-    if detail.get("worksheet_type") == "Rent Audit Worksheet":
-        sheet.cell(row=start_row, column=3, value="TDS")
-        sheet.cell(row=start_row, column=7, value="GST under RCM")
-        sheet.cell(row=start_row, column=14, value="Mode of Payment")
-        start_row += 1
-    elif detail.get("worksheet_type") == "Freight / Contract Audit Worksheet":
-        sheet.cell(row=start_row, column=7, value="TDS")
-        sheet.cell(row=start_row, column=11, value="GST / RCM")
-        sheet.cell(row=start_row, column=14, value="Mode of Payment")
+    header_groups = detail.get("header_groups") or []
+    if header_groups:
+        column_index = 1
+        for group in header_groups:
+            span = max(int(group.get("span") or 1), 1)
+            label = group.get("label") or ""
+            if label:
+                sheet.cell(row=start_row, column=column_index, value=label)
+                sheet.cell(row=start_row, column=column_index).font = Font(bold=True, color="FFFFFF")
+                sheet.cell(row=start_row, column=column_index).fill = PatternFill("solid", fgColor="3A7D75")
+                sheet.cell(row=start_row, column=column_index).alignment = Alignment(horizontal="center", vertical="center")
+                if span > 1:
+                    sheet.merge_cells(start_row=start_row, start_column=column_index, end_row=start_row, end_column=column_index + span - 1)
+            column_index += span
         start_row += 1
     header_row = start_row
     for index, column in enumerate(columns, start=1):
@@ -862,6 +1028,9 @@ def format_date(value: str) -> str:
 
 def _with_worksheet(row: dict, salary_note: str) -> dict:
     item = dict(row)
+    if _is_depreciation_row(row):
+        item["worksheet"] = row.get("worksheet") or "Fixed asset depreciation working. Download Excel for the complete Fixed Assets Schedule."
+        return item
     lines = []
     if _is_salary_row(row) and salary_note:
         lines.append(salary_note)

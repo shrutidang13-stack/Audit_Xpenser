@@ -31,6 +31,26 @@ def ensure_reporting_schema() -> None:
         "debit_amount": "FLOAT",
         "credit_amount": "FLOAT",
     })
+    _ensure_columns(table_names, "bills", {
+        "extracted_vendor_name": "VARCHAR(255)",
+        "extracted_vendor_gstin": "VARCHAR(20)",
+        "extracted_invoice_number": "VARCHAR(120)",
+        "extracted_invoice_date": "DATE",
+        "extracted_taxable_value": "FLOAT",
+        "extracted_cgst": "FLOAT",
+        "extracted_sgst": "FLOAT",
+        "extracted_igst": "FLOAT",
+        "extracted_total_gst": "FLOAT",
+        "extracted_total_amount": "FLOAT",
+        "extraction_confidence": "FLOAT DEFAULT 0",
+        "extraction_status": "VARCHAR(80) DEFAULT 'Pending'",
+        "ocr_review_required": "BOOLEAN DEFAULT 0",
+    })
+    _ensure_columns(table_names, "duplicate_bill_flags", {
+        "duplicate_group_key": "VARCHAR(255)",
+        "duplicate_reason": "TEXT",
+        "duplicate_score": "FLOAT DEFAULT 0",
+    })
 
 
 def _ensure_columns(table_names: set[str], table_name: str, additions: dict[str, str]) -> None:

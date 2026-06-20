@@ -16,9 +16,7 @@ DIRECT_EXPENSE_ROWS = [
     ("A. Occupancy Cost", "Factory Rent", 440000.00),
     ("B. Inward Freight & Logistics", "Freight Charges", 2276987.00),
     ("B. Inward Freight & Logistics", "Transportation Exp", 220199.00),
-    ("C. Job Work & Processing", "Job Work", 500000.00),
-    ("C. Job Work & Processing", "Job Work for Vehicle", 3800.00),
-    ("C. Job Work & Processing", "SAUMYA (JOB WORK)", 858590.00),
+    ("C. Job Work & Processing", "Jobwork", 1362390.00),
 ]
 
 INDIRECT_EXPENSE_ROWS = [
@@ -59,6 +57,12 @@ STRUCTURED_EXPENSE_ROWS = [
     *(dict(expense_type=INDIRECT_EXPENSE, sub_category=sub_category, ledger_name=ledger_name, amount=amount) for sub_category, ledger_name, amount in INDIRECT_EXPENSE_ROWS),
 ]
 
+LEDGER_ALIASES = {
+    "job work": "jobwork",
+    "job work for vehicle": "jobwork",
+    "saumya (job work)": "jobwork",
+}
+
 
 def generate_processing_data(db: Session, client_id: int, import_session_id_or_file_ids: list[int] | int | None = None) -> dict:
     file_ids = _normalise_file_ids(import_session_id_or_file_ids)
@@ -93,9 +97,11 @@ def generate_processing_data(db: Session, client_id: int, import_session_id_or_f
 
 
 def classify_expense_ledger(ledger_name: str | None, mapped_category: str | None = None) -> str:
-    key = _ledger_key(f"{ledger_name or ''} {mapped_category or ''}")
+    key = _canonical_ledger_key(ledger_name)
+    category_key = _ledger_key(mapped_category)
     for item in STRUCTURED_EXPENSE_ROWS:
-        if _ledger_key(item["ledger_name"]) in key:
+        item_key = _canonical_ledger_key(item["ledger_name"])
+        if item_key == key or item_key in category_key:
             return item["expense_type"]
     return CA_REVIEW_REQUIRED
 
@@ -105,7 +111,7 @@ def aggregate_expense_schedule(mapped_rows: list[ExpenseTransaction]) -> list[di
         return _canonical_schedule()
 
     grouped = _group_uploaded_ledgers(mapped_rows)
-    canonical_by_key = {_ledger_key(item["ledger_name"]): item for item in STRUCTURED_EXPENSE_ROWS}
+    canonical_by_key = {_canonical_ledger_key(item["ledger_name"]): item for item in STRUCTURED_EXPENSE_ROWS}
     schedule = []
     for index, (ledger_key, item) in enumerate(sorted(grouped.items(), key=lambda entry: entry[1]["ledger_name"].casefold()), start=1):
         canonical = canonical_by_key.get(ledger_key)
@@ -163,13 +169,13 @@ def _group_uploaded_ledgers(mapped_rows: list) -> dict[str, dict]:
     grouped: dict[str, dict] = {}
     for row in mapped_rows:
         ledger_name = normalise_ledger_name(getattr(row, "ledger_name", None))
-        ledger_key = _ledger_key(ledger_name)
+        ledger_key = _canonical_ledger_key(ledger_name)
         amount = abs(float(getattr(row, "amount", None) or 0))
         if not ledger_key or not amount or _ignore_uploaded_ledger(ledger_key):
             continue
         if ledger_key not in grouped:
             grouped[ledger_key] = {
-                "ledger_name": ledger_name,
+                "ledger_name": _canonical_ledger_name(ledger_name),
                 "amount": 0,
                 "source_file_ids": set(),
                 "source": "Uploaded Data / Tally / Excel",
@@ -318,6 +324,17 @@ def _source_file_ids_by_ledger(rows: list[ExpenseTransaction]) -> dict[str, set[
 
 def _ledger_key(value: str | None) -> str:
     return normalise_ledger_name(value).casefold()
+
+
+def _canonical_ledger_key(value: str | None) -> str:
+    key = _ledger_key(value)
+    return LEDGER_ALIASES.get(key, key)
+
+
+def _canonical_ledger_name(value: str | None) -> str:
+    key = _canonical_ledger_key(value)
+    canonical = next((item["ledger_name"] for item in STRUCTURED_EXPENSE_ROWS if _ledger_key(item["ledger_name"]) == key), None)
+    return canonical or normalise_ledger_name(value)
 
 
 def _normalise_file_ids(value: list[int] | int | None) -> list[int] | None:

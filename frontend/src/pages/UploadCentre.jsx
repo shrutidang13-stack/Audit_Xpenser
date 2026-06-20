@@ -1,4 +1,4 @@
-import { Upload } from "lucide-react";
+import { RefreshCcw, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Badge } from "../components/Badge";
@@ -6,11 +6,10 @@ import { DataTable } from "../components/DataTable";
 import { api } from "../lib/api";
 
 const categories = [
-  ["expense-ledger", "Day Book / Tally Day Book"],
   ["trial-balance", "Tally Book / Trial Balance"],
   ["bills", "Bills / Invoices / Vouchers"],
-  ["tds-data", "TDS Challan"],
   ["gst-data", "GST Data / GSTR-2B"],
+  ["fixed-assets-opening", "Opening Fixed Assets"],
   ["supporting-documents", "Supporting Documents"]
 ];
 const MAX_FILES_PER_BATCH = 500;
@@ -61,6 +60,15 @@ export function UploadCentre() {
   }, [activeClientId]);
   useEffect(() => { load(); }, [activeClientId]);
 
+  const clearDisplay = () => {
+    setFiles([]);
+    setMessage("");
+    window.localStorage.removeItem("auditxpenser.latestUploadFileIds");
+    window.localStorage.removeItem("auditxpenser.latestUploadSessionId");
+    window.localStorage.removeItem("auditxpenser.latestUploadCategory");
+    window.localStorage.removeItem("auditxpenser.latestUploadClientId");
+  };
+
   const upload = async (category, selectedFiles) => {
     const selected = Array.from(selectedFiles || []);
     const batch = selected.slice(0, MAX_FILES_PER_BATCH);
@@ -107,7 +115,13 @@ export function UploadCentre() {
 
   return (
     <section className="space-y-5">
-      <PageTitle title="Upload Client Data" />
+      <div className="flex flex-col gap-3 border-b border-ink/10 pb-4 sm:flex-row sm:items-end sm:justify-between">
+        <PageTitle title="Upload Client Data" compact />
+        <button onClick={clearDisplay} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-ink px-3 text-sm font-bold text-white">
+          <RefreshCcw size={16} />
+          Refresh display
+        </button>
+      </div>
       <div className="rounded border border-teal/20 bg-white px-4 py-3 text-sm font-semibold text-ink/75">
         Active client: {activeClientId ? <span className="text-teal">{activeClientName || `Client #${activeClientId}`}</span> : <span className="text-coral">Loading seeded client workspace</span>}
       </div>
@@ -151,11 +165,11 @@ function sanitizeClientId(value) {
   return String(value);
 }
 
-export function PageTitle({ title, subtitle }) {
+export function PageTitle({ title, subtitle, compact = false }) {
   return (
-    <header className="border-b border-ink/10 pb-4">
+    <header className={compact ? "" : "border-b border-ink/10 pb-4"}>
       <h1 className="text-2xl font-black tracking-normal">{title}</h1>
-      <p className="mt-1 max-w-3xl text-sm leading-6 text-ink/70">{subtitle}</p>
+      {subtitle && <p className="mt-1 max-w-3xl text-sm leading-6 text-ink/70">{subtitle}</p>}
     </header>
   );
 }

@@ -4,7 +4,7 @@ import pandas as pd
 from docx import Document
 from sqlalchemy.orm import Session
 
-from app.models import Client, ClientQuery, Form3CDImpact, RiskScore, StatutoryAlert, WorkingPaper
+from app.models import BillMatchingResult, Client, ClientQuery, FixedAssetDepreciation, FixedAssetReviewAlert, Form3CDImpact, RiskScore, StatutoryAlert, WorkingPaper
 from app.services.gst_reco_service import export_rows
 
 
@@ -42,6 +42,10 @@ def working_paper_docx(db: Session, client_id: int) -> BytesIO:
         doc.add_heading(heading, level=2)
         if paper and heading in {"Objective", "Scope", "Procedures performed", "Conclusion placeholder"}:
             doc.add_paragraph(paper.content)
+        elif heading == "Bill matching summary":
+            _add_bill_matching_summary(doc, db, client_id)
+        elif heading == "Form 3CD potential impact":
+            _add_module_review_summary(doc, db, client_id)
         elif heading == "Client queries generated":
             for query in queries:
                 doc.add_paragraph(f"{query.query_number}: {query.suggested_wording}", style="List Bullet")
@@ -51,6 +55,28 @@ def working_paper_docx(db: Session, client_id: int) -> BytesIO:
     doc.save(output)
     output.seek(0)
     return output
+
+
+def _add_bill_matching_summary(doc: Document, db: Session, client_id: int) -> None:
+    rows = db.query(BillMatchingResult).filter(BillMatchingResult.client_id == client_id).all()
+    if not rows:
+        doc.add_paragraph("No bill matching run data available. CA Review Required.")
+        return
+    matched = sum(1 for row in rows if row.match_status == "matched")
+    high = sum(1 for row in rows if row.risk_level == "High")
+    doc.add_paragraph(f"Bill matching results reviewed: {len(rows)}. Matched: {matched}. High-risk / unmatched or mismatched items: {high}.")
+    for row in rows[:20]:
+        if row.risk_level in {"High", "Medium"}:
+            doc.add_paragraph(f"{row.match_status}: {row.bill_vendor_name or row.book_vendor_name or 'Vendor not captured'} | {row.bill_invoice_number or row.book_invoice_number or '-'} | {row.suggested_action or 'CA review required.'}", style="List Bullet")
+
+
+def _add_module_review_summary(doc: Document, db: Session, client_id: int) -> None:
+    depreciation = db.query(FixedAssetDepreciation).filter(FixedAssetDepreciation.client_id == client_id).all()
+    alerts = db.query(FixedAssetReviewAlert).filter(FixedAssetReviewAlert.client_id == client_id).all()
+    doc.add_paragraph(f"Fixed asset depreciation summary: current year depreciation Rs. {sum(row.depreciation_for_year or 0 for row in depreciation):,.2f}; closing WDV Rs. {sum(row.closing_wdv or 0 for row in depreciation):,.2f}.")
+    doc.add_paragraph(f"Fixed asset review alerts: {len(alerts)}. Language is indicative and subject to CA verification.")
+    bill_reviews = db.query(BillMatchingResult).filter(BillMatchingResult.client_id == client_id, BillMatchingResult.match_status.in_(["only_in_bill", "only_in_books", "amount_mismatch", "gst_mismatch", "capital_review"])).count()
+    doc.add_paragraph(f"Bill matching potential Form 3CD / expense evidence review items: {bill_reviews}. Possible impact only; final reporting requires CA verification.")
 
 
 def _excel(rows: list[dict], sheet_name: str) -> BytesIO:

@@ -1,14 +1,15 @@
-import { BookOpen, ClipboardCheck, ClipboardList, FileText, FolderUp, History, LayoutDashboard, ReceiptText, Scale, Users } from "lucide-react";
+import { BookOpen, ClipboardCheck, ClipboardList, FileSearch, FileText, FolderUp, History, Landmark, LayoutDashboard, ReceiptText, Scale } from "lucide-react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 
 const navItems = [
   ["Upload Centre", "/", FolderUp],
-  ["Clients", "/clients", Users],
   ["Mapping", "/mapping", ClipboardList],
   ["Data", "/processing", Scale],
   ["Audit Worksheet", "/audit-worksheet", ClipboardCheck],
   ["Audit Dashboard", "/audit-dashboard", LayoutDashboard],
   ["GST Reco", "/gst-reco", ReceiptText],
+  ["Fixed Asset Schedule", "/fixed-assets", Landmark],
+  ["Bill Matching", "/bill-matching", FileSearch],
   ["Rules", "/rules", BookOpen],
   ["Form 3CD", "/form3cd", ClipboardList],
   ["Client Queries", "/queries", FileText],
@@ -29,7 +30,7 @@ export function Layout() {
         </div>
         <nav className="h-[calc(100vh-82px)] overflow-y-auto p-3">
           {navItems.map(([label, path, Icon]) => {
-            const isGlobal = path === "/" || path === "/clients";
+            const isGlobal = path === "/";
             const to = isGlobal ? path : `${prefix}${path}`;
             const disabled = !isGlobal && !activeClientId;
             return (

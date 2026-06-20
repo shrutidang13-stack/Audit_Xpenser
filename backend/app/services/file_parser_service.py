@@ -40,7 +40,9 @@ def parse_file(path: Path, category: str) -> dict:
             frame = pd.read_csv(path)
             result.update(_frame_result(frame, category))
         elif ext in {".xlsx", ".xls"}:
-            if category == "trial-balance":
+            if category.startswith("fixed-assets-"):
+                frame = parse_structured_workbook(path, category)
+            elif category == "trial-balance":
                 frame = _parse_tally_group_summary_workbook(path)
             else:
                 frame = pd.read_excel(path)
@@ -95,6 +97,49 @@ def _parse_tally_group_summary_workbook(path: Path) -> pd.DataFrame:
                 "Expense Type": clean_text(sheet_name),
             })
     return pd.DataFrame(rows, columns=["Ledger Name", "Debit", "Credit", "Expense Type"])
+
+
+def parse_structured_workbook(path: Path, category: str) -> pd.DataFrame:
+    sheets = pd.read_excel(path, sheet_name=None, header=None)
+    best_frame = None
+    best_score = -1
+    for _, frame in sheets.items():
+        frame = frame.fillna("")
+        for row_index in range(min(len(frame.index), 30)):
+            labels = [clean_text(value) for value in frame.iloc[row_index].tolist()]
+            score = _header_score(labels, category)
+            if score > best_score:
+                best_score = score
+                best_frame = _frame_from_header(frame, row_index)
+    if best_frame is not None and best_score >= 2:
+        return best_frame
+    first_sheet = next(iter(sheets.values()))
+    return pd.DataFrame(first_sheet).fillna("")
+
+
+def _header_score(labels: list[str], category: str) -> int:
+    text = " ".join(labels).casefold()
+    expected = {
+        "fixed-assets-opening": ["asset", "classification", "original cost", "wdv", "depreciation", "residual", "useful life"],
+        "fixed-assets-additions": ["asset", "vendor", "invoice", "purchase", "amount", "capitalisation"],
+        "fixed-assets-disposals": ["asset", "disposal", "sale", "mode"],
+    }
+    return sum(1 for token in expected.get(category, expected["fixed-assets-opening"]) if token in text)
+
+
+def _frame_from_header(frame: pd.DataFrame, row_index: int) -> pd.DataFrame:
+    headers = []
+    used = {}
+    for position, value in enumerate(frame.iloc[row_index].tolist()):
+        label = clean_text(value) or f"Column {position + 1}"
+        count = used.get(label, 0)
+        used[label] = count + 1
+        headers.append(label if count == 0 else f"{label} {count + 1}")
+    data = frame.iloc[row_index + 1 :].copy()
+    data.columns = headers
+    data = data.fillna("")
+    data = data.loc[~data.apply(lambda row: all(clean_text(value) == "" for value in row.tolist()), axis=1)]
+    return data.reset_index(drop=True)
 
 
 def _ignore_tally_group_summary_row(ledger_name, debit, credit) -> bool:

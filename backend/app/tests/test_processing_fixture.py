@@ -5,9 +5,7 @@ EXPECTED_DIRECT_LEDGERS = {
     "Factory Rent",
     "Freight Charges",
     "Transportation Exp",
-    "Job Work",
-    "Job Work for Vehicle",
-    "SAUMYA (JOB WORK)",
+    "Jobwork",
 }
 
 EXPECTED_INDIRECT_LEDGERS = {
@@ -57,7 +55,7 @@ def test_structured_processing_schedule_matches_reference_workbook():
     indirect_ledgers = {row["ledger_name"] for row in schedule["indirect_expenses"]}
     assert direct_ledgers == EXPECTED_DIRECT_LEDGERS
     assert indirect_ledgers == EXPECTED_INDIRECT_LEDGERS
-    assert len(schedule["direct_expenses"]) == 6
+    assert len(schedule["direct_expenses"]) == 4
     assert len(schedule["indirect_expenses"]) == 30
 
 

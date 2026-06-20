@@ -2,10 +2,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { AuditDashboard } from "./pages/AuditDashboard";
 import { AuditWorksheet } from "./pages/AuditWorksheet";
+import { BillMatching } from "./pages/BillMatching";
 import { ClientQueries } from "./pages/ClientQueries";
-import { Clients } from "./pages/Clients";
 import { Dashboard } from "./pages/Dashboard";
 import { Exceptions } from "./pages/Exceptions";
+import { FixedAssets } from "./pages/FixedAssets";
 import { Form3CD } from "./pages/Form3CD";
 import { GSTReco } from "./pages/GSTReco";
 import { Mapping } from "./pages/Mapping";
@@ -22,7 +23,6 @@ const router = createBrowserRouter(
       element: <Layout />,
       children: [
         { index: true, element: <UploadCentre /> },
-        { path: "clients", element: <Clients /> },
         { path: "client/:clientId/upload", element: <UploadCentre /> },
         { path: "client/:clientId/mapping", element: <Mapping /> },
         { path: "client/:clientId/processing", element: <Processing /> },
@@ -30,11 +30,12 @@ const router = createBrowserRouter(
         { path: "client/:clientId/audited-data", element: <AuditWorksheet /> },
         { path: "client/:clientId/audit-dashboard", element: <AuditDashboard /> },
         { path: "client/:clientId/gst-reco", element: <GSTReco /> },
+        { path: "client/:clientId/fixed-assets", element: <FixedAssets /> },
+        { path: "client/:clientId/bill-matching", element: <BillMatching /> },
         { path: "client/:clientId/rules", element: <ReferenceLibrary /> },
         { path: "client/:clientId/reference-library", element: <ReferenceLibrary /> },
         { path: "client/:clientId/exceptions", element: <Exceptions /> },
         { path: "client/:clientId/dashboard", element: <Dashboard /> },
-        { path: "client/:clientId/bill-matching", element: <TablePage type="bill-matches" /> },
         { path: "client/:clientId/high-risk", element: <TablePage type="high-risk-expenses" /> },
         { path: "client/:clientId/statutory-alerts", element: <TablePage type="statutory-alerts" /> },
         { path: "client/:clientId/vendor-risks", element: <TablePage type="vendor-risks" /> },

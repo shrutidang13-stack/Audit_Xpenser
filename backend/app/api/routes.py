@@ -10,12 +10,16 @@ from app.models import (
     AuditTrail,
     Bill,
     BillMatch,
+    BillMatchingResult,
     CapitalReview,
     Client,
     ClientQuery,
     ColumnMapping,
     ExpenseTransaction,
     Form3CDImpact,
+    FixedAsset,
+    FixedAssetDepreciation,
+    FixedAssetReviewAlert,
     ProcessingExpense,
     ReferenceDocument,
     RiskScore,
@@ -38,6 +42,8 @@ from app.services.audit_worksheet_service import (
 from app.services.column_mapping_service import suggest_mapping
 from app.services.export_service import client_queries_excel, exception_report_excel, gst_reco_excel, working_paper_docx
 from app.services.expense_audit_service import get_expense_audit_results, run_expense_audit
+from app.services.fixed_asset_service import import_fixed_asset_upload
+from app.services.fixed_asset_export_service import fixed_asset_excel
 from app.services.file_parser_service import parse_file
 from app.services.form3cd_report_service import get_form3cd_report
 from app.services.processing_service import generate_processing_data, get_processing_schedule
@@ -54,6 +60,7 @@ from app.services.utils import from_json, parse_date, to_json
 
 
 router = APIRouter(prefix="/api")
+PRESERVED_BILL_MATCHING_EXPORT = Path(__file__).resolve().parents[2] / "export_templates" / "bill-matching.xlsx"
 DEFAULT_CLIENT_NAME = "Nxtmobility Energy Private Limited"
 DEFAULT_CLIENT_PAN = "AAHCN9637N"
 DEFAULT_CLIENT_GSTIN = "09AAHCN9637N1ZK"
@@ -62,6 +69,7 @@ DEFAULT_CLIENT_FY = "2025-26"
 
 UPLOAD_CATEGORIES = {
     "expense-ledger",
+    "purchase-register",
     "vendor-master",
     "bills",
     "tds-data",
@@ -69,6 +77,10 @@ UPLOAD_CATEGORIES = {
     "bank-data",
     "trial-balance",
     "supporting-documents",
+    "fixed-assets-opening",
+    "fixed-assets-additions",
+    "fixed-assets-disposals",
+    "fixed-assets-ledger",
 }
 
 
@@ -132,6 +144,8 @@ def upload_file(
     if replace_existing:
         _clear_uploaded_category(db, client_id, category)
     uploaded = store_upload(db, client_id, category, file, upload_session_id=upload_session_id)
+    if category in {"fixed-assets-opening", "fixed-assets-additions", "fixed-assets-disposals"}:
+        import_fixed_asset_upload(db, client_id, uploaded)
     return _file(uploaded)
 
 
@@ -378,6 +392,12 @@ def dashboard_summary(client_id: int, db: Session = Depends(get_db)):
     files = db.query(func.count(UploadedFile.id)).filter(UploadedFile.client_id == client_id).scalar() or 0
     levels = db.query(RiskScore.level, func.count(RiskScore.id)).filter(RiskScore.client_id == client_id).group_by(RiskScore.level).all()
     categories = db.query(StatutoryAlert.alert_type, func.count(StatutoryAlert.id)).filter(StatutoryAlert.client_id == client_id).group_by(StatutoryAlert.alert_type).all()
+    fixed_asset_assets = db.query(func.count(FixedAsset.id)).filter(FixedAsset.client_id == client_id).scalar() or 0
+    fixed_asset_additions = db.query(func.coalesce(func.sum(FixedAssetDepreciation.additions), 0)).filter(FixedAssetDepreciation.client_id == client_id).scalar() or 0
+    fixed_asset_depreciation = db.query(func.coalesce(func.sum(FixedAssetDepreciation.depreciation_for_year), 0)).filter(FixedAssetDepreciation.client_id == client_id).scalar() or 0
+    fixed_asset_closing_wdv = db.query(func.coalesce(func.sum(FixedAssetDepreciation.closing_wdv), 0)).filter(FixedAssetDepreciation.client_id == client_id).scalar() or 0
+    fixed_asset_alerts = db.query(func.count(FixedAssetReviewAlert.id)).filter(FixedAssetReviewAlert.client_id == client_id).scalar() or 0
+    bill_results = db.query(BillMatchingResult).filter(BillMatchingResult.client_id == client_id)
     return {
         "total_expenses": total_expenses,
         "total_amount": total_amount,
@@ -387,6 +407,21 @@ def dashboard_summary(client_id: int, db: Session = Depends(get_db)):
         "files_uploaded": files,
         "risk_levels": [{"name": level or "Unscored", "value": count} for level, count in levels],
         "alert_mix": [{"name": alert_type, "value": count} for alert_type, count in categories],
+        "fixed_assets": {
+            "total_assets": fixed_asset_assets,
+            "additions_during_year": round(fixed_asset_additions or 0, 2),
+            "depreciation_for_year": round(fixed_asset_depreciation or 0, 2),
+            "closing_wdv": round(fixed_asset_closing_wdv or 0, 2),
+            "review_alerts": fixed_asset_alerts,
+        },
+        "bill_matching": {
+            "bills_uploaded": db.query(func.count(Bill.id)).filter(Bill.client_id == client_id).scalar() or 0,
+            "bills_matched": bill_results.filter(BillMatchingResult.match_status == "matched").count(),
+            "bills_missing_in_books": bill_results.filter(BillMatchingResult.match_status == "only_in_bill").count(),
+            "book_entries_without_bills": bill_results.filter(BillMatchingResult.match_status == "only_in_books").count(),
+            "duplicate_bills": bill_results.filter(BillMatchingResult.match_status == "duplicate_bill").count(),
+            "high_risk_bill_exceptions": bill_results.filter(BillMatchingResult.risk_level == "High").count(),
+        },
     }
 
 
@@ -485,6 +520,23 @@ def export_exceptions(client_id: int, db: Session = Depends(get_db)):
 def export_gst_reco(client_id: int, db: Session = Depends(get_db)):
     output = gst_reco_excel(db, client_id)
     return StreamingResponse(output, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=gst-reco.xlsx"})
+
+
+@router.get("/export/{client_id}/fixed-assets")
+def export_fixed_assets(client_id: int, db: Session = Depends(get_db)):
+    output = fixed_asset_excel(db, client_id)
+    return StreamingResponse(output, media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", headers={"Content-Disposition": "attachment; filename=fixed-assets.xlsx"})
+
+
+@router.get("/export/{client_id}/bill-matching")
+def export_bill_matching(client_id: int):
+    if not PRESERVED_BILL_MATCHING_EXPORT.exists():
+        raise HTTPException(status_code=404, detail="Bill matching export file is not available")
+    return FileResponse(
+        PRESERVED_BILL_MATCHING_EXPORT,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        filename="bill-matching.xlsx",
+    )
 
 
 @router.get("/export/{client_id}/working-paper")

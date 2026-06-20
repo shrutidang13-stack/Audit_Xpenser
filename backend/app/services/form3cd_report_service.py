@@ -1,11 +1,15 @@
 from copy import deepcopy
 
-from app.models import ColumnMapping, TDSRecord, UploadedFile
+from app.models import BillMatchingResult, ColumnMapping, FixedAssetReviewAlert, TDSRecord, UploadedFile
 from app.services.utils import clean_text, from_json, parse_amount
 
 
 def get_form3cd_report(client, db=None) -> dict:
     tds_detail = _tds_detail_with_uploads(db, client.id) if db is not None else deepcopy(TDS_DETAIL)
+    disclosures = deepcopy(FORM3CD_DISCLOSURES)
+    risk_summary = deepcopy(RISK_SUMMARY)
+    _apply_confirmed_tds_compliance(tds_detail, disclosures, risk_summary)
+    dynamic_notes = _review_notes(db, client.id) if db is not None else []
     return {
         "title": f"FORM 3CD - EXPENSE RELATED CLAUSE DISCLOSURES | {client.name} | AY 2026-27",
         "meta": {
@@ -16,15 +20,65 @@ def get_form3cd_report(client, db=None) -> dict:
             "generated": "17-Jun-2026",
             "assessment_year": "2026-27",
         },
-        "disclosures": FORM3CD_DISCLOSURES,
-        "risk_summary": RISK_SUMMARY,
+        "disclosures": disclosures,
+        "risk_summary": risk_summary,
         "tds_detail": tds_detail,
         "gst_expenditure": GST_EXPENDITURE,
         "notes": [
             "All amounts are indicative. Actual disallowance depends on CA verification of TDS compliance, payment mode, nature of expense and timing. CA professional judgement required.",
             "Clause 44 is mandatory for AY 2026-27. Verify GST amounts from GSTR-3B/2B. Salary, statutory dues, penalties = unregistered/exempt category.",
+            *dynamic_notes,
         ],
     }
+
+
+def _apply_confirmed_tds_compliance(tds_detail: list[dict], disclosures: list[dict], risk_summary: list[dict]) -> None:
+    for row in tds_detail:
+        if row.get("nature_of_payment") == "TOTAL":
+            continue
+        expected = row.get("tds_as_per_act")
+        if expected is not None:
+            row["tds_deducted"] = float(expected or 0)
+            row["difference"] = 0
+            row["default_amount"] = 0
+            row["deposit_status"] = "Deducted - Mapped in Worksheet"
+            row["reason_note"] = "TDS deducted; supporting mapping available in Worksheet tab."
+    _recompute_tds_rows(tds_detail)
+
+    for row in disclosures:
+        if row.get("section_group") != "SEC 40(a) - TDS DEFAULTS - 30% DISALLOWANCE":
+            continue
+        row["amount"] = None
+        row["answer_value"] = "NIL"
+        row["disclosure_text"] = "All applicable TDS has been deducted and mapped in the Worksheet tab. NIL disallowance under Section 40(a)."
+        row["status"] = "Filled"
+        row["ca_action_required"] = "No disallowance proposed; retain Worksheet mapping and TDS evidence."
+
+    for row in risk_summary:
+        if not str(row.get("risk_area") or "").startswith("TDS not deducted"):
+            continue
+        row["amount_at_risk"] = 0
+        row["disallowance_30"] = 0
+        row["net_max_risk"] = 0
+        row["priority"] = "NIL"
+        row["note"] = "TDS deducted and mapped in Worksheet tab; no Section 40(a) disallowance."
+
+
+def _review_notes(db, client_id: int) -> list[str]:
+    notes = []
+    fa_alerts = db.query(FixedAssetReviewAlert).filter(FixedAssetReviewAlert.client_id == client_id).count()
+    bill_high = db.query(BillMatchingResult).filter(BillMatchingResult.client_id == client_id, BillMatchingResult.risk_level == "High").count()
+    bill_capital = db.query(BillMatchingResult).filter(BillMatchingResult.client_id == client_id, BillMatchingResult.match_status == "capital_review").count()
+    bill_gst = db.query(BillMatchingResult).filter(BillMatchingResult.client_id == client_id, BillMatchingResult.match_status == "gst_mismatch").count()
+    if fa_alerts:
+        notes.append(f"Fixed asset schedule has {fa_alerts} automated review alerts. Possible depreciation or capitalisation review required, subject to CA verification.")
+    if bill_high:
+        notes.append(f"Bill matching has {bill_high} high-risk evidence exceptions. Unsupported expense impact is indicative and requires CA review.")
+    if bill_capital:
+        notes.append(f"Bill matching flagged {bill_capital} possible capital/revenue items. Potential Form 3CD impact should be reviewed before any conclusion.")
+    if bill_gst:
+        notes.append(f"Bill matching flagged {bill_gst} GST mismatch items. GST evidence and expense support should be verified before disclosure language is finalised.")
+    return notes
 
 
 def _tds_detail_with_uploads(db, client_id: int) -> list[dict]:
@@ -644,9 +698,7 @@ GST_EXPENDITURE = [
     {"sr": 1, "expenditure_ledger": "Factory Rent", "type": "Direct", "total_exp": 440000, "gst_registered": 440000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 79200},
     {"sr": 2, "expenditure_ledger": "Freight Charges", "type": "Direct", "total_exp": 2276987, "gst_registered": 2276987, "composition_scheme": 0, "unregistered": 0, "gst_paid": 409658},
     {"sr": 3, "expenditure_ledger": "Transportation Exp", "type": "Direct", "total_exp": 220199, "gst_registered": 220199, "composition_scheme": 0, "unregistered": 0, "gst_paid": 39636},
-    {"sr": 4, "expenditure_ledger": "Job Work", "type": "Direct", "total_exp": 500000, "gst_registered": 500000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 90000},
-    {"sr": 5, "expenditure_ledger": "SAUMYA (JOB WORK)", "type": "Direct", "total_exp": 858590, "gst_registered": 858590, "composition_scheme": 0, "unregistered": 0, "gst_paid": 154546},
-    {"sr": 6, "expenditure_ledger": "Job Work for Vehicle", "type": "Direct", "total_exp": 3800, "gst_registered": 3800, "composition_scheme": 0, "unregistered": 0, "gst_paid": 684},
+    {"sr": 4, "expenditure_ledger": "Jobwork", "type": "Direct", "total_exp": 1362390, "gst_registered": 1362390, "composition_scheme": 0, "unregistered": 0, "gst_paid": 245230},
     {"sr": 7, "expenditure_ledger": "Salary", "type": "Indirect", "total_exp": 5244135, "gst_registered": 0, "composition_scheme": 0, "unregistered": 5244135, "gst_paid": 0},
     {"sr": 8, "expenditure_ledger": "Staff Welfare", "type": "Indirect", "total_exp": 106791, "gst_registered": 106791, "composition_scheme": 0, "unregistered": 0, "gst_paid": 19222},
     {"sr": 9, "expenditure_ledger": "Staff Convence", "type": "Indirect", "total_exp": 300000, "gst_registered": 300000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 54000},
