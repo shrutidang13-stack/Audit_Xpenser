@@ -1,0 +1,284 @@
+﻿{
+    "dateCreated":  "2026-05-01T10:06:23Z",
+    "dateModified":  "2026-05-01T10:06:23Z",
+    "description":  "102520000000165897 2026-04-25 1 Short title, extent and commencement. Content INCOME-TAX ACT, 2025 [30 OF 2025]* [AS AMENDED BY FINANCE ACT, 2026] An Act to consolidate and amend the law relating...",
+    "embedded":  {
+                     "actions":  {
+
+                                 },
+                     "availableLanguages":  [
+                                                "en-US",
+                                                "hi-IN"
+                                            ],
+                     "contentFields":  [
+                                           {
+                                               "contentFieldValue":  {
+
+                                                                     },
+                                               "dataType":  "string",
+                                               "inputControl":  "select",
+                                               "label":  "Locale",
+                                               "name":  "locale",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+
+                                                                     },
+                                               "dataType":  "string",
+                                               "inputControl":  "select",
+                                               "label":  "CMS Type",
+                                               "name":  "sectionCmsType",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  "102520000000165897"
+                                                                     },
+                                               "dataType":  "string",
+                                               "inputControl":  "text",
+                                               "label":  "CMS ID",
+                                               "name":  "sectionCMSID",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  "2026-04-25T00:00:00Z"
+                                                                     },
+                                               "dataType":  "date",
+                                               "label":  "Date of Upload",
+                                               "name":  "uploadDate",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  "1"
+                                                                     },
+                                               "dataType":  "string",
+                                               "inputControl":  "text",
+                                               "label":  "Section Number",
+                                               "name":  "sectionNumber",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  "Short title, extent and commencement."
+                                                                     },
+                                               "dataType":  "string",
+                                               "inputControl":  "text",
+                                               "label":  "Section Title",
+                                               "name":  "sectionShortDescription",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  "Content",
+                                                                         "value":  "content"
+                                                                     },
+                                               "dataType":  "string",
+                                               "inputControl":  "radio",
+                                               "label":  "Content Type",
+                                               "name":  "selectType",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+
+                                                                     },
+                                               "dataType":  "document",
+                                               "label":  "Upload PDF",
+                                               "name":  "reportFile",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  "\u003c!DOCTYPE html\u003e\n\n\u003chtml lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\"\u003e\n\u003chead\u003e\n    \u003cmeta charset=\"utf-8\"\u003e\n    \u003ctitle\u003e\u003c/title\u003e\n    \u003c!-- Generated via Migration Utility May 2014 --\u003e\n    \u003cscript src=\"/_layouts/15/dit/js/cmsContents.js\" type=\"text/javascript\"\u003e\u003c/script\u003e\n    \u003clink rel=\"stylesheet\" type=\"text/css\" href=\"/_layouts/15/dit/styles/cmsStyles.css\"\u003e\n\u003c/head\u003e\n\u003cbody\u003e\u003cdiv\u003e\u003cdiv id=\"102520000000168001\"\u003e\u003cstyle type=\"text/css\"\u003e\n        @media screen {\n\n        .footprint\n        {\n        display:none;\n        font-family: Times New Roman;\n        font-size: 12pt;\n\n        }\n        body\n        {\n        font-family:Times New Roman;\n        }\n        .list\n        {\n        border: 0px solid #000000 !important;\n        }\n        }\n        @media print {\n\n        .footprint\n        {\n        display:block;\n        padding-right:20px;\n        font-family: Times New Roman;\n        font-size: 12pt;\n        color: #000000;\n\n        }\n        a\n        {\n        color:#000000;\n        text-decoration:none;\n        }\n        }\n\n\n\n      \u003c/style\u003e\u003cp style=\"font-size:14pt;font-family:Arial;text-align:center;text-transform:uppercase;margin-bottom:2em;\"\u003e\u003cb\u003e\u003c/b\u003e\u003c/p\u003e\u003cdiv\u003e\u003cp style=\"text-align:center; font-size:12pt; margin-bottom:4pt; margin-top:0pt;font-family:Times New Roman;\"\u003e\u003cb\u003eINCOME-TAX ACT, 2025\u003c/b\u003e\u003c/p\u003e\u003cp style=\"text-align:center; font-size:12pt; margin-bottom:4pt; margin-top:0pt;font-family:Times New Roman;\"\u003e\u003cb\u003e[30 OF 2025]\u003ca id=\"rfnstr1\" href=\"javascript:ShowFootnote(\u0027fnstr1\u0027);\"\u003e*\u003c/a\u003e\u003c/b\u003e\u003c/p\u003e\u003cp style=\"text-align:center; font-size:12pt; margin-bottom:4pt; margin-top:0pt;font-family:Times New Roman;\"\u003e\u003cb\u003e[AS AMENDED BY FINANCE ACT, 2026]\u003c/b\u003e\u003c/p\u003e\u003cp style=\"text-align:center; font-size:12pt; margin-bottom:4pt; margin-top:0pt;font-family:Times New Roman;\"\u003e\u003ci\u003eAn Act to consolidate and amend the law relating to income-tax\u003c/i\u003e\u003c/p\u003e\u003cp style=\"font-family:Times New Roman; text-align:justify; margin:3pt; font-size:12pt; margin-bottom:4pt; margin-top:0pt;\"\u003eBE it enacted by Parliament in the Seventy-sixth Year of the Republic of India as follows:â\u003c/p\u003e\u003cp style=\"text-align:center; font-size:12pt; margin-bottom:4pt; margin-top:0pt;font-family:Times New Roman;\"\u003e\u003cb\u003e\u003ci\u003eCHAPTER I\u003c/i\u003e\u003c/b\u003e\u003c/p\u003e\u003cp style=\"text-align:center; font-size:12pt; margin-bottom:4pt; margin-top:0pt;font-family:Times New Roman;\"\u003e\u003cb\u003ePRELIMINARY\u003c/b\u003e\u003c/p\u003e\u003cp style=\"font-family:Times New Roman; text-align:justify; margin:3pt; font-size:12pt; margin-bottom:4pt; margin-top:0pt;\"\u003e\u003cb\u003eShort title, extent and commencement.\u003c/b\u003e\u003c/p\u003e\u003cp style=\"font-family:Times New Roman; text-align:justify; margin:3pt; font-size:12pt; margin-bottom:4pt; margin-top:0pt;\"\u003e\u003cb\u003e1.\u003c/b\u003e (1) This Act may be called the Income-tax Act, 2025.\u003c/p\u003e\u003cp style=\"font-family:Times New Roman; text-align:justify; margin:3pt; font-size:12pt; margin-bottom:4pt; margin-top:0pt;\"\u003e(2) It extends to the whole of India.\u003c/p\u003e\u003cp style=\"font-family:Times New Roman; text-align:justify; margin:3pt; font-size:12pt; margin-bottom:4pt; margin-top:0pt;\"\u003e(3) Save as otherwise provided in this Act, it shall come into force on the 1st April, 2026.\u003c/p\u003e\u003c/div\u003e\u003cdiv id=\"footnote\" style=\"font-family:Times New Roman;font-size:12pt;\"\u003e\u003chr class=\"footprint\" style=\"margin-top:1in; height:1.5pt; background-color:#000000; width:300px; color:#404040;\" align=\"left\"\u003e\u003c/div\u003e\u003cdiv class=\"footprint\" id=\"fnstr1\" style=\"display:none\"\u003e\u003cp style=\"font-size:16px; text-indent:-1.5em; margin-left:2em; text-align:justify; font-size:12pt; margin-bottom:0pt; margin-top:0pt;\"\u003e*Assented by the President of India on 21-8-2025.\u003c/p\u003e\u003c/div\u003e\u003c/div\u003e\u003c/div\u003e\u003c/body\u003e\n\u003c/html\u003e"
+                                                                     },
+                                               "dataType":  "string",
+                                               "label":  "Section Description",
+                                               "name":  "documentContent",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  ""
+                                                                     },
+                                               "dataType":  "string",
+                                               "label":  "Foot Note",
+                                               "name":  "footnotes",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  "CHAPTER I",
+                                                                         "value":  "CHAPTER I"
+                                                                     },
+                                               "dataType":  "string",
+                                               "inputControl":  "select",
+                                               "label":  "Chapter Number",
+                                               "name":  "chapterNumber",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  "CHAPTER I - PRELIMINARY",
+                                                                         "value":  "CHAPTER I - PRELIMINARY"
+                                                                     },
+                                               "dataType":  "string",
+                                               "inputControl":  "select",
+                                               "label":  "Chapter Title",
+                                               "name":  "chapterTitle",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  "true"
+                                                                     },
+                                               "dataType":  "boolean",
+                                               "inputControl":  "checkbox",
+                                               "label":  "Not Append Chapter keyword?",
+                                               "name":  "chapterBoolean",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           },
+                                           {
+                                               "contentFieldValue":  {
+                                                                         "data":  ""
+                                                                     },
+                                               "dataType":  "string",
+                                               "inputControl":  "text",
+                                               "label":  "Remarks",
+                                               "name":  "sectionRemarks",
+                                               "nestedContentFields":  [
+
+                                                                       ],
+                                               "repeatable":  false
+                                           }
+                                       ],
+                     "contentStructureId":  35412,
+                     "creator":  {
+                                     "additionalName":  "",
+                                     "contentType":  "UserAccount",
+                                     "familyName":  "Varshney",
+                                     "givenName":  "Sonal",
+                                     "id":  11813128,
+                                     "name":  "Sonal Varshney"
+                                 },
+                     "customFields":  [
+
+                                      ],
+                     "dateCreated":  "2026-05-01T10:06:23Z",
+                     "dateModified":  "2026-05-01T11:25:07Z",
+                     "datePublished":  "2026-05-01T10:06:00Z",
+                     "description":  "",
+                     "externalReferenceCode":  "fc49eaaf-6c02-2aa8-6c89-27a74f76b497",
+                     "friendlyUrlPath":  "section-1-269",
+                     "id":  17392825,
+                     "key":  "17392823",
+                     "keywords":  [
+
+                                  ],
+                     "neverExpire":  true,
+                     "numberOfComments":  0,
+                     "priority":  1.0,
+                     "relatedContents":  [
+
+                                         ],
+                     "renderedContents":  [
+                                              {
+                                                  "contentTemplateId":  "2377298",
+                                                  "contentTemplateName":  "Sections Details Page Template",
+                                                  "markedAsDefault":  true,
+                                                  "renderedContentURL":  "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/17392825/rendered-content/2377298"
+                                              },
+                                              {
+                                                  "contentTemplateId":  "12474690",
+                                                  "contentTemplateName":  "Sections Automation Test Template",
+                                                  "markedAsDefault":  false,
+                                                  "renderedContentURL":  "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/17392825/rendered-content/12474690"
+                                              },
+                                              {
+                                                  "contentTemplateId":  "SECTIONS_PARALLEL_VIEW_TEMPLATE",
+                                                  "contentTemplateName":  "SECTIONS_PARALLEL_VIEW_TEMPLATE",
+                                                  "markedAsDefault":  false,
+                                                  "renderedContentURL":  "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/17392825/rendered-content/SECTIONS_PARALLEL_VIEW_TEMPLATE"
+                                              },
+                                              {
+                                                  "contentTemplateId":  "sections-display-page",
+                                                  "contentTemplateName":  "Sections Display Page",
+                                                  "markedAsDefault":  true,
+                                                  "renderedContentURL":  "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/17392825/rendered-content-by-display-page/sections-display-page"
+                                              },
+                                              {
+                                                  "contentTemplateId":  "sections-display-page-(copy)",
+                                                  "contentTemplateName":  "Sections Display Page (Copy)",
+                                                  "markedAsDefault":  false,
+                                                  "renderedContentURL":  "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/17392825/rendered-content-by-display-page/sections-display-page-(copy)"
+                                              }
+                                          ],
+                     "siteId":  20117,
+                     "structuredContentFolderId":  17029193,
+                     "subscribed":  false,
+                     "taxonomyCategoryBriefs":  [
+                                                    {
+                                                        "taxonomyCategoryId":  8325573,
+                                                        "taxonomyCategoryName":  "Income-tax Act, 2025",
+                                                        "taxonomyCategoryReference":  {
+                                                                                          "externalReferenceCode":  "f39612f2-d70c-aa4d-faa0-5994386c6d9e",
+                                                                                          "siteKey":  "Guest"
+                                                                                      }
+                                                    },
+                                                    {
+                                                        "taxonomyCategoryId":  13590315,
+                                                        "taxonomyCategoryName":  "2026",
+                                                        "taxonomyCategoryReference":  {
+                                                                                          "externalReferenceCode":  "d18b2fe1-a17a-0ac0-faa6-746a4b53a387",
+                                                                                          "siteKey":  "Guest"
+                                                                                      }
+                                                    }
+                                                ],
+                     "title":  "Section 1",
+                     "uuid":  "fc49eaaf-6c02-2aa8-6c89-27a74f76b497"
+                 },
+    "itemURL":  "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/17392825",
+    "score":  0.0,
+    "title":  "Section 1"
+}

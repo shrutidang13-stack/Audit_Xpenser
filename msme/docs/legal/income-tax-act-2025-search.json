@@ -1,0 +1,3873 @@
+﻿{
+  "actions" : {
+    "updateBatch" : {
+      "method" : "PUT",
+      "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/batch"
+    },
+    "get" : {
+      "method" : "GET",
+      "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/sites/20117/structured-contents"
+    },
+    "deleteBatch" : {
+      "method" : "DELETE",
+      "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/batch"
+    }
+  },
+  "facets" : [ ],
+  "items" : [ {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152662/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152662/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152662"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Schedule Part A-Gen- General"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:center;\"><b>Schedule Part A-</b><b>Gen- General</b></p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\"><b>About the Schedule</b></p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">Part A â General in the Income Tax Return (ITR) forms collects basic and essential information about the taxpayer.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This includes personal and identification details such as name, PAN, Aadhaar number, address, contact information, etc. It also captures the taxpayer's status (individual, firm, company, etc.), filing status (original or revised return), and whether the return is being filed under any specific section, like <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000091137', '');\">section 119(2)(b)</a>, etc.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">Part A-GEN is the initial section in all Income Tax Return (ITR) forms 1 to 7.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">The specific fields in Part A-GEN vary depending on the ITR form and the type of assessee to whom it applies, ensuring the collection of all foundational information required by the Income Tax Department.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T07:35:26Z",
+    "dateModified" : "2026-01-03T09:36:20Z",
+    "datePublished" : "2025-12-05T07:35:00Z",
+    "description" : "",
+    "externalReferenceCode" : "4fe00a55-e141-c7ae-a0e7-d1f09a432dcc",
+    "friendlyUrlPath" : "schedule-part-a-gen-general",
+    "id" : 10152662,
+    "key" : "10152660",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 100.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152662/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152662/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 13650854,
+      "taxonomyCategoryName" : "Part A-Gen- General",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "949c178a-e07a-3acf-4b56-18b26e1a11c3",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Part A-Gen- General",
+    "uuid" : "1d4e5250-5f50-bcb6-5467-1549e2e5a015"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152721/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152721/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152721"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph\"><b>About the Schedule</b></p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph\">âSchedule â Audit Informationâ in the Income Tax Return (ITR) forms captures audit information. The Audit Information Schedule is a crucial disclosure section for taxpayers engaged in business or profession. It ensures compliance with statutory requirements under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090803', '');\">sections </a><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090803', '');\">44AA</a> and <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090804', '');\">44AB</a> of the Income-tax Act, 1961. Taxpayers are required to confirm whether they maintain books of account, whether they fall under mandatory audit provisions, and if so, under which specific clauses. If the audit is applicable, taxpayers are required to disclose details of the auditor, such as name, membership number, and firm registration number, along with the date of furnishing the audit report and acknowledgement number. The schedule also seeks several other information.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statute"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoListParagraphCxSpFirst\" style=\"text-align:justify;text-justify:inter-ideograph;\ntext-indent:-18.0pt;mso-list:l0 level1 lfo1\">â¢ <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090803', '');\">Section </a><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090803', '');\">44AA</a> and <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090804', '');\">Section </a><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090804', '');\">44AB</a> of Income-tax Act, 1961</p>\n\n<p class=\"MsoListParagraphCxSpLast\" style=\"text-align:justify;text-justify:inter-ideograph;\ntext-indent:-18.0pt;mso-list:l0 level1 lfo1\">â¢<a href=\"javascript:ShowMainContent('Rule', 'CMSID', '103120000000007146 ', '');\"> Rule 6F</a> and <a href=\"javascript:ShowMainContent('Rule', 'CMSID', '103120000000007148 ', '');\"> Rule 6G</a> of the Income-tax Rules, 1962</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph\"><b>Legal Provision</b></p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph\"><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090803', '');\">Section</a><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090803', '');\"> 44AA</a> requires an assessee to prepare and maintain books of account if their income, turnover, or gross receipts exceed the prescribed threshold. <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090804', '');\">Section</a><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090804', '');\"> 44AB</a> also mandates a tax audit of these books for assessees engaged in business or profession, where the turnover or gross receipts exceed the specified limit. This audit must be conducted by a Chartered Accountant in practice.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Applicable to:"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph\"><b>Applicable to:</b></p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph\">This schedule is applicable to ITR-3, ITR-5, ITR-6, and ITR-7.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T07:43:40Z",
+    "dateModified" : "2026-01-14T11:50:24Z",
+    "datePublished" : "2025-12-05T07:43:00Z",
+    "description" : "",
+    "externalReferenceCode" : "5b54ed54-27ba-91c2-a422-8f4f9d96ac8d",
+    "friendlyUrlPath" : "schedule-part-a-audit-information",
+    "id" : 10152721,
+    "key" : "10152719",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 200.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152721/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152721/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168368,
+      "taxonomyCategoryName" : "ITR-3",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "3d760704-23fb-2ec1-2b00-990ed227a13d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168481,
+      "taxonomyCategoryName" : "ITR-5",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "30869718-72a8-7d6c-6c56-1e7f5387c85b",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168604,
+      "taxonomyCategoryName" : "ITR-7",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "8d7b3daa-267e-f599-b9e8-86926d2fbf81",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651299,
+      "taxonomyCategoryName" : "Part A- Audit information",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "22546fe1-8536-8323-08cb-e8dc6765732f",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Part A- Audit information",
+    "uuid" : "1e230e93-4d1f-f926-e15b-1394de597f82"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152817/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152817/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152817"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:center;\"><b>Schedule </b><b>Nature of Business or Profession</b></p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\"><b>About the Schedule</b></p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">âSchedule â Nature of Businessâ in the Income Tax Return (ITR) form is used to report the specific nature of the business or professional activity carried out by the taxpayer during the financial year.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule is mandatory for all individuals, HUFs, firms, companies, etc., engaged in business or profession. The schedule requires selecting the appropriate business/profession code as specified by the Income Tax Department in the ITR utility. Taxpayers may report multiple business or professional activities by providing separate codes and corresponding descriptions.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-3, ITR-4, ITR-5 and ITR-6.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T08:48:45Z",
+    "dateModified" : "2026-01-03T09:53:48Z",
+    "datePublished" : "2025-12-05T08:48:00Z",
+    "description" : "",
+    "externalReferenceCode" : "b5164997-9d07-bd68-ae37-87eccd0d713e",
+    "friendlyUrlPath" : "schedule_nature_of_business",
+    "id" : 10152817,
+    "key" : "10152815",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 300.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152817/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152817/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168368,
+      "taxonomyCategoryName" : "ITR-3",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "3d760704-23fb-2ec1-2b00-990ed227a13d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168420,
+      "taxonomyCategoryName" : "ITR-4",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "53ea0d57-6965-13ff-c36b-3d83552c9051",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168481,
+      "taxonomyCategoryName" : "ITR-5",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "30869718-72a8-7d6c-6c56-1e7f5387c85b",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651362,
+      "taxonomyCategoryName" : "Nature of Business or Profession",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "5dab4fd8-b856-d15f-bed3-caf9e4efda07",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Nature of Business or Profession",
+    "uuid" : "a41dedf2-5d82-34b9-b891-cfc55913b7d6"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152854/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152854/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152854"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">âSchedule 10(13A)â in the Income Tax Return form is used to compute the exempt portion of House Rent Allowance (HRA) under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090722', '');\">section 10(13A)</a> of the Income-tax Act. The schedule requires disclosure of specific salary components and rent-related details to determine the eligible exemption. It captures details such as place of work, actual HRA received, rent paid, basic salary, and dearness allowance. Based on these, the exemption is computed as the least of the following: actual HRA received, rent paid minus 10% of salary, and 50% (metro) or 40% (non-metro) of salary.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statute"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoListParagraphCxSpFirst\" style=\"text-align:justify;text-indent:-18.0pt;\nmso-list:l0 level1 lfo1\">â¢ <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090722', '');\">Section 10(13A)</a> of Income-tax Act, 1961</p>\n\n<p class=\"MsoListParagraphCxSpLast\" style=\"text-align:justify;text-indent:-18.0pt;\nmso-list:l0 level1 lfo1\">â¢ <a href=\"javascript:ShowMainContent('Rule', 'CMSID', '103120000000006868 ', '');\"> Rule 2A</a> of the Income-tax Rules, 1962</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">House Rent Allowance is paid by the employers to the employees to meet the cost of rented house taken by them. The Income-tax law allows exemption up to certain extent in respect of the HRA if employee pays rent for the house which he actually occupies. In case the employee lives in his own house and does not pay any rent, he cannot claim exemption for HRA.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Applicable to:"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"tab-stops:121.2pt\">This schedule applies to ITR-1 and ITR-4.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Act, 1961"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-act"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Rules"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-rules"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Tax Charts and Tables"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/charts-tables"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Tutorials"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/tutorials"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T08:54:26Z",
+    "dateModified" : "2026-01-14T11:46:02Z",
+    "datePublished" : "2025-12-05T08:54:00Z",
+    "description" : "",
+    "externalReferenceCode" : "ff0bee3d-5b79-da98-39d4-28bdbe9e3c66",
+    "friendlyUrlPath" : "schedule_10_13a",
+    "id" : 10152854,
+    "key" : "10152852",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 400.0,
+    "relatedContents" : [ {
+      "contentType" : "StructuredContent",
+      "id" : 6324944,
+      "title" : "Employees - Benefits allowable"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6352323,
+      "title" : "Deductions/Allowances allowed to a salaried employee"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 4239270,
+      "title" : "Section - 10"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6412241,
+      "title" : "Rule - 2A"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17453908,
+      "title" : "Section - 10"
+    } ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152854/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152854/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10167261,
+      "taxonomyCategoryName" : "ITR-1",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "1e56199a-a3f1-7b6d-f39f-4c8ae0c84594",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168420,
+      "taxonomyCategoryName" : "ITR-4",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "53ea0d57-6965-13ff-c36b-3d83552c9051",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651423,
+      "taxonomyCategoryName" : "10(13A) â House Rent Allowance (HRA)",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "c63adafd-4f2b-82e4-b270-047ad68e2d04",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule 10(13A) â House Rent Allowance (HRA)",
+    "uuid" : "ce15facf-9eae-3a8b-ce99-10a30cbb156f"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152865/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152865/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152865"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p style=\"text-align:justify\">âSchedule 24(b)â is used to report interest paid on borrowed capital for claiming deduction under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090745', '');\">Section 24(b)</a> of the Income Tax Act. The assessee must provide detailed information about each loan, including the lenderâs name (bank/institution/person), loan account number, date of sanction, total sanctioned amount, outstanding balance as on the last date of the financial year, and the interest amount paid during the year.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statute"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoListParagraph\" style=\"text-align:justify;text-indent:-18.0pt;\nmso-list:l0 level1 lfo1\">â¢ <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090745', '');\">Section 24(b)</a> of Income-tax Act, 1961</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">Interest paid or payable on the amount borrowed for purchase, construction, repair, renovation or reconstruction of a house property is allowed as deduction while computing income under the head 'House Property'. Full deduction is allowed for interest paid or payable on borrowed capital if house property is let out or deemed to be let-out out. However, in case of self-occupied house properties, the deduction is limited to Rs. 30,000 or Rs. 200,000, as the case may be.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Applicable to:"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">This schedule applies to ITR-1 and ITR-4</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Act, 1961"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-act"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Rules"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-rules"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Tax Charts and Tables"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/charts-tables"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Tutorials"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/tutorials"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T08:57:17Z",
+    "dateModified" : "2026-01-14T12:01:33Z",
+    "datePublished" : "2025-12-05T08:57:00Z",
+    "description" : "",
+    "externalReferenceCode" : "32e7dbff-e6d5-8374-fd02-83b0b6e25c9d",
+    "friendlyUrlPath" : "schedule_24b",
+    "id" : 10152865,
+    "key" : "10152863",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 500.0,
+    "relatedContents" : [ {
+      "contentType" : "StructuredContent",
+      "id" : 6105329,
+      "title" : "Deductions allowable to tax payer"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6345106,
+      "title" : "Income from house propertyâ"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 4264959,
+      "title" : "Section - 24"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6413783,
+      "title" : "Rule - 4"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17454255,
+      "title" : "Section - 24"
+    } ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152865/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152865/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10167261,
+      "taxonomyCategoryName" : "ITR-1",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "1e56199a-a3f1-7b6d-f39f-4c8ae0c84594",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168420,
+      "taxonomyCategoryName" : "ITR-4",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "53ea0d57-6965-13ff-c36b-3d83552c9051",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651466,
+      "taxonomyCategoryName" : "24(b) â Interest on Borrowed Capital",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "f16576cf-db05-6c10-f1d2-2ed6da1efc87",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule 24(b) â Interest on Borrowed Capital",
+    "uuid" : "c51d1a5a-2b9b-5833-a2ad-80111daa86fb"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152876/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152876/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152876"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p style=\"text-align:justify\">âSchedule 80Câ in the Income Tax Return pertains to deductions available under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090896', '');\">Section 80C</a>, which includes investments or payments such as life insurance premium, contributions to provident funds, and deferred annuity schemes. The assessee is required to furnish the eligible amount being claimed as deduction along with the corresponding policy number or document identification number wherever applicable.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statute"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoListParagraph\" style=\"text-align:justify;text-indent:-18.0pt;\nmso-list:l0 level1 lfo1\">â¢ <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090896', '');\">Section 80C</a> of Income-tax Act, 1961</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">An Individual or HUF is eligible to claim deduction of Rs. 150,000 for certain investments, deposits or payments. The deduction is allowed under this provision for making payment for the life insurances, education expenses, contribution to provident fund, repayment of housing loan, contribution to certain small saving schemes, contribution to pension funds, or fixed deposits.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Applicable to:"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"tab-stops:82.8pt\">This schedule applies to ITR-1 and ITR-4</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Act, 1961"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-act"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T08:59:59Z",
+    "dateModified" : "2026-01-03T09:56:41Z",
+    "datePublished" : "2025-12-05T08:59:00Z",
+    "description" : "",
+    "externalReferenceCode" : "34fd5410-82d7-1a40-cbc3-19bbc59c8901",
+    "friendlyUrlPath" : "schedule_80c",
+    "id" : 10152876,
+    "key" : "10152874",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 600.0,
+    "relatedContents" : [ {
+      "contentType" : "StructuredContent",
+      "id" : 4415392,
+      "title" : "Section - 80C"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17441365,
+      "title" : "Section - 80C"
+    } ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152876/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152876/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10167261,
+      "taxonomyCategoryName" : "ITR-1",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "1e56199a-a3f1-7b6d-f39f-4c8ae0c84594",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168420,
+      "taxonomyCategoryName" : "ITR-4",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "53ea0d57-6965-13ff-c36b-3d83552c9051",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651507,
+      "taxonomyCategoryName" : "80C â Deduction under Section 80C",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "697ec28a-0aac-d817-0e63-522159f52683",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule 80C â Deduction under Section 80C",
+    "uuid" : "707d8aac-d25d-e645-2964-4f5115b7f7fd"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152908/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152908/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152908"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">âSchedule 80Eâ in the Income Tax Return is used to claim deduction for interest paid on education loans under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090909', '');\">section 80E.</a> It requires the assessee to provide details such as the name of the lender (bank, financial institution, or approved entity), loan account number, date of sanction, total loan amount, outstanding loan as on the last day of the financial year, and the interest paid during the year towards higher education loan.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statue"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoListParagraph\" style=\"text-align:justify;text-indent:-18.0pt;\nmso-list:l0 level1 lfo1\">â¢ <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090909', '');\">Section 80E</a> of Income-tax Act, 1961</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">An individual is allowed to claim a deduction under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090909', '');\">Section 80E</a> in respect of interest paid on education loan taken for the higher education of himself or his relative. The deduction is available for 8 assessment years commencing from the assessment year in which the assessee starts paying the interest on a loan.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Applicable to:"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">This schedule applies to ITR-1 and ITR-4</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Act, 1961"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-act"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Tutorials"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/tutorials"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:05:33Z",
+    "dateModified" : "2026-01-14T11:59:30Z",
+    "datePublished" : "2025-12-05T09:05:00Z",
+    "description" : "",
+    "externalReferenceCode" : "ecd030e4-5844-4b1e-463e-735a4c01a01f",
+    "friendlyUrlPath" : "schedule_80e",
+    "id" : 10152908,
+    "key" : "10152906",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 700.0,
+    "relatedContents" : [ {
+      "contentType" : "StructuredContent",
+      "id" : 4424254,
+      "title" : "Section - 80E"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6352323,
+      "title" : "Deductions/Allowances allowed to a salaried employee"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17441547,
+      "title" : "Section - 80E"
+    } ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152908/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152908/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10167261,
+      "taxonomyCategoryName" : "ITR-1",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "1e56199a-a3f1-7b6d-f39f-4c8ae0c84594",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168420,
+      "taxonomyCategoryName" : "ITR-4",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "53ea0d57-6965-13ff-c36b-3d83552c9051",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651531,
+      "taxonomyCategoryName" : "80E â Interest on Loan Taken for Higher Education",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "6626b8ca-e98a-d559-3998-5743483e522a",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule 80E â Interest on Loan Taken for Higher Education",
+    "uuid" : "a1dfafa7-58bc-f802-240d-3c107e0963b8"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152920/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152920/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152920"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">âSchedule 80EEâ in the Income Tax Return is used to claim the deduction under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090910', '');\">section 80EE</a> for interest paid on home loans availed for the purchase of a residential house property. The assessee is required to furnish key information such as the name of the lender (bank, institution, or person), loan account number, date of sanction, total sanctioned amount, outstanding balance at the end of the financial year, and the total interest amount eligible for deduction under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090910', '');\">Section 80EE.</a></p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statute"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoListParagraph\" style=\"text-align:justify;text-indent:-18.0pt;\nmso-list:l0 level1 lfo1\">â¢ <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090910', '');\">Section 80EE</a> of Income-tax Act, 1961</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">The deduction under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090910', '');\">Section 80EE</a> is allowed in respect of interest payable on loan sanctioned in the financial year 2016-17 for acquisition of a residential property. The amount of deduction under this section is limited to Rs. 50,000 in a financial year.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Applicable to:"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p>This schedule applies to ITR-1 and ITR-4.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Act, 1961"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-act"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Tutorials"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/tutorials"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:07:53Z",
+    "dateModified" : "2026-01-03T09:57:51Z",
+    "datePublished" : "2025-12-05T09:07:00Z",
+    "description" : "",
+    "externalReferenceCode" : "5ff25b8e-6a58-4236-84fe-eedbbaa34208",
+    "friendlyUrlPath" : "schedule_80ee",
+    "id" : 10152920,
+    "key" : "10152918",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 800.0,
+    "relatedContents" : [ {
+      "contentType" : "StructuredContent",
+      "id" : 4424530,
+      "title" : "Section - 80EE"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6352323,
+      "title" : "Deductions/Allowances allowed to a salaried employee"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17441561,
+      "title" : "Section - 80EE"
+    } ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152920/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152920/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10167261,
+      "taxonomyCategoryName" : "ITR-1",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "1e56199a-a3f1-7b6d-f39f-4c8ae0c84594",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168420,
+      "taxonomyCategoryName" : "ITR-4",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "53ea0d57-6965-13ff-c36b-3d83552c9051",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651560,
+      "taxonomyCategoryName" : "80EE â Interest on Loan Taken for Residential House Property",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "ccd70c7e-69c3-bfda-cb56-682df66f51bb",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule 80EE â Interest on Loan Taken for Residential House Property",
+    "uuid" : "ec0be772-4752-0e96-bfcc-df4c4df6e05c"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152932/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152932/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152932"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">âSchedule 80EEAâ in the Income Tax Return facilitates the reporting of interest paid on housing loans eligible for deduction under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090911', '');\">Section 80EEA.</a> This deduction, up to Rs. 1,50,000, is available to individual assessees (resident or non-resident) for loans sanctioned between 01.04.2019 and 31.03.2022 for the acquisition of residential house property. The schedule requires disclosure of the stamp value of the property and complete loan details, including the lenderâs name, loan account number, sanction date, total sanctioned amount, outstanding balance as on the last day of the financial year, and interest amount eligible for deduction.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statute"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\"><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090911', '');\">Section 80EEA</a> of the Income-tax Act, 1961</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">Under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090911', '');\">Section 80EEA</a>, an additional deduction up to Rs. 1,50,000 is allowed in respect of interest payable on the housing loan (sanctioned between 01-04-2019 and 31-03-2022) to acquire a residential property. This deduction is available to an individual assessee, whether resident or non-resident.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Applicable to:"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p>This schedule applies to ITR-1 and ITR-4.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Act, 1961"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-act"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Tutorials"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/tutorials"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:10:22Z",
+    "dateModified" : "2026-01-03T09:58:40Z",
+    "datePublished" : "2025-12-05T09:10:00Z",
+    "description" : "",
+    "externalReferenceCode" : "6f7ebceb-8c66-f166-8429-21fa17f8dcfe",
+    "friendlyUrlPath" : "schedule_80eea",
+    "id" : 10152932,
+    "key" : "10152930",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 900.0,
+    "relatedContents" : [ {
+      "contentType" : "StructuredContent",
+      "id" : 4424701,
+      "title" : "Section - 80EEA"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6352323,
+      "title" : "Deductions/Allowances allowed to a salaried employee"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17441575,
+      "title" : "Section - 80EEA"
+    } ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152932/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152932/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10167261,
+      "taxonomyCategoryName" : "ITR-1",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "1e56199a-a3f1-7b6d-f39f-4c8ae0c84594",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168420,
+      "taxonomyCategoryName" : "ITR-4",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "53ea0d57-6965-13ff-c36b-3d83552c9051",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651589,
+      "taxonomyCategoryName" : "80EEA â Deduction in Respect of Interest on Loan Taken for Certain House Property",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "e33e44be-0732-0986-bdec-0190b4acaa2c",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule 80EEA â Deduction in Respect of Interest on Loan Taken for Certain House Property",
+    "uuid" : "328d0a90-ca9f-4e2b-ed53-e646cc21f83e"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152944/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152944/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152944"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">âSchedule 80EEBâ in the Income Tax Return is used to claim deduction under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090912', '');\">section </a><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090912', '');\">80EEB</a> for interest paid on loans taken for the purchase of electric vehicles. This schedule applies to individual taxpayers and supports the governmentâs initiative to promote eco-friendly transportation. The assessee is required to furnish details such as the name of the lender (bank or financial institution), loan account number, date of loan sanction, total loan amount, outstanding loan balance at the end of the financial year, the vehicle registration number, and the total interest paid during the year eligible for deduction under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090912', '');\">section 80EEB</a>.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statue"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\"><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090912', '');\">Section 80EEB</a> of the Income-tax Act, 1961.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\"><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090912', '');\">Section </a><a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090912', '');\">80EEB</a> allows a deduction of up to Rs. 1,50,000 for interest paid on a loan taken from any financial institution for the purchase of an electric vehicle. This provision aims to promote a pollution-free India by reducing vehicular emissions. The loan must be sanctioned between 01-04-2019 and 31-03-2023 to qualify for this benefit.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Applicable to:"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">This schedule applies to ITR-1 and ITR-4.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Act, 1961"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-act"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Tutorials"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/tutorials"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:13:15Z",
+    "dateModified" : "2026-01-14T11:40:34Z",
+    "datePublished" : "2025-12-05T09:13:00Z",
+    "description" : "",
+    "externalReferenceCode" : "bd7cbf12-8769-a771-93e2-68eaba747413",
+    "friendlyUrlPath" : "schedule_80eeb",
+    "id" : 10152944,
+    "key" : "10152942",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 1000.0,
+    "relatedContents" : [ {
+      "contentType" : "StructuredContent",
+      "id" : 4424872,
+      "title" : "Section - 80EEB"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6352323,
+      "title" : "Deductions/Allowances allowed to a salaried employee"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17441589,
+      "title" : "Section - 80EEB"
+    } ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152944/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10152944/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10167261,
+      "taxonomyCategoryName" : "ITR-1",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "1e56199a-a3f1-7b6d-f39f-4c8ae0c84594",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168420,
+      "taxonomyCategoryName" : "ITR-4",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "53ea0d57-6965-13ff-c36b-3d83552c9051",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651618,
+      "taxonomyCategoryName" : "80EEB â Deduction in Respect of Interest Paid on Purchase of Electric Vehicle",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "ce94c1d9-04d5-9f0b-0fb2-4a86fcb0bbf0",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule 80EEB â Deduction in Respect of Interest Paid on Purchase of Electric Vehicle",
+    "uuid" : "61156ff1-7d5c-4e90-58fb-a02ec6aea826"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153017/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153017/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153017"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">Schedule Part AâBalance Sheet (Part A-BS) in the ITR form requires taxpayers to furnish details of their Balance Sheet as of March 31st of the relevant financial year. This schedule applies to individuals, Hindu Undivided Families (HUFs), firms, LLPs, companies, and other entities that earn income from business or profession and are required to maintain books of accounts.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">The purpose of Part A-BS is to provide a comprehensive snapshot of the taxpayer's financial position, detailing assets (like fixed assets, investments, current assets, and loans &amp; advances) and liabilities (proprietor's capital, loan funds, and deferred tax liabilities).</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">In cases where regular books of account of business or profession are not maintained, the taxpayers are required to fill out details under âNo Account Caseâ, wherein the total number of debtors, creditors, stock-in-trade, and cash balance is only required.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-3, ITR-5 and ITR-6.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:24:31Z",
+    "dateModified" : "2026-01-03T09:59:53Z",
+    "datePublished" : "2025-12-05T09:24:00Z",
+    "description" : "",
+    "externalReferenceCode" : "e0fb5618-afc8-494a-4704-e4777bc7baf4",
+    "friendlyUrlPath" : "schedule_part_a_bs",
+    "id" : 10153017,
+    "key" : "10153015",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 1100.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153017/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153017/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168368,
+      "taxonomyCategoryName" : "ITR-3",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "3d760704-23fb-2ec1-2b00-990ed227a13d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168481,
+      "taxonomyCategoryName" : "ITR-5",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "30869718-72a8-7d6c-6c56-1e7f5387c85b",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651647,
+      "taxonomyCategoryName" : "Part A-BS - Balance Sheet",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "f6a17257-0940-5b8f-99ff-97cbf6e59dc7",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Part A-BS - Balance Sheet",
+    "uuid" : "097a141a-6390-32f0-5a23-52fae62d0f34"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153029/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153029/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153029"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"p\" style=\"text-align:justify;text-justify:inter-ideograph;\">Schedule Part AâManufacturing Account in the Income Tax Return (ITR) form applies to taxpayers engaged in manufacturing activities.</p>\n\n<p class=\"p\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule captures detailed information about the manufacturing process and cost components incurred during the financial year. It includes entries such as opening and closing stock of raw materials, purchases of raw materials, direct wages, factory overheads, and other manufacturing expenses. It also reflects the cost of goods manufactured and closing stock of finished goods to compute the cost of goods sold. The resulting gross profit or loss is then carried to the Profit and Loss account.</p>\n\n<p class=\"p\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-3, ITR-5 and ITR-6.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:26:24Z",
+    "dateModified" : "2026-01-03T10:00:29Z",
+    "datePublished" : "2025-12-05T09:26:00Z",
+    "description" : "",
+    "externalReferenceCode" : "f9f4d7dd-8a55-6fa6-9483-5beb81e8d0c3",
+    "friendlyUrlPath" : "schedule_part_a_manufacturing",
+    "id" : 10153029,
+    "key" : "10153027",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 1200.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153029/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153029/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168368,
+      "taxonomyCategoryName" : "ITR-3",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "3d760704-23fb-2ec1-2b00-990ed227a13d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168481,
+      "taxonomyCategoryName" : "ITR-5",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "30869718-72a8-7d6c-6c56-1e7f5387c85b",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651666,
+      "taxonomyCategoryName" : "Part A-Manufacturing Account",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "8afc594a-59f8-dab2-6006-930873d9d46d",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Part A-Manufacturing Account",
+    "uuid" : "0dab93df-d49b-d879-a3a3-dd9d91515938"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153094/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153094/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153094"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">Schedule Part A-Manufacturing (Ind AS) in the ITR form applies to companies engaged in manufacturing activities that are required to prepare their financial statements according to Indian Accounting Standards (Ind AS).</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule is designed to capture the cost structure and production performance of the manufacturing business during the financial year. It includes details such as opening and closing stock of raw materials, purchases, direct wages, factory overheads, and cost of goods manufactured. It also accounts for the opening and closing stock of finished goods to arrive at the cost of goods sold. The final output, i.e., gross profit or loss, is transferred to the Profit and Loss account.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-6 only.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:32:29Z",
+    "dateModified" : "2026-01-03T10:01:05Z",
+    "datePublished" : "2025-12-05T09:32:00Z",
+    "description" : "",
+    "externalReferenceCode" : "614098e4-c44a-d398-22c8-78a728780b5d",
+    "friendlyUrlPath" : "schedule_part_a_manufacturing_ind_as",
+    "id" : 10153094,
+    "key" : "10153092",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 1300.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153094/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153094/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651685,
+      "taxonomyCategoryName" : "Part A-Manufacturing Ind AS",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "c4cec155-cedb-6885-6f89-a47e75d33b80",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Part A-Manufacturing Ind AS",
+    "uuid" : "b028b7cf-3e08-56a4-28e7-0bdea42d5353"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153134/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153134/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153134"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">Schedule Part AâTrading Account in the ITR form applies to taxpayers engaged in trading activities, including individuals, firms, and companies.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule captures the business's trading results and calculates the gross profit or loss for the financial year. It includes key details such as opening stock, purchases, direct expenses, sales, and closing stock. The difference between total sales and the cost of goods sold results in the gross profit or loss, which is carried forward to the Profit and Loss account.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-3, ITR-5 and ITR-6.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:33:52Z",
+    "dateModified" : "2026-01-03T10:02:40Z",
+    "datePublished" : "2025-12-05T09:33:00Z",
+    "description" : "",
+    "externalReferenceCode" : "52f43a48-399c-454d-1220-b1fc54f1c8cc",
+    "friendlyUrlPath" : "schedule_part_a_trading",
+    "id" : 10153134,
+    "key" : "10153132",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 1400.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153134/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153134/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168368,
+      "taxonomyCategoryName" : "ITR-3",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "3d760704-23fb-2ec1-2b00-990ed227a13d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168481,
+      "taxonomyCategoryName" : "ITR-5",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "30869718-72a8-7d6c-6c56-1e7f5387c85b",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651700,
+      "taxonomyCategoryName" : "Part A-Trading Account",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "e67a005b-02d7-8e2b-dd96-9c3adf6b7142",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Part A-Trading Account",
+    "uuid" : "f1bd0a17-3d03-6f6f-b612-91a40d0d1aa5"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153161/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153161/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153161"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">Schedule Part A â Trading Ind AS in the Income Tax Return (ITR) form applies to companies that are required to prepare their financial statements in compliance with Indian Accounting Standards (Ind AS).</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule captures the trading results of the business, reflecting the gross profit or loss for the financial year. It includes details such as opening stock, purchases, direct expenses, sales, and closing stock, all reported in accordance with Ind AS. For companies that have adopted Ind AS (Indian Accounting Standards), this schedule ensures that their trading activities are reported in a manner consistent with these globally converged accounting principles.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-6 only.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:35:21Z",
+    "dateModified" : "2026-01-08T11:30:07Z",
+    "datePublished" : "2025-12-05T09:35:00Z",
+    "description" : "",
+    "externalReferenceCode" : "7ad3e754-3d87-bddb-445c-699dc69aeebd",
+    "friendlyUrlPath" : "schedule_parta_trading_ind_as",
+    "id" : 10153161,
+    "key" : "10153159",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 0.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153161/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153161/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13668168,
+      "taxonomyCategoryName" : "Part A-Trading Account Ind AS",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "80859493-490a-ea14-a953-11f8abe3b81b",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Section A â Business Account (Indian Accounting Standards)",
+    "uuid" : "e44a1ca0-3a4a-a247-51d9-9f70af045301"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153185/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153185/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153185"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">Schedule Part AâP&amp;L (Profit and Loss Account) in the Income Tax Return (ITR) form captures details related to the taxpayerâs financial year profit and loss statement. This schedule applies to taxpayers who maintain books of accounts and is especially relevant to those engaged in business or professional activities.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">It includes details of revenue from operations, other income, cost of goods sold, operating and administrative expenses, depreciation, and net profit or loss for the year. Taxpayers are required to report figures according to their books of accounts or prescribed formats if books are not maintained. In cases where books are maintained, the data filled here should be matched to the financial statements.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">In cases where regular books of account of business or profession are not maintained, the taxpayers are required to fill out details under âNo Account Caseâ, wherein gross receipts and expenses are declared.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-3, ITR-5 and ITR-6.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:36:58Z",
+    "dateModified" : "2026-01-03T10:03:55Z",
+    "datePublished" : "2025-12-05T09:36:00Z",
+    "description" : "",
+    "externalReferenceCode" : "83c6acea-5031-c3e7-3feb-d83b82376c93",
+    "friendlyUrlPath" : "schedule_parta_p_l",
+    "id" : 10153185,
+    "key" : "10153183",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 1600.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153185/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153185/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168368,
+      "taxonomyCategoryName" : "ITR-3",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "3d760704-23fb-2ec1-2b00-990ed227a13d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168481,
+      "taxonomyCategoryName" : "ITR-5",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "30869718-72a8-7d6c-6c56-1e7f5387c85b",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651730,
+      "taxonomyCategoryName" : "Part A â P&L (Profit & Loss)",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "986e1655-d790-efa6-7f2c-4bb33b955970",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Part A â P&L (Profit & Loss)",
+    "uuid" : "91cb07e7-3d26-b6c6-1b94-2c3c7d6e435e"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153209/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153209/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153209"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">âSchedule Part AâOIâ Other Information in the Income Tax Return (ITR) form collects various financial and operational details of the taxpayer's business or profession. This schedule is mandatory for individuals and entities required to maintain books of accounts and is especially relevant for those liable to audit under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090804', '');\">Section 44AB.</a></p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">It includes information such as the method of accounting employed (mercantile or cash), valuation method for closing stock, amounts debited to the profit and loss account (such as interest, depreciation, payments to partners), and details of amounts disallowable under various provisions of the Income Tax Act. It also captures information on loans or advances, deemed income, and capital account details of partners, among others.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">The objective of Schedule OI is to provide a detailed view of the financial workings and specific adjustments made in computing taxable income, thereby ensuring a more accurate and comprehensive disclosure in the return.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-3, ITR-5 and ITR-6.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:38:35Z",
+    "dateModified" : "2026-01-03T10:04:38Z",
+    "datePublished" : "2025-12-05T09:38:00Z",
+    "description" : "",
+    "externalReferenceCode" : "73bde1bb-e31e-44d1-215f-5e8dffaf09b4",
+    "friendlyUrlPath" : "schedule_parta_oi",
+    "id" : 10153209,
+    "key" : "10153207",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 1700.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153209/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153209/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168368,
+      "taxonomyCategoryName" : "ITR-3",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "3d760704-23fb-2ec1-2b00-990ed227a13d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168481,
+      "taxonomyCategoryName" : "ITR-5",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "30869718-72a8-7d6c-6c56-1e7f5387c85b",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13651750,
+      "taxonomyCategoryName" : "Part A-OI (Other Information)",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "a99aa409-1868-0213-ca3c-cdb71467633d",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Part A-OI (Other Information)",
+    "uuid" : "d787f4b7-4998-91fc-9c26-30b8a6da6149"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153220/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153220/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153220"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">âSchedule Part A â QDâ in the Income Tax Return (ITR) form captures Quantitative Details for taxpayers engaged in manufacturing or trading activities, and is mandatory for those liable for audit under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090804', '');\">Section 44AB</a> of the Income Tax Act</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">The Schedule applies to taxpayers engaged in manufacturing, trading, or other businesses involving physical goods. It requires the furnishing of inventory-related quantitative information.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">Under this schedule, the taxpayer is required to furnish item-wise details such as the name of the product, unit of measurement (e.g., kilograms, litres, pieces), and the quantity of opening stock, purchases, production (if any), sales, and closing stock.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies only to businesses dealing in physical goods and is not required to be filled out by professionals or service-oriented businesses that do not involve tangible inventory.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-3, ITR-5 and ITR-6.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:39:52Z",
+    "dateModified" : "2026-01-03T10:12:43Z",
+    "datePublished" : "2025-12-05T09:39:00Z",
+    "description" : "",
+    "externalReferenceCode" : "e7f3d367-959d-eca6-f2f2-3cf2c7f3d2a7",
+    "friendlyUrlPath" : "schedule_part_a_qd",
+    "id" : 10153220,
+    "key" : "10153218",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 1800.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153220/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153220/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168368,
+      "taxonomyCategoryName" : "ITR-3",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "3d760704-23fb-2ec1-2b00-990ed227a13d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168481,
+      "taxonomyCategoryName" : "ITR-5",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "30869718-72a8-7d6c-6c56-1e7f5387c85b",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13658349,
+      "taxonomyCategoryName" : "Part A-QD (Quantitative Details)",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "79925691-4024-2a40-48ee-bced1edcfa48",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule Part A-QD (Quantitative Details)",
+    "uuid" : "f05cfc89-6516-0187-436e-9f464e8b8b49"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153264/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153264/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153264"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph\">Schedule BBS in the ITR forms, specifically relevant for companies (e.g., in ITR-6), pertains to the details of tax on distributed income of a domestic company arising from the buy-back of its own shares.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph\">Prior to October 1, 2024, the buy-back of shares by domestic companies was governed by <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000091072', '');\">Section 115QA</a>, under which the company was liable to pay buy-back tax on the distributed income. This income was exempt in the hands of the shareholder under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090722', '');\">Section 10(34A).</a></p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph\">Schedule BBS requires the company to furnish specific details related to this buy-back transaction and the tax payable thereon. This typically includes:</p>\n\n<p class=\"MsoListParagraphCxSpFirst\" style=\"text-align:justify;text-justify:inter-ideograph;\ntext-indent:-18.0pt;mso-list:l0 level1 lfo1\">â¢The consideration paid by the company for the buy-back.</p>\n\n<p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align:justify;text-justify:\ninter-ideograph;text-indent:-18.0pt;mso-list:l0 level1 lfo1\">â¢The amount received by the company for the issue of such shares (the cost of acquisition for the company).</p>\n\n<p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align:justify;text-justify:\ninter-ideograph;text-indent:-18.0pt;mso-list:l0 level1 lfo1\">â¢The distributed income (the difference between the buy-back consideration and the issue price).</p>\n\n<p class=\"MsoListParagraphCxSpMiddle\" style=\"text-align:justify;text-justify:\ninter-ideograph;text-indent:-18.0pt;mso-list:l0 level1 lfo1\">â¢The amount of tax payable on this distributed income at the prescribed rate.</p>\n\n<p class=\"MsoListParagraphCxSpLast\" style=\"text-align:justify;text-justify:inter-ideograph;\ntext-indent:-18.0pt;mso-list:l0 level1 lfo1\">â¢Details of payment of such tax.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statute"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoListParagraphCxSpFirst\" style=\"margin-left:35.45pt;mso-add-space:\nauto;text-indent:-21.25pt;mso-list:l1 level2 lfo2\">â¢ <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000091072', '');\">Section 115QA</a> and <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090722', '');\">Section 10(34A)</a> of Income-tax Act, 1961</p>\n\n<p class=\"MsoListParagraphCxSpLast\" style=\"margin-left:35.45pt;mso-add-space:\nauto;text-indent:-21.25pt;mso-list:l1 level2 lfo2\">â¢ <a href=\"javascript:ShowMainContent('Rule', 'CMSID', 'F401E6B9-5E65-4f4a-A187-C99C899B0C06 ', '');\"> Rule 40BB</a> of the Income-tax Rules, 1962</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p style=\"text-align:justify;text-justify:inter-ideograph\">If a domestic company buys back its own shares on or before 30-09-2024, it is liable to pay tax at the rate of 20% (plus surcharge and cess) on the distributed income, as per this provision. The term distributed income refers to the consideration paid by the company on buy-back of shares, reduced by the amount received by the company at the time of issue of such shares. In such cases, the consideration received by the shareholder is exempt under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090722', '');\">Section 10(34A).</a> However, for buy-back of shares on or after 01-10-2024, the amount received will be taxable in the hands of the shareholder as deemed dividend.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : ""
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : { },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:42:51Z",
+    "dateModified" : "2026-01-14T11:29:41Z",
+    "datePublished" : "2025-12-05T09:42:00Z",
+    "description" : "",
+    "externalReferenceCode" : "b735a724-e029-9ace-b2ec-90f6db340468",
+    "friendlyUrlPath" : "schedule_bbs",
+    "id" : 10153264,
+    "key" : "10153262",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 1900.0,
+    "relatedContents" : [ ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153264/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153264/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10168559,
+      "taxonomyCategoryName" : "ITR-6",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "52d8584a-7d01-1e72-534c-a12c7e763a7d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13658368,
+      "taxonomyCategoryName" : "BBS â Details of tax on distributed income of a domestic company on buy back of shares",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "c501a03d-4675-101d-396e-5ff378d006d0",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule BBS â Details of tax on distributed income of a domestic company on buy back of shares",
+    "uuid" : "7e59e5f1-9872-99e8-c846-0a8f48325061"
+  }, {
+    "actions" : {
+      "get-rendered-content" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153290/rendered-content/{contentTemplateId}"
+      },
+      "get-rendered-content-by-display-page" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153290/rendered-content-by-display-page/{displayPageKey}"
+      },
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153290"
+      }
+    },
+    "availableLanguages" : [ "en-US", "hi-IN" ],
+    "contentFields" : [ {
+      "contentFieldValue" : {
+        "data" : "2025-12-05T00:00:00Z"
+      },
+      "dataType" : "date",
+      "label" : "Date of Upload",
+      "name" : "uploadDate",
+      "nestedContentFields" : [ ],
+      "repeatable" : false
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "About the Schedule"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">âSchedule Sâ in the Income Tax Return (ITR) form captures details of income earned under the head \"Salaries.\" It applies to taxpayers deriving income from employment, whether as full-time or part-time employees.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule requires detailed information about the employer, including their name, Tax Deduction Account Number (TAN), Nature of employment and address. However, these details are not required in case ITR-1 or ITR-4 is filed.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">The schedule also provides a structured format for reporting various salary components, such as gross salary, allowances (like HRA or transport allowance), perquisites (like rent-free accommodation or car benefits), and any profits in lieu of salary, including gratuity or leave encashment.</p>\n\n<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">Taxpayers can also claim deductions of eligible expenses under <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090741', '');\">Section 16</a>, such as the standard deduction, entertainment allowance, and professional tax.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Relevant Statue"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"41\" style=\"margin-left:36.0000pt;text-indent:-18.0000pt;text-align:justify;\ntext-justify:inter-ideograph;mso-list:l0 level1 lfo1;\">â¢ <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090740', '');\">Section 15</a> , <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090741', '');\">Section 16</a> , <a href=\"javascript:ShowMainContent('Act', 'CMSID', '102120000000090742', '');\">Section 17</a> of Income-tax Act, 1961</p>\n\n<p class=\"41\" style=\"margin-left:36.0000pt;text-indent:-18.0000pt;text-align:justify;\ntext-justify:inter-ideograph;mso-list:l0 level1 lfo1;\">â¢ <a href=\"javascript:ShowMainContent('Rule', 'CMSID', '103120000000007059 ', '');\"> Rule 3</a> , <a href=\"javascript:ShowMainContent('Rule', 'CMSID', '103120000000007062 ', '');\"> Rule 3A</a> , <a href=\"javascript:ShowMainContent('Rule', 'CMSID', '103520000000080290 ', '');\"> Rule 3B</a> of the Income-tax Rules, 1962</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Legal Provision"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\">'Salary' is the first head of income. The income taxable under this head shall be calculated on due basis or on receipt basis, whichever occurs earlier. Taxable salary shall include taxable allowances, perquisites, retirement benefits and profit in lieu of salary. Certain deductions are also allowed from salary income.</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Content Group",
+      "name" : "content",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Applicable to:"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Sub-Title",
+        "name" : "subTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "data" : "<p class=\"MsoNormal\" style=\"text-align:justify;text-justify:inter-ideograph;\">This schedule applies to ITR-1 to ITR-4</p>"
+        },
+        "dataType" : "string",
+        "label" : "HTML Content",
+        "name" : "htmlContent",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Act, 1961"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-act"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Rules"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-rules"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    }, {
+      "contentFieldValue" : { },
+      "dataType" : "",
+      "label" : "Link To Page Group",
+      "name" : "linkToPage",
+      "nestedContentFields" : [ {
+        "contentFieldValue" : {
+          "data" : "Income-tax Forms"
+        },
+        "dataType" : "string",
+        "inputControl" : "text",
+        "label" : "Page Title",
+        "name" : "pageTitle",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      }, {
+        "contentFieldValue" : {
+          "link" : "/income-tax-forms"
+        },
+        "dataType" : "url",
+        "label" : "Link to Page",
+        "name" : "linkToPages",
+        "nestedContentFields" : [ ],
+        "repeatable" : false
+      } ],
+      "repeatable" : true
+    } ],
+    "contentStructureId" : 36282,
+    "customFields" : [ ],
+    "dateCreated" : "2025-12-05T09:45:57Z",
+    "dateModified" : "2026-01-14T11:35:08Z",
+    "datePublished" : "2025-12-05T09:45:00Z",
+    "description" : "",
+    "externalReferenceCode" : "5c89486d-bb58-033f-8b61-f09c588e1303",
+    "friendlyUrlPath" : "schedule_s",
+    "id" : 10153290,
+    "key" : "10153288",
+    "keywords" : [ ],
+    "neverExpire" : true,
+    "numberOfComments" : 0,
+    "priority" : 2000.0,
+    "relatedContents" : [ {
+      "contentType" : "StructuredContent",
+      "id" : 6413729,
+      "title" : "Rule - 3"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6413747,
+      "title" : "Rule - 3A"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6413765,
+      "title" : "Rule - 3B"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6440162,
+      "title" : "Form No. : 16"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 6440533,
+      "title" : "Form No. : 24Q"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 4253685,
+      "title" : "Section - 15"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 4255077,
+      "title" : "Section - 16"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 4256469,
+      "title" : "Section - 17"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17454185,
+      "title" : "Section - 16"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17454171,
+      "title" : "Section - 15"
+    }, {
+      "contentType" : "StructuredContent",
+      "id" : 17454199,
+      "title" : "Section - 17"
+    } ],
+    "renderedContents" : [ {
+      "contentTemplateId" : "334021",
+      "contentTemplateName" : "ITR Assistant Wizard",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153290/rendered-content/334021"
+    }, {
+      "contentTemplateId" : "itr-assistant-wizard---display-page-templates",
+      "contentTemplateName" : "ITR Assistant Wizard - Display Page Templates",
+      "markedAsDefault" : true,
+      "renderedContentURL" : "https://www.incometaxindia.gov.in/o/headless-delivery/v1.0/structured-contents/10153290/rendered-content-by-display-page/itr-assistant-wizard---display-page-templates"
+    } ],
+    "siteId" : 20117,
+    "structuredContentFolderId" : 36066,
+    "subscribed" : false,
+    "taxonomyCategoryBriefs" : [ {
+      "taxonomyCategoryId" : 10167261,
+      "taxonomyCategoryName" : "ITR-1",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "1e56199a-a3f1-7b6d-f39f-4c8ae0c84594",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168284,
+      "taxonomyCategoryName" : "ITR-2",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "cc11f6da-e3ee-3e00-bb7c-1a4c6817fc1f",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168368,
+      "taxonomyCategoryName" : "ITR-3",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "3d760704-23fb-2ec1-2b00-990ed227a13d",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 10168420,
+      "taxonomyCategoryName" : "ITR-4",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "53ea0d57-6965-13ff-c36b-3d83552c9051",
+        "siteKey" : "Guest"
+      }
+    }, {
+      "taxonomyCategoryId" : 13658383,
+      "taxonomyCategoryName" : "S â Detail of Income from Salary",
+      "taxonomyCategoryReference" : {
+        "externalReferenceCode" : "0fea4fd2-aa75-92fc-2b2e-9ac7c24b9707",
+        "siteKey" : "Guest"
+      }
+    } ],
+    "title" : "Schedule S â Detail of Income from Salary",
+    "uuid" : "85127dd6-b3fd-ad7f-6125-997e85fc9f53"
+  } ],
+  "lastPage" : 4977,
+  "page" : 1,
+  "pageSize" : 20,
+  "totalCount" : 99527
+}

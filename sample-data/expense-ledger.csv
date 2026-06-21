@@ -1,6 +1,0 @@
-Date,Voucher No,Ledger Name,Vendor Name,Narration,Amount,Debit/Credit,Payment Mode,Invoice No,GST Amount,TDS Amount
-2026-03-28,PV-1045,Travelling Expenses,BlueSky Travels,Director travel to client site,75000,Dr,Bank,INV-778,9000,
-2026-03-30,PV-1046,Repairs and Maintenance,CoolAir Services,AC replacement in office,120000,Dr,Bank,CA-221,21600,
-2026-02-12,PV-0988,Professional Fees,ABC Consultants,Consultancy services for ERP review,450000,Dr,Bank,ABC-992,81000,
-2026-01-19,PV-0902,Hotel and Food,Grand Palace Hotel,Management dinner,120000,Dr,Cash,GP-331,6000,
-2026-03-25,JV-211,Penalty and Fine,State Department,Late filing fee,20000,Dr,Bank,,

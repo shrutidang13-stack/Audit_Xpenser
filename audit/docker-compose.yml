@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: auditxpenser
+      POSTGRES_USER: auditxpenser
+      POSTGRES_PASSWORD: auditxpenser
+    ports:
+      - "5432:5432"
+    volumes:
+      - auditxpenser-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auditxpenser -d auditxpenser"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql://auditxpenser:auditxpenser@db:5432/auditxpenser
+      AI_PROVIDER: mock
+      UPLOAD_DIR: uploads
+      APP_ENV: development
+      MSME_ENABLED: "true"
+      MSME_API_BASE_URL: http://host.docker.internal:3001
+      MSME_TIMEOUT_SECONDS: 30
+      MSME_API_TOKEN: ""
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/uploads:/app/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    environment:
+      VITE_API_BASE_URL: ""
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  auditxpenser-db:

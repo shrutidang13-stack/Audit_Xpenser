@@ -1,0 +1,1 @@
+from app.services.audit_pipeline_service import _vendor_risks as run_vendor_risk_checks

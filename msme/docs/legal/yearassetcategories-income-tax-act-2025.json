@@ -1,0 +1,76 @@
+﻿{
+  "actions" : {
+    "updateBatch" : {
+      "method" : "PUT",
+      "href" : "https://www.incometaxindia.gov.in/o/c/yearassetcategories/batch"
+    },
+    "deleteBatch" : {
+      "method" : "DELETE",
+      "href" : "https://www.incometaxindia.gov.in/o/c/yearassetcategories/batch"
+    }
+  },
+  "facets" : [ ],
+  "items" : [ {
+    "actions" : {
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/c/yearassetcategories/13590228"
+      }
+    },
+    "creator" : {
+      "additionalName" : "",
+      "contentType" : "UserAccount",
+      "externalReferenceCode" : "82d57b02-1021-efa8-9374-1df0cca463c9",
+      "familyName" : "Taxmann",
+      "givenName" : "Mukesh",
+      "id" : 11812954,
+      "name" : "Mukesh Taxmann"
+    },
+    "dateCreated" : "2026-01-02T10:18:13Z",
+    "dateModified" : "2026-01-02T10:19:55Z",
+    "externalReferenceCode" : "024861d3-8dd5-52c8-de94-241877409abe",
+    "id" : 13590228,
+    "keywords" : [ ],
+    "status" : {
+      "code" : 0,
+      "label" : "approved",
+      "label_i18n" : "Approved"
+    },
+    "taxonomyCategoryBriefs" : [ ],
+    "year" : "2026",
+    "assetCategoryID" : 13590315
+  }, {
+    "actions" : {
+      "get" : {
+        "method" : "GET",
+        "href" : "https://www.incometaxindia.gov.in/o/c/yearassetcategories/3961796"
+      }
+    },
+    "creator" : {
+      "additionalName" : "",
+      "contentType" : "UserAccount",
+      "externalReferenceCode" : "7de04494-480f-e2e3-054a-20d3eea01e5e",
+      "familyName" : "Patel",
+      "givenName" : "Manthan",
+      "id" : 82585,
+      "name" : "Manthan Patel"
+    },
+    "dateCreated" : "2025-10-13T06:11:38Z",
+    "dateModified" : "2025-10-13T06:11:38Z",
+    "externalReferenceCode" : "e4da01e9-b39f-3515-1e06-ada66f8e1eac",
+    "id" : 3961796,
+    "keywords" : [ ],
+    "status" : {
+      "code" : 0,
+      "label" : "approved",
+      "label_i18n" : "Approved"
+    },
+    "taxonomyCategoryBriefs" : [ ],
+    "year" : "2025",
+    "assetCategoryID" : 38332
+  } ],
+  "lastPage" : 1,
+  "page" : 1,
+  "pageSize" : 500,
+  "totalCount" : 2
+}

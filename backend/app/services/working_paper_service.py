@@ -1,1 +1,0 @@
-from app.services.audit_pipeline_service import _working_paper as generate_working_paper

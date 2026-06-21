@@ -1,0 +1,48 @@
+{
+  "updatedAt": "2026-05-20T00:00:00.000Z",
+  "sources": [
+    {
+      "id": "income-tax-act-2025",
+      "title": "Income-tax Act, 2025",
+      "officialUrl": "https://www.incometaxindia.gov.in/income-tax-act-2025",
+      "officialPdfUrl": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_2025_as_amended_by_fa_act_2026-pdf",
+      "localPdf": "docs/legal/Income-tax-Act-2025_as-amended-by-Finance-Act-2026.pdf",
+      "localMetadata": "docs/legal/income-tax-act-2025/metadata.json",
+      "localJson": "docs/legal/income-tax-act-2025/sections.json",
+      "localText": "docs/legal/income-tax-act-2025/income-tax-act-2025.txt",
+      "sectionsDownloaded": 553
+    },
+    {
+      "id": "income-tax-act-1961",
+      "title": "Income-tax Act, 1961",
+      "officialUrl": "https://www.incometaxindia.gov.in/income-tax-act",
+      "officialPdfUrl": "https://www.incometaxindia.gov.in/documents/d/guest/income_tax_act_1961_as_amended_by_fa_act_2026-1-pdf",
+      "localPdf": "docs/legal/Income-tax-Act-1961_as-amended-by-Finance-Act-2026.pdf"
+    },
+    {
+      "id": "income-tax-rules-2026",
+      "title": "Income-tax Rules, 2026",
+      "officialUrl": "https://www.incometaxindia.gov.in/income-tax-rule-2026",
+      "localPdf": "docs/legal/Income-tax-Rules-2026_2026-05-02_06-43-43_f4bcb3_en.pdf"
+    },
+    {
+      "id": "income-tax-rules-1962",
+      "title": "Income-tax Rules, 1962",
+      "officialUrl": "https://www.incometaxindia.gov.in/income-tax-rules",
+      "officialPdfUrl": "https://www.incometaxindia.gov.in/documents/20117/1842422/Income-tax-Rules-1962_2026-04-01_05-44-55_6f86ac_en.pdf/912570c2-a404-2a4c-ac17-e93ea54d2602?version=11.0&t=1775132171126&download=true",
+      "localPdf": "docs/legal/Income-tax-Rules-1962_2026-04-01_05-44-55_6f86ac_en.pdf",
+      "localMetadata": "docs/legal/income-tax-rules-1962/metadata.json",
+      "localRuleIndex": "docs/legal/income-tax-rules-1962/rules-index.json",
+      "localSubjectIndex": "docs/legal/income-tax-rules-1962/subjects-index.json",
+      "localFormIndex": "docs/legal/income-tax-rules-1962/forms-index.json",
+      "rulesDownloaded": 520,
+      "subjectsDownloaded": 114,
+      "formsDownloaded": 532
+    },
+    {
+      "id": "msme-act-2006",
+      "title": "Micro, Small and Medium Enterprises Development Act PDF supplied by user",
+      "localPdf": "docs/legal/Msme Act.pdf"
+    }
+  ]
+}

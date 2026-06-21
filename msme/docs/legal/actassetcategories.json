@@ -1,0 +1,1179 @@
+﻿{
+  "actions" : { },
+  "facets" : [ ],
+  "items" : [ {
+    "id" : 4208869,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Aadhaar (Targeted Delivery Of Financial And Other Subsides, Benefits And Services) Act, 2016",
+    "assetCategoryID" : 4208866,
+    "hasAmendments" : false,
+    "pageURL" : "/aadhaar-targeted-delivery-of-financial-and-other-subsides-benefits-and-services-act-2016"
+  }, {
+    "id" : 15767660,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Actuaries Act, 2006",
+    "assetCategoryID" : 15800017,
+    "hasAmendments" : false,
+    "pageURL" : "/actuaries-act-2006"
+  }, {
+    "id" : 15767692,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Advocates Act, 1961",
+    "assetCategoryID" : 15800014,
+    "hasAmendments" : false,
+    "pageURL" : "/advocates-act-1961"
+  }, {
+    "id" : 4208874,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Air (Prevention And Control of Pollution) Act, 1981",
+    "assetCategoryID" : 4208871,
+    "hasAmendments" : false,
+    "pageURL" : "/air-prevention-and-control-of-pollution-act-1981"
+  }, {
+    "id" : 4208884,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Apprentices Act, 1961",
+    "assetCategoryID" : 4208881,
+    "hasAmendments" : false,
+    "pageURL" : "/apprentices-act-1961"
+  }, {
+    "id" : 4208889,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Arbitration And Conciliation Act, 1996",
+    "assetCategoryID" : 4208886,
+    "hasAmendments" : false,
+    "pageURL" : "/arbitration-and-conciliation-act-1996"
+  }, {
+    "id" : 4208894,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Banking Cash Transaction Tax (Repealed)",
+    "assetCategoryID" : 4208891,
+    "hasAmendments" : false,
+    "pageURL" : "/banking-cash-transaction-tax"
+  }, {
+    "id" : 15868445,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Bharatiya Nagarik Suraksha Sanhita, 2023",
+    "assetCategoryID" : 15868489,
+    "hasAmendments" : false,
+    "pageURL" : "/bharatiya-nagarik-suraksha-sanhita-2023"
+  }, {
+    "id" : 15855794,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Bharatiya Nyaya Sanhita, 2023",
+    "assetCategoryID" : 15855838,
+    "hasAmendments" : false,
+    "pageURL" : "/the-bharatiya-nyaya-sanhita-2023"
+  }, {
+    "id" : 15855451,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Bharatiya Sakshya Adhiniyam, 2023",
+    "assetCategoryID" : 15855497,
+    "hasAmendments" : false,
+    "pageURL" : "/the-bharatiya-sakshya-adhiniyam-2023"
+  }, {
+    "id" : 4208899,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Black Money (Undisclosed Foreign Income and Assets) and Imposition of Tax Act, 2015",
+    "assetCategoryID" : 4208896,
+    "hasAmendments" : false,
+    "pageURL" : "/black-money-undisclosed-foreign-income-and-assets-and-imposition-of-tax-act-2015"
+  }, {
+    "id" : 4208904,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Central Board of Revenue Act, 1963",
+    "assetCategoryID" : 4208901,
+    "hasAmendments" : false,
+    "pageURL" : "/central-board-of-revenue-act-1963"
+  }, {
+    "id" : 4208914,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Charitable And Religious Trusts Act, 1920",
+    "assetCategoryID" : 4208911,
+    "hasAmendments" : false,
+    "pageURL" : "/charitable-and-religious-trusts-act-1920"
+  }, {
+    "id" : 4208909,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Charitable Endowments Act, 1890",
+    "assetCategoryID" : 4208906,
+    "hasAmendments" : false,
+    "pageURL" : "/charitable-endowments-act-1890"
+  }, {
+    "id" : 4208919,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Chartered Accountants Act, 1949",
+    "assetCategoryID" : 4208916,
+    "hasAmendments" : false,
+    "pageURL" : "/chartered-accountants-act-1949"
+  }, {
+    "id" : 4208929,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Code of Criminal Procedure, 1973",
+    "assetCategoryID" : 4208926,
+    "hasAmendments" : false,
+    "pageURL" : "/code-of-criminal-procedure-1973"
+  }, {
+    "id" : 4208934,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Commodities Transaction Tax [As introduced by Finance Act, 2013]",
+    "assetCategoryID" : 4208931,
+    "hasAmendments" : false,
+    "pageURL" : "/commodities-transaction-tax"
+  }, {
+    "id" : 4208939,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Companies Act, 1956 (Repealed)",
+    "assetCategoryID" : 4208936,
+    "hasAmendments" : false,
+    "pageURL" : "/companies-act-1956"
+  }, {
+    "id" : 4208944,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Companies Act, 2013",
+    "assetCategoryID" : 4208941,
+    "hasAmendments" : false,
+    "pageURL" : "/companies-act-2013"
+  }, {
+    "id" : 4208949,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Company Secretaries Act, 1980",
+    "assetCategoryID" : 4208946,
+    "hasAmendments" : false,
+    "pageURL" : "/company-secretaries-act-1980"
+  }, {
+    "id" : 4208954,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Competition Act, 2002",
+    "assetCategoryID" : 4208951,
+    "hasAmendments" : false,
+    "pageURL" : "/competition-act-2002"
+  }, {
+    "id" : 4208959,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Conservation of Foreign Exchange And Prevention of Smuggling Activities Act, 1974",
+    "assetCategoryID" : 4208956,
+    "hasAmendments" : false,
+    "pageURL" : "/conservation-of-foreign-exchange-and-prevention-of-smuggling-activities-act-1974"
+  }, {
+    "id" : 4208964,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Consumer Protection Act, 1986 (Repealed)",
+    "assetCategoryID" : 4208961,
+    "hasAmendments" : false,
+    "pageURL" : "/consumer-protection-act-1986"
+  }, {
+    "id" : 4208969,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Consumer Protection Act, 2019",
+    "assetCategoryID" : 4208966,
+    "hasAmendments" : false,
+    "pageURL" : "/consumer-protection-act-2019"
+  }, {
+    "id" : 4208974,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Copyright Act, 1957",
+    "assetCategoryID" : 4208971,
+    "hasAmendments" : false,
+    "pageURL" : "/copyright-act-1957"
+  }, {
+    "id" : 4208979,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Cost And Works Accountants Act, 1959",
+    "assetCategoryID" : 4208976,
+    "hasAmendments" : false,
+    "pageURL" : "/cost-and-works-accountants-act-1959"
+  }, {
+    "id" : 4208984,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Credit Information Companies (Regulation) Act, 2005",
+    "assetCategoryID" : 4208981,
+    "hasAmendments" : false,
+    "pageURL" : "/credit-information-companies-regulation-act-2005"
+  }, {
+    "id" : 4208989,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Depositories Act, 1996",
+    "assetCategoryID" : 4208986,
+    "hasAmendments" : false,
+    "pageURL" : "/depositories-act-1996"
+  }, {
+    "id" : 4208994,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Designs Act, 2000",
+    "assetCategoryID" : 4208991,
+    "hasAmendments" : false,
+    "pageURL" : "/designs-act-2000"
+  }, {
+    "id" : 15856183,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Digital Personal Data Protection Act, 2023",
+    "assetCategoryID" : 15868243,
+    "hasAmendments" : false,
+    "pageURL" : "/digital-personal-data-protection-act-2023"
+  }, {
+    "id" : 4209009,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Direct Tax Vivad Se Vishwas Scheme, 2024 [As introduced by Finance (No. 2) Act, 2024]",
+    "assetCategoryID" : 4209006,
+    "hasAmendments" : false,
+    "pageURL" : "/direct-tax-vivad-se-vishwas-scheme-2024"
+  }, {
+    "id" : 4209004,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Direct Tax Vivad se Vishwas Act, 2020",
+    "assetCategoryID" : 4209001,
+    "hasAmendments" : false,
+    "pageURL" : "/direct-tax-vivad-se-vishwas-act-2020"
+  }, {
+    "id" : 4209014,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Economic Offences (Inapplicability of Limitation) Act, 1974",
+    "assetCategoryID" : 4209011,
+    "hasAmendments" : false,
+    "pageURL" : "/economic-offences-inapplicability-of-limitation-act-1974"
+  }, {
+    "id" : 4209019,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Emblems And Names (Prevention of Improper Use) Act, 1950",
+    "assetCategoryID" : 4209016,
+    "hasAmendments" : false,
+    "pageURL" : "/emblems-and-names-prevention-of-improper-use-act-1950"
+  }, {
+    "id" : 4209024,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Employees Compensation Act, 1923",
+    "assetCategoryID" : 4209021,
+    "hasAmendments" : false,
+    "pageURL" : "/employees-compensation-act-1923"
+  }, {
+    "id" : 4209029,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Employees Provident Funds And Miscellaneous Provisions Act, 1952",
+    "assetCategoryID" : 4209026,
+    "hasAmendments" : false,
+    "pageURL" : "/employees-provident-funds-and-miscellaneous-provisions-act-1952"
+  }, {
+    "id" : 4209044,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Employeesâ State Insurance Act, 1948",
+    "assetCategoryID" : 4209041,
+    "hasAmendments" : false,
+    "pageURL" : "/employees-state-insurance-act-1948"
+  }, {
+    "id" : 4209034,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Employersâ Liability Act, 1938",
+    "assetCategoryID" : 4209031,
+    "hasAmendments" : false,
+    "pageURL" : "/employers-liability-act-1938"
+  }, {
+    "id" : 4209039,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Environment Protection Act, 1986",
+    "assetCategoryID" : 4209036,
+    "hasAmendments" : false,
+    "pageURL" : "/environment-protection-act-1986"
+  }, {
+    "id" : 4209054,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Equal Remuneration Act, 1976",
+    "assetCategoryID" : 4209051,
+    "hasAmendments" : false,
+    "pageURL" : "/equal-remuneration-act-1976"
+  }, {
+    "id" : 4209049,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Equalisation Levy [As introduced by Finance Act, 2016] (Abolished)",
+    "assetCategoryID" : 4209046,
+    "hasAmendments" : false,
+    "pageURL" : "/equalisation-levy"
+  }, {
+    "id" : 4209059,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Essential Commodities Act, 1955",
+    "assetCategoryID" : 4209056,
+    "hasAmendments" : false,
+    "pageURL" : "/essential-commodities-act-1955"
+  }, {
+    "id" : 4209064,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Expenditure-Tax Act, 1987",
+    "assetCategoryID" : 4209061,
+    "hasAmendments" : false,
+    "pageURL" : "/expenditure-tax-act-1987"
+  }, {
+    "id" : 4209069,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Factories Act, 1948",
+    "assetCategoryID" : 4209066,
+    "hasAmendments" : false,
+    "pageURL" : "/factories-act-1948"
+  }, {
+    "id" : 4209074,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "2024,2019",
+    "nameOfAct" : "Finance Acts",
+    "assetCategoryID" : 4209071,
+    "hasAmendments" : true,
+    "pageURL" : "/finance-acts"
+  }, {
+    "id" : 4209079,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Foreign Contribution (Regulation) Act, 2010",
+    "assetCategoryID" : 4209076,
+    "hasAmendments" : false,
+    "pageURL" : "/foreign-contribution-regulation-act-2010"
+  }, {
+    "id" : 4209084,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Foreign Exchange Management Act, 1999",
+    "assetCategoryID" : 4209081,
+    "hasAmendments" : false,
+    "pageURL" : "/foreign-exchange-management-act-1999"
+  }, {
+    "id" : 4209089,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Foreign Trade (Development ï¼ Regulation) Act, 1992",
+    "assetCategoryID" : 4209086,
+    "hasAmendments" : false,
+    "pageURL" : "/foreign-trade-development-%EF%BC%86-regulation-act-1992"
+  }, {
+    "id" : 4209094,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Fugitive Economic Offenders Act, 2018",
+    "assetCategoryID" : 4209091,
+    "hasAmendments" : false,
+    "pageURL" : "/fugitive-economic-offenders-act-2018"
+  }, {
+    "id" : 4209099,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "General Clauses Act, 1897",
+    "assetCategoryID" : 4209096,
+    "hasAmendments" : false,
+    "pageURL" : "/general-clauses-act-1897"
+  }, {
+    "id" : 4209104,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Gift-Tax Act, 1958",
+    "assetCategoryID" : 4209101,
+    "hasAmendments" : false,
+    "pageURL" : "/gift-tax-act-1958"
+  }, {
+    "id" : 4209109,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Gold Bonds (Immunities And Exemptions) Act, 1993",
+    "assetCategoryID" : 4209106,
+    "hasAmendments" : false,
+    "pageURL" : "/gold-bonds-immunities-and-exemptions-act-1993"
+  }, {
+    "id" : 4209114,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Hindu Adoptions And Maintenance Act, 1956",
+    "assetCategoryID" : 4209111,
+    "hasAmendments" : false,
+    "pageURL" : "/hindu-adoptions-and-maintenance-act-1956"
+  }, {
+    "id" : 4209119,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Hindu Marriage Act, 1955",
+    "assetCategoryID" : 4209116,
+    "hasAmendments" : false,
+    "pageURL" : "/hindu-marriage-act-1955"
+  }, {
+    "id" : 4209124,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Hindu Minority And Guardianship Act, 1956",
+    "assetCategoryID" : 4209121,
+    "hasAmendments" : false,
+    "pageURL" : "/hindu-minority-and-guardianship-act-1956"
+  }, {
+    "id" : 4209129,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Hindu Succession Act, 1956",
+    "assetCategoryID" : 4209126,
+    "hasAmendments" : false,
+    "pageURL" : "/hindu-succession-act-1956"
+  }, {
+    "id" : 4209134,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "2024,2019",
+    "nameOfAct" : "Income-tax Act, 1961",
+    "assetCategoryID" : 4209131,
+    "hasAmendments" : true,
+    "pageURL" : "/income-tax-act"
+  }, {
+    "id" : 8147128,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "1961,1962,1963,1964,1965,1966,1967,1968,1969,1970,1971,1970,1971,1972,1973,1974,1975,1976,1977,1978,1979,1980,1981,1982,1983,1984,1985,1986,1987,1988,1989,1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2024 (No. 1),2024 (No. 2),2019 (No. 1),2019 (No. 2)",
+    "nameOfAct" : "Income-tax Act, 2025",
+    "assetCategoryID" : 8325573,
+    "hasAmendments" : true,
+    "pageURL" : "/income-tax-act-2025"
+  }, {
+    "id" : 4209144,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Indian Contract Act, 1872",
+    "assetCategoryID" : 4209141,
+    "hasAmendments" : false,
+    "pageURL" : "/indian-contract-act-1872"
+  }, {
+    "id" : 4209149,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Indian Easements Act, 1882",
+    "assetCategoryID" : 4209146,
+    "hasAmendments" : false,
+    "pageURL" : "/indian-easements-act-1882"
+  }, {
+    "id" : 4209154,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Indian Evidence Act, 1872",
+    "assetCategoryID" : 4209151,
+    "hasAmendments" : false,
+    "pageURL" : "/indian-evidence-act-1872"
+  }, {
+    "id" : 4209159,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Indian Fatal Accidents Act, 1855",
+    "assetCategoryID" : 4209156,
+    "hasAmendments" : false,
+    "pageURL" : "/indian-fatal-accidents-act-1855"
+  }, {
+    "id" : 4209139,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Indian Income-Tax Act, 1922 (Repealed)",
+    "assetCategoryID" : 4209136,
+    "hasAmendments" : false,
+    "pageURL" : "/indian-income-tax-act-1922"
+  }, {
+    "id" : 4209164,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Indian Partnership Act, 1932",
+    "assetCategoryID" : 4209161,
+    "hasAmendments" : false,
+    "pageURL" : "/indian-partnership-act-1932"
+  }, {
+    "id" : 4209169,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Indian Penal Code, 1860",
+    "assetCategoryID" : 4209166,
+    "hasAmendments" : false,
+    "pageURL" : "/indian-penal-code-1860"
+  }, {
+    "id" : 4209174,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Indian Stamp Act, 1899",
+    "assetCategoryID" : 4209171,
+    "hasAmendments" : false,
+    "pageURL" : "/indian-stamp-act-1899"
+  }, {
+    "id" : 4209179,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Indian Trusts Act, 1882",
+    "assetCategoryID" : 4209176,
+    "hasAmendments" : false,
+    "pageURL" : "/indian-trusts-act-1882"
+  }, {
+    "id" : 4209184,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Industrial Disputes Act, 1947",
+    "assetCategoryID" : 4209181,
+    "hasAmendments" : false,
+    "pageURL" : "/industrial-disputes-act-1947"
+  }, {
+    "id" : 4209189,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Industrial Employment (Standing Orders) Act, 1946",
+    "assetCategoryID" : 4209186,
+    "hasAmendments" : false,
+    "pageURL" : "/industrial-employment-standing-orders-act-1946"
+  }, {
+    "id" : 4209194,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Industries (Development ï¼ Regulation) Act, 1951",
+    "assetCategoryID" : 4209191,
+    "hasAmendments" : false,
+    "pageURL" : "/industries-development-%EF%BC%86-regulation-act-1951"
+  }, {
+    "id" : 4209199,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Information Technology Act, 2000",
+    "assetCategoryID" : 4209196,
+    "hasAmendments" : false,
+    "pageURL" : "/information-technology-act-2000"
+  }, {
+    "id" : 4209204,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Insurance Regulatory And Development Authority Act, 1999",
+    "assetCategoryID" : 4209201,
+    "hasAmendments" : false,
+    "pageURL" : "/insurance-regulatory-and-development-authority-act-1999"
+  }, {
+    "id" : 4209209,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Interest-Tax Act, 1974",
+    "assetCategoryID" : 4209206,
+    "hasAmendments" : false,
+    "pageURL" : "/interest-tax-act-1974"
+  }, {
+    "id" : 4209214,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Labour Laws (Simplification of Procedure for Furnishing Returns and Maintaining Registers by Certain Establishments) Act, 1988",
+    "assetCategoryID" : 4209211,
+    "hasAmendments" : false,
+    "pageURL" : "/labour-laws-simplification-of-procedure-for-furnishing-returns-and-maintaining-registers-by-certain-establishments-act-1988"
+  }, {
+    "id" : 4209219,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Land Acquisition Act, 1894 (Repealed)",
+    "assetCategoryID" : 4209216,
+    "hasAmendments" : false,
+    "pageURL" : "/land-acquisition-act-1894"
+  }, {
+    "id" : 4209224,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Legal Metrology Act, 2009",
+    "assetCategoryID" : 4209221,
+    "hasAmendments" : false,
+    "pageURL" : "/legal-metrology-act-2009"
+  }, {
+    "id" : 4209229,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Limitation Act, 1963",
+    "assetCategoryID" : 4209226,
+    "hasAmendments" : false,
+    "pageURL" : "/limitation-act-1963"
+  }, {
+    "id" : 4209234,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Limited Liability Partnership Act, 2008",
+    "assetCategoryID" : 4209231,
+    "hasAmendments" : false,
+    "pageURL" : "/limited-liability-partnership-act-2008"
+  }, {
+    "id" : 4209239,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Maternity Benefit Act, 1961",
+    "assetCategoryID" : 4209236,
+    "hasAmendments" : false,
+    "pageURL" : "/maternity-benefit-act-1961"
+  }, {
+    "id" : 4209244,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Micro, Small And Medium Enterprises Development Act, 2006",
+    "assetCategoryID" : 4209241,
+    "hasAmendments" : false,
+    "pageURL" : "/micro-small-and-medium-enterprises-development-act-2006"
+  }, {
+    "id" : 4209249,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Minimum Wages Act, 1948",
+    "assetCategoryID" : 4209246,
+    "hasAmendments" : false,
+    "pageURL" : "/minimum-wages-act-1948"
+  }, {
+    "id" : 4209254,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Multi-State Co-Operative Societies Act, 2002",
+    "assetCategoryID" : 4209251,
+    "hasAmendments" : false,
+    "pageURL" : "/multi-state-co-operative-societies-act-2002"
+  }, {
+    "id" : 4209259,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "National Green Tribunal Act, 2010",
+    "assetCategoryID" : 4209256,
+    "hasAmendments" : false,
+    "pageURL" : "/national-green-tribunal-act-2010"
+  }, {
+    "id" : 4209264,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "National Tax Tribunal Act, 2005",
+    "assetCategoryID" : 4209261,
+    "hasAmendments" : false,
+    "pageURL" : "/national-tax-tribunal-act-2005"
+  }, {
+    "id" : 4209269,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Negotiable Instruments Act, 1881",
+    "assetCategoryID" : 4209266,
+    "hasAmendments" : false,
+    "pageURL" : "/negotiable-instruments-act-1881"
+  }, {
+    "id" : 4209304,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "PREFERENCE SHARES (REGULATION OF DIVIDENDS) ACT, 1960",
+    "assetCategoryID" : 4209301,
+    "hasAmendments" : false,
+    "pageURL" : "/preference-shares-regulation-of-dividends-act-1960"
+  }, {
+    "id" : 4209274,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Partition Act, 1893",
+    "assetCategoryID" : 4209271,
+    "hasAmendments" : false,
+    "pageURL" : "/partition-act-1893"
+  }, {
+    "id" : 4209279,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Patents Act, 1970",
+    "assetCategoryID" : 4209276,
+    "hasAmendments" : false,
+    "pageURL" : "/patents-act-1970"
+  }, {
+    "id" : 4209284,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Payment of Bonus Act, 1965",
+    "assetCategoryID" : 4209281,
+    "hasAmendments" : false,
+    "pageURL" : "/payment-of-bonus-act-1965"
+  }, {
+    "id" : 4209289,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Payment of Gratuity Act, 1972",
+    "assetCategoryID" : 4209286,
+    "hasAmendments" : false,
+    "pageURL" : "/payment-of-gratuity-act-1972"
+  }, {
+    "id" : 4209294,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Payment of Wages Act, 1936",
+    "assetCategoryID" : 4209291,
+    "hasAmendments" : false,
+    "pageURL" : "/payment-of-wages-act-1936"
+  }, {
+    "id" : 4209299,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Personal Injuries (Compensation Insurance) Act, 1963 (Repealed)",
+    "assetCategoryID" : 4209296,
+    "hasAmendments" : false,
+    "pageURL" : "/personal-injuries-compensation-insurance-act-1963-repealed-"
+  }, {
+    "id" : 4209314,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Prevention of Corruption Act, 1988",
+    "assetCategoryID" : 4209311,
+    "hasAmendments" : false,
+    "pageURL" : "/prevention-of-corruption-act-1988"
+  }, {
+    "id" : 4209309,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Prevention of Money Laundering Act, 2002",
+    "assetCategoryID" : 4209306,
+    "hasAmendments" : false,
+    "pageURL" : "/prevention-of-money-laundering-act-2002"
+  }, {
+    "id" : 4209319,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Prohibition of Benami Property Transactions Act, 1988",
+    "assetCategoryID" : 4209316,
+    "hasAmendments" : false,
+    "pageURL" : "/prohibition-of-benami-property-transactions-act-1988"
+  }, {
+    "id" : 4209324,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Public Liability Insurance Act, 1991",
+    "assetCategoryID" : 4209321,
+    "hasAmendments" : false,
+    "pageURL" : "/public-liability-insurance-act-1991"
+  }, {
+    "id" : 4209329,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Public Provident Fund Act, 1968",
+    "assetCategoryID" : 4209326,
+    "hasAmendments" : false,
+    "pageURL" : "/public-provident-fund-act-1968"
+  }, {
+    "id" : 4209334,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Real Estate (Regulation And Development) Act, 2016",
+    "assetCategoryID" : 4209331,
+    "hasAmendments" : false,
+    "pageURL" : "/real-estate-regulation-and-development-act-2016"
+  }, {
+    "id" : 4209339,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Recovery of Debts and Bankruptcy Act, 1993",
+    "assetCategoryID" : 4209336,
+    "hasAmendments" : false,
+    "pageURL" : "/recovery-of-debts-and-bankruptcy-act-1993"
+  }, {
+    "id" : 4209344,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Registration Act, 1908",
+    "assetCategoryID" : 4209341,
+    "hasAmendments" : false,
+    "pageURL" : "/registration-act-1908"
+  }, {
+    "id" : 4209349,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Remittances of Foreign Exchange And Investment In Foreign Exchange Bonds (Immunities And Exemptions) Act, 1991",
+    "assetCategoryID" : 4209346,
+    "hasAmendments" : false,
+    "pageURL" : "/remittances-of-foreign-exchange-and-investment-in-foreign-exchange-bonds-immunities-and-exemptions-act-1991"
+  }, {
+    "id" : 4209354,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Reserve Bank of India Act, 1934",
+    "assetCategoryID" : 4209351,
+    "hasAmendments" : false,
+    "pageURL" : "/reserve-bank-of-india-act-1934"
+  }, {
+    "id" : 4209364,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Right To Fair Compensation And Transparency In Land Acquisition, Rehabilitation And Resettlement Act, 2013",
+    "assetCategoryID" : 4209361,
+    "hasAmendments" : false,
+    "pageURL" : "/right-to-fair-compensation-and-transparency-in-land-acquisition-rehabilitation-and-resettlement-act-2013"
+  }, {
+    "id" : 4209359,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Right to Information Act, 2005",
+    "assetCategoryID" : 4209356,
+    "hasAmendments" : false,
+    "pageURL" : "/right-to-information-act-2005"
+  }, {
+    "id" : 4209404,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "SICK INDUSTRIAL COMPANIES (SPECIAL PROVISIONS) REPEAL ACT, 2003",
+    "assetCategoryID" : 4209401,
+    "hasAmendments" : false,
+    "pageURL" : "/sick-industrial-companies-special-provisions-repeal-act-2003"
+  }, {
+    "id" : 4209434,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "STATE EMBLEM OF INDIA (PROHIBITION OF IMPROPER USE) ACT, 2005",
+    "assetCategoryID" : 4209431,
+    "hasAmendments" : false,
+    "pageURL" : "/state-emblem-of-india-prohibition-of-improper-use-act-2005"
+  }, {
+    "id" : 4209369,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Sale of Goods Act, 1930",
+    "assetCategoryID" : 4209366,
+    "hasAmendments" : false,
+    "pageURL" : "/sale-of-goods-act-1930"
+  }, {
+    "id" : 4209374,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Sales Promotion Employees (Conditions of Service) Act, 1976",
+    "assetCategoryID" : 4209371,
+    "hasAmendments" : false,
+    "pageURL" : "/sales-promotion-employees-conditions-of-service-act-1976"
+  }, {
+    "id" : 4209384,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Securities And Exchange Board of India Act, 1992",
+    "assetCategoryID" : 4209381,
+    "hasAmendments" : false,
+    "pageURL" : "/securities-and-exchange-board-of-india-act-1992"
+  }, {
+    "id" : 4209379,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Securities Contracts (Regulation) Act, 1956",
+    "assetCategoryID" : 4209376,
+    "hasAmendments" : false,
+    "pageURL" : "/securities-contracts-regulation-act-1956"
+  }, {
+    "id" : 4209389,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Securities Transaction Tax [As introduced by Finance (No. 2) Act, 2004]",
+    "assetCategoryID" : 4209386,
+    "hasAmendments" : false,
+    "pageURL" : "/securities-transaction-tax"
+  }, {
+    "id" : 4209394,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Securitisation And Reconstruction of Financial Assets And Enforcement of Security Interest Act, 2002",
+    "assetCategoryID" : 4209391,
+    "hasAmendments" : false,
+    "pageURL" : "/securitisation-and-reconstruction-of-financial-assets-and-enforcement-of-security-interest-act-2002"
+  }, {
+    "id" : 4209399,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Sick Industrial Companies (Special Provisions) Act, 1985 (Repealed)",
+    "assetCategoryID" : 4209396,
+    "hasAmendments" : false,
+    "pageURL" : "/sick-industrial-companies-special-provisions-act-1985"
+  }, {
+    "id" : 4209409,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Societies Registration Act, 1860",
+    "assetCategoryID" : 4209406,
+    "hasAmendments" : false,
+    "pageURL" : "/societies-registration-act-1860"
+  }, {
+    "id" : 4209414,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Special Bearer Bonds (Immunities And Exemptions) Act, 1981",
+    "assetCategoryID" : 4209411,
+    "hasAmendments" : false,
+    "pageURL" : "/special-bearer-bonds-immunities-and-exemptions-act-1981"
+  }, {
+    "id" : 4209419,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Special Court (Trial of Offences Relating to Transactions in Securities) Act, 1992",
+    "assetCategoryID" : 4209416,
+    "hasAmendments" : false,
+    "pageURL" : "/special-court-trial-of-offences-relating-to-transactions-in-securities-act-1992"
+  }, {
+    "id" : 4209424,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Special Economic Zone Act, 2005",
+    "assetCategoryID" : 4209421,
+    "hasAmendments" : false,
+    "pageURL" : "/special-economic-zone-act-2005"
+  }, {
+    "id" : 4209429,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Specific Relief Act, 1963",
+    "assetCategoryID" : 4209426,
+    "hasAmendments" : false,
+    "pageURL" : "/specific-relief-act-1963"
+  }, {
+    "id" : 4209444,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Taxation Laws (Amendment) Act, 2017",
+    "assetCategoryID" : 4209441,
+    "hasAmendments" : false,
+    "pageURL" : "/taxation-laws-amendment-act-2017"
+  }, {
+    "id" : 4209449,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Taxation Laws (Amendment) Act, 2019",
+    "assetCategoryID" : 4209446,
+    "hasAmendments" : false,
+    "pageURL" : "/taxation-laws-amendment-act-2019"
+  }, {
+    "id" : 4209454,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Taxation Laws (Amendment) Act, 2021",
+    "assetCategoryID" : 4209451,
+    "hasAmendments" : false,
+    "pageURL" : "/taxation-laws-amendment-act-2021"
+  }, {
+    "id" : 4209439,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Taxation and Other Laws (Relaxation and Amendment of Certain Provisions) Act, 2020",
+    "assetCategoryID" : 4209436,
+    "hasAmendments" : false,
+    "pageURL" : "/taxation-and-other-laws-relaxation-and-amendment-of-certain-provisions-act-2020"
+  }, {
+    "id" : 4209459,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Trade Marks Act, 1999",
+    "assetCategoryID" : 4209456,
+    "hasAmendments" : false,
+    "pageURL" : "/trade-marks-act-1999"
+  }, {
+    "id" : 4209464,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Transfer of Property Act, 1882",
+    "assetCategoryID" : 4209461,
+    "hasAmendments" : false,
+    "pageURL" : "/transfer-of-property-act-1882"
+  }, {
+    "id" : 4209469,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Tribunals Reforms Act, 2021",
+    "assetCategoryID" : 4209466,
+    "hasAmendments" : false,
+    "pageURL" : "/tribunals-reforms-act-2021"
+  }, {
+    "id" : 4209474,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Urban Land (Ceiling And Regulation) Repeal Act, 1999 (Repealed)",
+    "assetCategoryID" : 4209471,
+    "hasAmendments" : false,
+    "pageURL" : "/urban-land-ceiling-and-regulation-repeal-act-1999-repealed-"
+  }, {
+    "id" : 4209479,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Voluntary Deposits (Immunities And Exemptions) Act, 1991",
+    "assetCategoryID" : 4209476,
+    "hasAmendments" : false,
+    "pageURL" : "/voluntary-deposits-immunities-and-exemptions-act-1991"
+  }, {
+    "id" : 4209484,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Water (Prevention And Control of Pollution) Act, 1974",
+    "assetCategoryID" : 4209481,
+    "hasAmendments" : false,
+    "pageURL" : "/water-prevention-and-control-of-pollution-act-1974"
+  }, {
+    "id" : 4209489,
+    "indiaCodePortalURL" : "https://www.indiacode.nic.in/",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Wealth-Tax Act, 1957",
+    "assetCategoryID" : 4209486,
+    "hasAmendments" : false,
+    "pageURL" : "/wealth-tax-act-1957"
+  }, {
+    "id" : 4209494,
+    "indiaCodePortalURL" : "",
+    "isInactive" : false,
+    "exclusionYears" : "",
+    "nameOfAct" : "Weekly Holidays Act, 1942 (Repealed)",
+    "assetCategoryID" : 4209491,
+    "hasAmendments" : false,
+    "pageURL" : "/weekly-holidays-act-1942-repealed-"
+  } ],
+  "lastPage" : 1,
+  "page" : 1,
+  "pageSize" : 500,
+  "totalCount" : 130
+}

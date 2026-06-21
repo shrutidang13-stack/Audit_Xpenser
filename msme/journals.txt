@@ -1,0 +1,1 @@
+﻿{"success":true,"count":2,"vouchers":[{"date":"2026-03-31","vchType":"Journal","party":"HLSL LOGISTICS&#13;&#10;","voucherNumber":"896591681","amount":687000},{"date":"2026-03-31","vchType":"Journal","party":"AGREEMA ASSOCIATES","voucherNumber":"896591684","amount":40000}]}

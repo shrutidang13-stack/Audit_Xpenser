@@ -1,5 +1,5 @@
 services:
-  db:
+  audit-db:
     image: postgres:16
     environment:
       POSTGRES_DB: auditxpenser
@@ -15,29 +15,33 @@ services:
       timeout: 5s
       retries: 10
 
-  backend:
-    build: ./backend
+  audit-backend:
+    build: ./audit/backend
     environment:
-      DATABASE_URL: postgresql://auditxpenser:auditxpenser@db:5432/auditxpenser
+      DATABASE_URL: postgresql://auditxpenser:auditxpenser@audit-db:5432/auditxpenser
       AI_PROVIDER: mock
       UPLOAD_DIR: uploads
       APP_ENV: development
+      MSME_ENABLED: "true"
+      MSME_API_BASE_URL: http://host.docker.internal:3001
+      MSME_TIMEOUT_SECONDS: 30
+      MSME_API_TOKEN: ""
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/uploads:/app/uploads
+      - ./audit/backend/uploads:/app/uploads
     depends_on:
-      db:
+      audit-db:
         condition: service_healthy
 
-  frontend:
-    build: ./frontend
+  audit-frontend:
+    build: ./audit/frontend
     environment:
       VITE_API_BASE_URL: ""
     ports:
       - "5173:5173"
     depends_on:
-      - backend
+      - audit-backend
 
 volumes:
   auditxpenser-db:

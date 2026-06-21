@@ -1,0 +1,86 @@
+{
+  "loginRegister": {
+    "css": ["a[href*='login']", "button[id*='login']", "button[class*='login']"],
+    "xpath": [
+      "//*[self::a or self::button or @role='button'][normalize-space(.)='Login/Register' or normalize-space(.)='Sign In/Sign Up' or contains(normalize-space(.),'Login/Register')]"
+    ],
+    "text": ["Login/Register", "Sign In/Sign Up"]
+  },
+  "loginOption": {
+    "xpath": [
+      "//*[self::a or self::button or @role='menuitem' or @role='button'][normalize-space(.)='Login' or normalize-space(.)='V3 Login']"
+    ],
+    "text": ["V3 Login", "Login"]
+  },
+  "userId": {
+    "css": ["input[name='userId']", "input[name='username']", "input[id*='user']", "input[placeholder*='User']"],
+    "xpath": ["//input[contains(translate(@name,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'user') or contains(translate(@id,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'user')]"]
+  },
+  "password": {
+    "css": ["input[type='password']", "input[name='password']", "input[id*='password']"],
+    "xpath": ["//input[@type='password']"]
+  },
+  "loginButton": {
+    "css": ["button[type='submit']", "input[type='submit']"],
+    "text": ["Login", "Sign In", "Submit"]
+  },
+  "mcaServices": {
+    "text": ["MCA Services"]
+  },
+  "companyEFiling": {
+    "text": ["Company e-Filing", "Company eFiling", "Company Forms"]
+  },
+  "complianceServices": {
+    "text": ["Compliance Services"]
+  },
+  "msmeForm": {
+    "text": ["MSME Form-1", "MSME - Half yearly return", "MSME", "Half yearly return"]
+  },
+  "cin": {
+    "css": ["input[name='cin']", "input[id*='cin']", "input[placeholder*='CIN']"],
+    "xpath": ["//input[contains(translate(@name,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'cin') or contains(translate(@id,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'cin')]"]
+  },
+  "searchOrPrefill": {
+    "text": ["Search", "Pre-fill", "Prefill", "Validate"]
+  },
+  "returnType": {
+    "css": ["select[name*='return']", "select[id*='return']"],
+    "text": ["Periodic Half-yearly return"]
+  },
+  "startDate": {
+    "css": ["input[name*='start']", "input[id*='start']", "input[placeholder*='Start']"],
+    "xpath": ["//input[contains(translate(@name,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'start') or contains(translate(@id,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'start')]"]
+  },
+  "endDate": {
+    "css": ["input[name*='end']", "input[id*='end']", "input[placeholder*='End']"],
+    "xpath": ["//input[contains(translate(@name,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'end') or contains(translate(@id,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'end')]"]
+  },
+  "uploadExcel": {
+    "css": ["input[type='file']"],
+    "text": ["Import/Upload Excel", "Upload Excel", "Import Excel"]
+  },
+  "save": {
+    "text": ["Save"]
+  },
+  "next": {
+    "text": ["Next", "Continue"]
+  },
+  "attachment": {
+    "css": ["input[type='file']"],
+    "text": ["Choose file", "Choose File", "Upload Attachment"]
+  },
+  "designation": {
+    "css": ["select[name*='designation']", "select[id*='designation']"],
+    "xpath": ["//select[contains(translate(@name,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'designation') or contains(translate(@id,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'designation')]"]
+  },
+  "signatoryId": {
+    "css": ["input[name*='din']", "input[id*='din']", "input[name*='pan']", "input[id*='pan']", "input[name*='membership']", "input[id*='membership']"],
+    "xpath": ["//input[contains(translate(@name,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'din') or contains(translate(@id,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'din') or contains(translate(@name,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'membership') or contains(translate(@id,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'membership')]"]
+  },
+  "checkForm": {
+    "text": ["Check Form", "Proceed", "Submit for DSC", "Save"]
+  },
+  "dscBox": {
+    "text": ["DSC", "Digital Signature", "Sign"]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "capturedAt": "2026-05-20T12:39:47.810Z",
+  "sourceUrl": "https://www.incometaxindia.gov.in/income-tax-rules",
+  "title": "Income-tax Rules, 1962",
+  "ruleCategory": {
+    "id": 6388693,
+    "indiaCodePortalURL": "https://www.indiacode.nic.in/",
+    "hasForms": true,
+    "assetCategoryID": 6388690,
+    "pageURL": "/income-tax-rules",
+    "nameOfRule": "Income-tax Rules, 1962"
+  },
+  "consolidatedPdf": {
+    "contentUrl": "/documents/20117/1842422/Income-tax-Rules-1962_2026-04-01_05-44-55_6f86ac_en.pdf/912570c2-a404-2a4c-ac17-e93ea54d2602?version=11.0&t=1775132171126&download=true",
+    "sizeInBytes": 103643017,
+    "title": "Income-tax-Rules-1962_2026-04-01_05-44-55_6f86ac_en"
+  },
+  "counts": {
+    "rules": 520,
+    "subjects": 114,
+    "forms": 532
+  },
+  "files": {
+    "rules": "rules-index.json",
+    "subjects": "subjects-index.json",
+    "forms": "forms-index.json"
+  }
+}
