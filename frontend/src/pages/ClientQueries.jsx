@@ -26,7 +26,7 @@ export function ClientQueries() {
 
   const generate = async () => {
     const { data } = await api.post(`/api/audit/${clientId}/queries/generate`);
-    setMessage(`${data.created} query${data.created === 1 ? "" : "ies"} generated from pending exceptions.`);
+    setMessage(`${data.created} potential client queries loaded from the approved query register.`);
     await load();
   };
 
@@ -56,12 +56,12 @@ export function ClientQueries() {
   return (
     <section className="space-y-5">
       <div className="flex flex-col gap-3 border-b border-ink/10 pb-4 md:flex-row md:items-end md:justify-between">
-        <PageTitle title="Client Queries" subtitle="Suggested client-facing queries generated from canonical exceptions." />
+        <PageTitle title="Client Queries" subtitle="Potential client queries from the approved FY 2025-26 query register." />
         <div className="flex flex-wrap gap-2">
           <select value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }} className="h-10 rounded border border-ink/15 bg-white px-3 text-sm font-bold">
             {["Pending", "Under Review", "Resolved", "Not Applicable", ""].map((item) => <option key={item} value={item}>{item || "All Statuses"}</option>)}
           </select>
-          <button onClick={generate} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-ink px-3 text-sm font-bold text-white"><RefreshCcw size={16} />Generate Queries</button>
+          <button onClick={generate} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-ink px-3 text-sm font-bold text-white"><RefreshCcw size={16} />Reload Query Register</button>
           <button onClick={() => { setRecipient(""); setMailOpen(true); setMailMessage(""); }} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-teal px-3 text-sm font-bold text-white"><Mail size={16} />Send Mail</button>
           <a href={`/api/reports/${clientId}/query-letter?status=${encodeURIComponent(status || "")}`} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-moss px-3 text-sm font-bold text-white"><Download size={16} />Download Query Letter</a>
         </div>
@@ -71,24 +71,23 @@ export function ClientQueries() {
         <table className="min-w-full text-sm">
           <thead className="bg-ink text-white">
             <tr>
-              {["Query No.", "Status", "Category", "Vendor", "Amount", "Documents Required", "Query", "Client Response", "CA Note"].map((head) => <th key={head} className="px-3 py-2 text-left text-xs font-black">{head}</th>)}
+              {["Query ID", "Ledger", "Category", "Severity", "Amount", "Observation", "Documents Required", "Status"].map((head) => <th key={head} className="px-3 py-2 text-left text-xs font-black">{head}</th>)}
             </tr>
           </thead>
           <tbody>
             {rows.map((row) => (
               <tr key={row.id} className="border-b align-top hover:bg-blue-50">
                 <td className="px-3 py-2 font-black">{row.query_number}</td>
-                <td className="px-3 py-2"><Status value={row.status} /></td>
+                <td className="px-3 py-2 font-semibold">{row.ledger}</td>
                 <td className="px-3 py-2 font-semibold">{row.category}</td>
-                <td className="px-3 py-2">{row.vendor}</td>
+                <td className="px-3 py-2"><Severity value={row.priority} /></td>
                 <td className="px-3 py-2 font-bold">{formatInr(row.amount)}</td>
+                <td className="max-w-lg px-3 py-2">{row.issue_detected}</td>
                 <td className="max-w-xs px-3 py-2">{row.documents_required}</td>
-                <td className="max-w-md px-3 py-2">{row.suggested_wording}</td>
-                <td className="px-3 py-2">{row.client_response || ""}</td>
-                <td className="px-3 py-2">{row.ca_note || ""}</td>
+                <td className="px-3 py-2"><Status value={row.status} /></td>
               </tr>
             ))}
-            {!rows.length && <tr><td colSpan={9} className="px-3 py-10 text-center font-bold text-ink/55">No client queries found.</td></tr>}
+            {!rows.length && <tr><td colSpan={8} className="px-3 py-10 text-center font-bold text-ink/55">No client queries found.</td></tr>}
           </tbody>
         </table>
       </div>
@@ -133,6 +132,13 @@ function Status({ value }) {
   return <span className={`rounded border px-2 py-1 text-xs font-black ${cls}`}>{value}</span>;
 }
 
+function Severity({ value }) {
+  const text = String(value || "").toLowerCase();
+  const cls = text === "critical" ? "border-red-300 bg-red-100 text-red-800" : text === "high" ? "border-coral/30 bg-coral/10 text-coral" : text === "medium" ? "border-amber/30 bg-amber/10 text-amber-800" : "border-green-200 bg-green-50 text-green-700";
+  return <span className={`rounded border px-2 py-1 text-xs font-black uppercase ${cls}`}>{value}</span>;
+}
+
 function formatInr(value) {
+  if (value === null || value === undefined || value === "") return "-";
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(Number(value || 0));
 }

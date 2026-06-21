@@ -14,9 +14,10 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A3, landscape
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.models import Client, UploadedFile
+from app.models import Client, FixedAssetDepreciation, UploadedFile
 from app.services.expense_audit_service import get_expense_audit_results
 from app.services.fixed_asset_export_service import fixed_asset_excel
 from app.services.fixed_asset_service import class_summary, export_payload
@@ -131,7 +132,6 @@ WORKSHEET_SAMPLE_REPORTS = {
 }
 JOBWORK_LEDGER_KEYS = {"job work", "job work for vehicle", "saumya (job work)", "jobwork"}
 DEPRECIATION_WORKSHEET_ID = -9001
-DEPRECIATION_AUDIT_AMOUNT = 279067.22
 
 
 def get_audit_worksheet_data(db: Session, client_id: int) -> dict:
@@ -140,7 +140,8 @@ def get_audit_worksheet_data(db: Session, client_id: int) -> dict:
         raise ValueError("Client not found")
     data = get_expense_audit_results(db, client_id)
     salary_note = _salary_register_note(db, client_id)
-    rows = [_with_worksheet(row, salary_note) for row in _add_depreciation_row(_merge_jobwork_rows(data["rows"]))]
+    depreciation_amount = _depreciation_audit_amount(db, client_id)
+    rows = [_with_worksheet(row, salary_note) for row in _add_depreciation_row(_merge_jobwork_rows(data["rows"]), depreciation_amount)]
     summary = {
         **_worksheet_summary(rows, data["summary"]),
         "payment_40a3_review_items": len([row for row in rows if row.get("payment_40a3_review") != "No difference noted from available data"]),
@@ -458,8 +459,10 @@ def _merge_jobwork_rows(rows: list[dict]) -> list[dict]:
     return merged
 
 
-def _add_depreciation_row(rows: list[dict]) -> list[dict]:
+def _add_depreciation_row(rows: list[dict], depreciation_amount: float | None = None) -> list[dict]:
     if any(_ledger_key(row.get("ledger_name")) == "depreciation" for row in rows):
+        return rows
+    if not depreciation_amount:
         return rows
     item = {
         "id": DEPRECIATION_WORKSHEET_ID,
@@ -467,9 +470,9 @@ def _add_depreciation_row(rows: list[dict]) -> list[dict]:
         "sr_no": len(rows) + 1,
         "ledger_name": "Depreciation",
         "expense_type": "Indirect Expense",
-        "amount_as_per_audit": DEPRECIATION_AUDIT_AMOUNT,
+        "amount_as_per_audit": depreciation_amount,
         "amount_as_per_gl": 0,
-        "difference_amount": DEPRECIATION_AUDIT_AMOUNT,
+        "difference_amount": depreciation_amount,
         "tds_review": "No TDS review triggered based on available statutory mapping",
         "gst_review": "GST RCM not triggered based on ledger nature",
         "payment_40a3_review": "No difference noted from available data",
@@ -481,6 +484,14 @@ def _add_depreciation_row(rows: list[dict]) -> list[dict]:
         "worksheet": "Fixed asset depreciation working. Download Excel for the complete Fixed Assets Schedule.",
     }
     return [*rows, item]
+
+
+def _depreciation_audit_amount(db: Session, client_id: int) -> float | None:
+    amount = db.query(func.coalesce(func.sum(FixedAssetDepreciation.depreciation_for_year), 0)).filter(
+        FixedAssetDepreciation.client_id == client_id,
+    ).scalar()
+    rounded = round(float(amount or 0), 2)
+    return rounded or None
 
 
 def _worksheet_summary(rows: list[dict], fallback: dict) -> dict:
@@ -523,10 +534,13 @@ def _selected_result_row(db: Session, client_id: int, ledger_name: str | None = 
 
 def _find_result_row(db: Session, client_id: int, result_id: int) -> dict:
     if int(result_id) == DEPRECIATION_WORKSHEET_ID:
-        return _with_worksheet(_add_depreciation_row([])[0], "")
+        rows = _add_depreciation_row([], _depreciation_audit_amount(db, client_id))
+        if not rows:
+            raise ValueError("Depreciation worksheet row not found")
+        return _with_worksheet(rows[0], "")
     data = get_expense_audit_results(db, client_id)
     salary_note = _salary_register_note(db, client_id)
-    for row in _add_depreciation_row(_merge_jobwork_rows(data["rows"])):
+    for row in _add_depreciation_row(_merge_jobwork_rows(data["rows"]), _depreciation_audit_amount(db, client_id)):
         row_id = row.get("result_id") or row.get("id")
         if row_id is not None and int(row_id) == int(result_id):
             return _with_worksheet(row, salary_note)

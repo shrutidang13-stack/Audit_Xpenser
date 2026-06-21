@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import datetime
 
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, Query, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
@@ -57,6 +58,7 @@ from app.services.reference_library_service import (
 from app.services.retention_service import delete_uploaded_files
 from app.services.upload_service import store_upload
 from app.services.utils import from_json, parse_date, to_json
+from app.services.workspace_reset_service import reset_client_workspace
 
 
 router = APIRouter(prefix="/api")
@@ -126,6 +128,13 @@ def get_client(client_id: int, db: Session = Depends(get_db)):
     if not client:
         raise HTTPException(404, "Client not found")
     return _client(client)
+
+
+@router.delete("/clients/{client_id}/workspace")
+def reset_workspace(client_id: int, db: Session = Depends(get_db)):
+    if not db.get(Client, client_id):
+        raise HTTPException(404, "Client not found")
+    return reset_client_workspace(db, client_id)
 
 
 @router.post("/upload/{client_id}/{category}")
@@ -470,6 +479,17 @@ def form3cd_report(client_id: int, db: Session = Depends(get_db)):
     client = db.get(Client, client_id)
     if not client:
         raise HTTPException(404, "Client not found")
+    return get_form3cd_report(client, db)
+
+
+@router.post("/dashboard/{client_id}/form3cd-report/regenerate")
+def regenerate_form3cd_report(client_id: int, db: Session = Depends(get_db)):
+    client = db.get(Client, client_id)
+    if not client:
+        raise HTTPException(404, "Client not found")
+    client.form3cd_generated_at = datetime.now()
+    db.commit()
+    db.refresh(client)
     return get_form3cd_report(client, db)
 
 

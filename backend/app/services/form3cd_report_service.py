@@ -1,10 +1,29 @@
 from copy import deepcopy
+from datetime import datetime
 
 from app.models import BillMatchingResult, ColumnMapping, FixedAssetReviewAlert, TDSRecord, UploadedFile
 from app.services.utils import clean_text, from_json, parse_amount
 
 
 def get_form3cd_report(client, db=None) -> dict:
+    if db is not None and not db.query(UploadedFile.id).filter(UploadedFile.client_id == client.id).first():
+        return {
+            "title": f"FORM 3CD - EXPENSE RELATED CLAUSE DISCLOSURES | {client.name} | AY 2026-27",
+            "meta": {
+                "pan": client.pan,
+                "gstin": client.gstin,
+                "financial_year": client.financial_year,
+                "audit": "Audit u/s 44AB",
+                "generated": None,
+                "assessment_year": "2026-27",
+            },
+            "disclosures": [],
+            "risk_summary": [],
+            "tds_detail": [],
+            "clause_34a": {"rows": [], "note": "Upload client data to generate this worksheet."},
+            "gst_expenditure": [],
+            "notes": ["Upload client data to generate Form 3CD review outputs."],
+        }
     tds_detail = _tds_detail_with_uploads(db, client.id) if db is not None else deepcopy(TDS_DETAIL)
     disclosures = deepcopy(FORM3CD_DISCLOSURES)
     risk_summary = deepcopy(RISK_SUMMARY)
@@ -17,12 +36,13 @@ def get_form3cd_report(client, db=None) -> dict:
             "gstin": client.gstin,
             "financial_year": client.financial_year,
             "audit": "Audit u/s 44AB",
-            "generated": "17-Jun-2026",
+            "generated": (client.form3cd_generated_at or datetime(2026, 6, 17)).strftime("%d-%b-%Y"),
             "assessment_year": "2026-27",
         },
         "disclosures": disclosures,
         "risk_summary": risk_summary,
         "tds_detail": tds_detail,
+        "clause_34a": CLAUSE_34A,
         "gst_expenditure": GST_EXPENDITURE,
         "notes": [
             "All amounts are indicative. Actual disallowance depends on CA verification of TDS compliance, payment mode, nature of expense and timing. CA professional judgement required.",
@@ -30,6 +50,19 @@ def get_form3cd_report(client, db=None) -> dict:
             *dynamic_notes,
         ],
     }
+
+
+CLAUSE_34A = {
+    "rows": [
+        {"tan": "[Company TAN - to be inserted]", "section": "194C", "nature_of_payment": "Payments to contractors - Freight Charges, Job Work, Business Promotion (contracted services) (Rate: 10%/1%/2%)", "total_payment_receipt": 3859576, "amount_tax_required": 1359000, "amount_tax_at_specified_rate": 13590, "tax_deducted_specified_rate": 13590, "amount_tax_less_rate": 0, "tax_deducted_less_rate": 0, "tax_not_deposited": 0},
+        {"tan": "[Company TAN - to be inserted]", "section": "194-I", "nature_of_payment": "Rent - Factory Rent + Office Rent (Rate: 10%)", "total_payment_receipt": 915000, "amount_tax_required": 915000, "amount_tax_at_specified_rate": 91500, "tax_deducted_specified_rate": 91500, "amount_tax_less_rate": 0, "tax_deducted_less_rate": 0, "tax_not_deposited": 0},
+        {"tan": "[Company TAN - to be inserted]", "section": "194J", "nature_of_payment": "Fees for professional/technical services - Accounting, Audit, Technical, Legal (Rate: 10%)", "total_payment_receipt": 604000, "amount_tax_required": 604000, "amount_tax_at_specified_rate": 80000, "tax_deducted_specified_rate": 8000, "amount_tax_less_rate": 0, "tax_deducted_less_rate": 0, "tax_not_deposited": 0},
+        {"tan": "[Company TAN - to be inserted]", "section": "194H", "nature_of_payment": "Commission / Brokerage (Rate: 5%)", "total_payment_receipt": 113500, "amount_tax_required": 113500, "amount_tax_at_specified_rate": 20000, "tax_deducted_specified_rate": 1000, "amount_tax_less_rate": 0, "tax_deducted_less_rate": 0, "tax_not_deposited": 0},
+        {"tan": "[Company TAN - to be inserted]", "section": "194A", "nature_of_payment": "Interest other than interest on securities - Finance Charges (loan interest) (Rate: 10%)", "total_payment_receipt": 2897496, "amount_tax_required": 180000, "amount_tax_at_specified_rate": 18000, "tax_deducted_specified_rate": 18000, "amount_tax_less_rate": 0, "tax_deducted_less_rate": 0, "tax_not_deposited": 0},
+        {"tan": None, "section": "TOTAL", "nature_of_payment": None, "total_payment_receipt": 8390988, "amount_tax_required": 8390988, "amount_tax_at_specified_rate": 230000, "tax_deducted_specified_rate": 22000, "amount_tax_less_rate": 0, "tax_deducted_less_rate": 0, "tax_not_deposited": 0},
+    ],
+    "note": "Column (6)/(7) figures reflect only the TDS ledger balances actually found in the books (Tds 194I: Rs.13,000 on Rs.1,30,000; Tds 194J: Rs.8,000 on Rs.80,000; TDS 194H: Rs.1,000 on Rs.20,000). The balance of column (5) for each section represents amounts on which tax was required to be deducted but no corresponding TDS ledger was identified - to be reconciled against Form 26Q / TRACES before filing. Column (10) - non-deposit of TDS - has been left at Nil pending confirmation of challan payment dates; this must be verified by the audit team. TAN to be inserted by the CA before upload.",
+}
 
 
 def _apply_confirmed_tds_compliance(tds_detail: list[dict], disclosures: list[dict], risk_summary: list[dict]) -> None:
@@ -695,39 +728,39 @@ TDS_DETAIL = [
 
 
 GST_EXPENDITURE = [
-    {"sr": 1, "expenditure_ledger": "Factory Rent", "type": "Direct", "total_exp": 440000, "gst_registered": 440000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 79200},
-    {"sr": 2, "expenditure_ledger": "Freight Charges", "type": "Direct", "total_exp": 2276987, "gst_registered": 2276987, "composition_scheme": 0, "unregistered": 0, "gst_paid": 409658},
-    {"sr": 3, "expenditure_ledger": "Transportation Exp", "type": "Direct", "total_exp": 220199, "gst_registered": 220199, "composition_scheme": 0, "unregistered": 0, "gst_paid": 39636},
-    {"sr": 4, "expenditure_ledger": "Jobwork", "type": "Direct", "total_exp": 1362390, "gst_registered": 1362390, "composition_scheme": 0, "unregistered": 0, "gst_paid": 245230},
-    {"sr": 7, "expenditure_ledger": "Salary", "type": "Indirect", "total_exp": 5244135, "gst_registered": 0, "composition_scheme": 0, "unregistered": 5244135, "gst_paid": 0},
-    {"sr": 8, "expenditure_ledger": "Staff Welfare", "type": "Indirect", "total_exp": 106791, "gst_registered": 106791, "composition_scheme": 0, "unregistered": 0, "gst_paid": 19222},
-    {"sr": 9, "expenditure_ledger": "Staff Convence", "type": "Indirect", "total_exp": 300000, "gst_registered": 300000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 54000},
-    {"sr": 10, "expenditure_ledger": "Accounting Charges", "type": "Indirect", "total_exp": 480000, "gst_registered": 480000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 86400},
-    {"sr": 11, "expenditure_ledger": "Audit Fee", "type": "Indirect", "total_exp": 100000, "gst_registered": 100000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 18000},
-    {"sr": 12, "expenditure_ledger": "Technical Fee", "type": "Indirect", "total_exp": 20000, "gst_registered": 20000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 3600},
-    {"sr": 13, "expenditure_ledger": "Legal Exp", "type": "Indirect", "total_exp": 4000, "gst_registered": 4000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 720},
-    {"sr": 14, "expenditure_ledger": "Office Rent", "type": "Indirect", "total_exp": 475000, "gst_registered": 475000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 85500},
-    {"sr": 15, "expenditure_ledger": "Electricity Exp", "type": "Indirect", "total_exp": 161278, "gst_registered": 161278, "composition_scheme": 0, "unregistered": 0, "gst_paid": 0},
-    {"sr": 16, "expenditure_ledger": "Telephone Exp", "type": "Indirect", "total_exp": 20513, "gst_registered": 20513, "composition_scheme": 0, "unregistered": 0, "gst_paid": 3692},
-    {"sr": 17, "expenditure_ledger": "Internet Exp", "type": "Indirect", "total_exp": 18000, "gst_registered": 18000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 3240},
-    {"sr": 18, "expenditure_ledger": "Printing & Stationery", "type": "Indirect", "total_exp": 66540, "gst_registered": 66540, "composition_scheme": 0, "unregistered": 0, "gst_paid": 11977},
-    {"sr": 19, "expenditure_ledger": "Software Renewal", "type": "Indirect", "total_exp": 12000, "gst_registered": 12000, "composition_scheme": 0, "unregistered": 0, "gst_paid": 2160},
-    {"sr": 20, "expenditure_ledger": "Office Exp", "type": "Indirect", "total_exp": 204590, "gst_registered": 204590, "composition_scheme": 0, "unregistered": 0, "gst_paid": 36826},
-    {"sr": 21, "expenditure_ledger": "Repair & Maintenance", "type": "Indirect", "total_exp": 5800, "gst_registered": 5800, "composition_scheme": 0, "unregistered": 0, "gst_paid": 1044},
-    {"sr": 22, "expenditure_ledger": "Roc Expenses", "type": "Indirect", "total_exp": 41250, "gst_registered": 41250, "composition_scheme": 0, "unregistered": 0, "gst_paid": 7425},
-    {"sr": 23, "expenditure_ledger": "Courier Exp", "type": "Indirect", "total_exp": 3826, "gst_registered": 3826, "composition_scheme": 0, "unregistered": 0, "gst_paid": 689},
-    {"sr": 24, "expenditure_ledger": "Stock Insurance Charges", "type": "Indirect", "total_exp": 10840, "gst_registered": 10840, "composition_scheme": 0, "unregistered": 0, "gst_paid": 0},
-    {"sr": 25, "expenditure_ledger": "Business Promotion", "type": "Indirect", "total_exp": 221615, "gst_registered": 221615, "composition_scheme": 0, "unregistered": 0, "gst_paid": 39891},
-    {"sr": 26, "expenditure_ledger": "Commision", "type": "Indirect", "total_exp": 113500, "gst_registered": 113500, "composition_scheme": 0, "unregistered": 0, "gst_paid": 20430},
-    {"sr": 27, "expenditure_ledger": "Finance Charges", "type": "Indirect", "total_exp": 2897496, "gst_registered": 2897496, "composition_scheme": 0, "unregistered": 0, "gst_paid": 0},
-    {"sr": 28, "expenditure_ledger": "Bank Charges", "type": "Indirect", "total_exp": 140249, "gst_registered": 140249, "composition_scheme": 0, "unregistered": 0, "gst_paid": 0},
-    {"sr": 29, "expenditure_ledger": "GST Interest", "type": "Indirect", "total_exp": 6041, "gst_registered": 0, "composition_scheme": 0, "unregistered": 6041, "gst_paid": 0},
-    {"sr": 30, "expenditure_ledger": "TDS Interest", "type": "Indirect", "total_exp": 585, "gst_registered": 0, "composition_scheme": 0, "unregistered": 585, "gst_paid": 0},
-    {"sr": 31, "expenditure_ledger": "Penalty", "type": "Indirect", "total_exp": 6014, "gst_registered": 0, "composition_scheme": 0, "unregistered": 6014, "gst_paid": 0},
-    {"sr": 32, "expenditure_ledger": "Travelling Expenses", "type": "Indirect", "total_exp": 62388, "gst_registered": 62388, "composition_scheme": 0, "unregistered": 0, "gst_paid": 6239},
-    {"sr": 33, "expenditure_ledger": "Fuel Exp", "type": "Indirect", "total_exp": 266799, "gst_registered": 266799, "composition_scheme": 0, "unregistered": 0, "gst_paid": 48024},
-    {"sr": 34, "expenditure_ledger": "Expenses Written Off", "type": "Indirect", "total_exp": 145228, "gst_registered": 0, "composition_scheme": 0, "unregistered": 145228, "gst_paid": 0},
-    {"sr": 35, "expenditure_ledger": "Misc Exp", "type": "Indirect", "total_exp": 1500, "gst_registered": 1500, "composition_scheme": 0, "unregistered": 0, "gst_paid": 270},
-    {"sr": 36, "expenditure_ledger": "WARRANTY EXPENSE", "type": "Indirect", "total_exp": 55805, "gst_registered": 55805, "composition_scheme": 0, "unregistered": 0, "gst_paid": 10045},
-    {"sr": None, "expenditure_ledger": "GRAND TOTAL", "type": None, "total_exp": 15491359, "gst_registered": 10089356, "composition_scheme": 0, "unregistered": 5402003, "gst_paid": 1233118},
+    {"sr": 1, "expenditure_ledger": "Factory Rent", "type": "Direct", "total_exp": 440000, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 440000},
+    {"sr": 2, "expenditure_ledger": "Freight Charges", "type": "Direct", "total_exp": 2276987, "exempt_nil_non_taxable": 0, "gst_registered": 2276987, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 3, "expenditure_ledger": "Transportation Exp", "type": "Direct", "total_exp": 220199, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 4, "expenditure_ledger": "Jobwork", "type": "Direct", "total_exp": 1362390, "exempt_nil_non_taxable": 0, "gst_registered": 1362390, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 7, "expenditure_ledger": "Salary", "type": "Indirect", "total_exp": 5244135, "exempt_nil_non_taxable": 5244135, "gst_registered": 0, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 8, "expenditure_ledger": "Staff Welfare", "type": "Indirect", "total_exp": 106791, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 106791},
+    {"sr": 9, "expenditure_ledger": "Staff Convence", "type": "Indirect", "total_exp": 300000, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 300000},
+    {"sr": 10, "expenditure_ledger": "Accounting Charges", "type": "Indirect", "total_exp": 480000, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 480000},
+    {"sr": 11, "expenditure_ledger": "Audit Fee", "type": "Indirect", "total_exp": 100000, "exempt_nil_non_taxable": 0, "gst_registered": 100000, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 12, "expenditure_ledger": "Technical Fee", "type": "Indirect", "total_exp": 20000, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 20000},
+    {"sr": 13, "expenditure_ledger": "Legal Exp", "type": "Indirect", "total_exp": 4000, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 4000},
+    {"sr": 14, "expenditure_ledger": "Office Rent", "type": "Indirect", "total_exp": 475000, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 475000},
+    {"sr": 15, "expenditure_ledger": "Electricity Exp", "type": "Indirect", "total_exp": 161278, "exempt_nil_non_taxable": 161278, "gst_registered": 0, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 16, "expenditure_ledger": "Telephone Exp", "type": "Indirect", "total_exp": 20513, "exempt_nil_non_taxable": 0, "gst_registered": 20513, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 17, "expenditure_ledger": "Internet Exp", "type": "Indirect", "total_exp": 18000, "exempt_nil_non_taxable": 0, "gst_registered": 18000, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 18, "expenditure_ledger": "Printing & Stationery", "type": "Indirect", "total_exp": 66540, "exempt_nil_non_taxable": 0, "gst_registered": 66540, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 19, "expenditure_ledger": "Software Renewal", "type": "Indirect", "total_exp": 12000, "exempt_nil_non_taxable": 0, "gst_registered": 12000, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 20, "expenditure_ledger": "Office Exp", "type": "Indirect", "total_exp": 204590, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 204590},
+    {"sr": 21, "expenditure_ledger": "Repair & Maintenance", "type": "Indirect", "total_exp": 5800, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 5800},
+    {"sr": 22, "expenditure_ledger": "Roc Expenses", "type": "Indirect", "total_exp": 41250, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 41250},
+    {"sr": 23, "expenditure_ledger": "Courier Exp", "type": "Indirect", "total_exp": 3826, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 3825},
+    {"sr": 24, "expenditure_ledger": "Stock Insurance Charges", "type": "Indirect", "total_exp": 10840, "exempt_nil_non_taxable": 0, "gst_registered": 10840, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 25, "expenditure_ledger": "Business Promotion", "type": "Indirect", "total_exp": 221615, "exempt_nil_non_taxable": 0, "gst_registered": 154472, "composition_scheme": 0, "unregistered": 67143},
+    {"sr": 26, "expenditure_ledger": "Commision", "type": "Indirect", "total_exp": 113500, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 113500},
+    {"sr": 27, "expenditure_ledger": "Finance Charges", "type": "Indirect", "total_exp": 2897496, "exempt_nil_non_taxable": 2897496, "gst_registered": 0, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 28, "expenditure_ledger": "Bank Charges", "type": "Indirect", "total_exp": 140249, "exempt_nil_non_taxable": 0, "gst_registered": 140249, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 29, "expenditure_ledger": "GST Interest", "type": "Indirect", "total_exp": 6041, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 6041},
+    {"sr": 30, "expenditure_ledger": "TDS Interest", "type": "Indirect", "total_exp": 585, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 585},
+    {"sr": 31, "expenditure_ledger": "Penalty", "type": "Indirect", "total_exp": 6014, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 6014},
+    {"sr": 32, "expenditure_ledger": "Travelling Expenses", "type": "Indirect", "total_exp": 62388, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 62388},
+    {"sr": 33, "expenditure_ledger": "Fuel Exp", "type": "Indirect", "total_exp": 266799, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 266799},
+    {"sr": 34, "expenditure_ledger": "Expenses Written Off", "type": "Indirect", "total_exp": 145228, "exempt_nil_non_taxable": 145228, "gst_registered": 0, "composition_scheme": 0, "unregistered": 0},
+    {"sr": 35, "expenditure_ledger": "Misc Exp", "type": "Indirect", "total_exp": 1500, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 1500},
+    {"sr": 36, "expenditure_ledger": "WARRANTY EXPENSE", "type": "Indirect", "total_exp": 55805, "exempt_nil_non_taxable": 0, "gst_registered": 0, "composition_scheme": 0, "unregistered": 55805},
+    {"sr": None, "expenditure_ledger": "GRAND TOTAL", "type": None, "total_exp": 15491359, "exempt_nil_non_taxable": 3204002, "gst_registered": 5018065, "composition_scheme": 0, "unregistered": 7269292},
 ]

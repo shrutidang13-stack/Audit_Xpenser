@@ -8,7 +8,6 @@ from app.models import (
     BusinessPurposeRisk,
     CapitalReview,
     Client,
-    ClientQuery,
     DuplicateBillFlag,
     ExpenseClassification,
     ExpenseTransaction,
@@ -86,7 +85,6 @@ def run_audit(db: Session, client_id: int, file_ids: list[int] | None = None) ->
     db.flush()
     _form3cd_impacts(db, client_id)
     db.flush()
-    _queries(db, client_id, expenses)
     _working_paper(db, client, normalised)
     db.commit()
     audit_run = create_audit_run(db, client_id)
@@ -261,30 +259,6 @@ def _form3cd_impacts(db, client_id):
         db.add(Form3CDImpact(client_id=client_id, source_type="capital_review", source_id=item.id, clause_area="Potential Clause 21/computation review", observation=item.reason, suggested_review=item.suggested_review_area))
     for score in db.query(RiskScore).filter(RiskScore.client_id == client_id, RiskScore.score >= 60).all():
         db.add(Form3CDImpact(client_id=client_id, source_type="risk_score", source_id=score.id, clause_area="Potential tax audit reporting review", observation=f"Indicative risk score {score.score}: {score.reasons}", suggested_review="CA review required before reporting conclusion."))
-
-
-def _queries(db, client_id, expenses):
-    qn = 1
-    high_scores = {r.transaction_id: r for r in db.query(RiskScore).filter(RiskScore.client_id == client_id, RiskScore.score >= 20).all()}
-    for tx in expenses:
-        if tx.id not in high_scores:
-            continue
-        score = high_scores[tx.id]
-        required = "Supporting bill, payment proof and management clarification."
-        wording = f"Please provide supporting documents and clarification for {tx.ledger_name or 'expense'} of Rs. {tx.amount:,.2f} dated {tx.date or 'not available'}."
-        db.add(ClientQuery(
-            client_id=client_id,
-            query_number=f"Q-{qn:03d}",
-            ledger=tx.ledger_name,
-            vendor=tx.vendor_name,
-            transaction_date=tx.date,
-            amount=tx.amount,
-            issue_detected=f"{score.level}: {score.reasons}",
-            required_document=required,
-            priority="High" if score.score >= 70 else "Medium",
-            suggested_wording=wording,
-        ))
-        qn += 1
 
 
 def _working_paper(db, client, normalised):

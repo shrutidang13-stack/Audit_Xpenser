@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { AlertTriangle, CheckCircle2, FileSpreadsheet, Search } from "lucide-react";
+import { AlertTriangle, CheckCircle2, FileSpreadsheet, RefreshCcw, Search } from "lucide-react";
 import { Badge } from "../components/Badge";
 import { api } from "../lib/api";
 
@@ -26,15 +26,37 @@ const riskColumns = [
   ["note", "Note"]
 ];
 
+const clause34aColumns = [
+  ["tan", "Tax Deduction and Collection Account Number (TAN)"],
+  ["section", "Section"],
+  ["nature_of_payment", "Nature of Payment"],
+  ["total_payment_receipt", "Total amount of payment or receipt of the nature specified in column (3)"],
+  ["amount_tax_required", "Total amount on which tax was required to be deducted or collected at specified rate out of (4)"],
+  ["amount_tax_at_specified_rate", "Total amount on which tax was deducted or collected at specified rate out of (5)"],
+  ["tax_deducted_specified_rate", "Amount of tax deducted or collected out of (6)"],
+  ["amount_tax_less_rate", "Total amount on which tax was deducted or collected at less than specified rate out of (7)"],
+  ["tax_deducted_less_rate", "Amount of tax deducted or collected out of (8)"],
+  ["tax_not_deposited", "Amount of tax deducted or collected not deposited to the credit of the Central Government out of (6) and (8)"]
+];
+
 const gstColumns = [
+  ["sr", "Sl. No."],
+  ["total_exp", "Total Amount of Expenditure Incurred"],
+  ["exempt_nil_non_taxable", "Expenditure in respect of entities registered under GST (Exempted / Nil-Rated / Non-Taxable)"],
+  ["composition_scheme", "Expenditure relating to entities registered under GST (Composition Scheme)"],
+  ["gst_registered", "Expenditure relating to entities registered under GST (Registered Persons)"],
+  ["unregistered", "Expenditure relating to entities not registered under GST"]
+];
+
+const gstWorksheetColumns = [
   ["sr", "Sr."],
   ["expenditure_ledger", "Expenditure Ledger"],
   ["type", "Type"],
   ["total_exp", "Total Exp"],
+  ["exempt_nil_non_taxable", "Exempted / Nil-Rated / Non-Taxable"],
   ["gst_registered", "GST-Registered"],
   ["composition_scheme", "Composition Scheme"],
-  ["unregistered", "Unregistered"],
-  ["gst_paid", "GST Paid on Exp"]
+  ["unregistered", "Unregistered"]
 ];
 
 const moneyFields = new Set([
@@ -48,7 +70,15 @@ const moneyFields = new Set([
   "tds_deducted",
   "difference",
   "default_amount",
+  "total_payment_receipt",
+  "amount_tax_required",
+  "amount_tax_at_specified_rate",
+  "tax_deducted_specified_rate",
+  "amount_tax_less_rate",
+  "tax_deducted_less_rate",
+  "tax_not_deposited",
   "total_exp",
+  "exempt_nil_non_taxable",
   "gst_registered",
   "composition_scheme",
   "unregistered",
@@ -61,6 +91,8 @@ export function Form3CD() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [activeTab, setActiveTab] = useState("disclosures");
+  const [regenerating, setRegenerating] = useState(false);
+  const [showClause44Worksheet, setShowClause44Worksheet] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -76,6 +108,19 @@ export function Form3CD() {
     return () => { mounted = false; };
   }, [clientId]);
 
+  const regenerateReport = async () => {
+    setRegenerating(true);
+    setError("");
+    try {
+      const { data } = await api.post(`/api/dashboard/${clientId}/form3cd-report/regenerate`);
+      setReport(data);
+    } catch (err) {
+      setError(err.response?.data?.detail || err.message || "Could not regenerate Form 3CD report");
+    } finally {
+      setRegenerating(false);
+    }
+  };
+
   const filteredDisclosures = useMemo(() => filterRows(
     (report?.disclosures || []).filter((row) => row.section_group !== "SEC 40(a) - TDS DEFAULTS - 30% DISALLOWANCE"),
     query
@@ -85,9 +130,27 @@ export function Form3CD() {
     return {
       mandatory: (report?.disclosures || []).filter((row) => ["Mandatory", "Critical"].includes(row.status)).length,
       maxRisk: risk.reduce((sum, row) => sum + (row.net_max_risk || 0), 0),
-      gstPaid: (report?.gst_expenditure || []).find((row) => row.expenditure_ledger === "GRAND TOTAL")?.gst_paid || 0
+      clause44Expenditure: (report?.gst_expenditure || []).find((row) => row.expenditure_ledger === "GRAND TOTAL")?.total_exp || 0
     };
   }, [report]);
+
+  const clause44Rows = useMemo(() => {
+    const total = (report?.gst_expenditure || []).find((row) => row.expenditure_ledger === "GRAND TOTAL");
+    if (!total) return [];
+    return [{
+      sr: 1,
+      total_exp: total.total_exp || 0,
+      exempt_nil_non_taxable: total.exempt_nil_non_taxable || 0,
+      composition_scheme: total.composition_scheme || 0,
+      gst_registered: total.gst_registered || 0,
+      unregistered: total.unregistered || 0
+    }];
+  }, [report]);
+
+  const clause44WorksheetRows = useMemo(() => (report?.gst_expenditure || []).map((row) => ({
+    ...row,
+    exempt_nil_non_taxable: row.exempt_nil_non_taxable || 0
+  })), [report]);
 
   if (!report) {
     return (
@@ -109,7 +172,13 @@ export function Form3CD() {
               </div>
               <h1 className="mt-2 max-w-5xl text-2xl font-black leading-tight">{report.title}</h1>
             </div>
-            <Badge tone="medium">CA Review Required</Badge>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge tone="medium">CA Review Required</Badge>
+              <button onClick={regenerateReport} disabled={regenerating} className="focus-ring inline-flex h-9 items-center gap-2 rounded bg-white px-3 text-sm font-black text-ink disabled:opacity-60">
+                <RefreshCcw size={15} className={regenerating ? "animate-spin" : ""} />
+                {regenerating ? "Regenerating..." : "Regenerate Report"}
+              </button>
+            </div>
           </div>
           <div className="mt-4 grid gap-2 text-sm font-semibold text-white/85 sm:grid-cols-2 lg:grid-cols-5">
             <Meta label="PAN" value={report.meta.pan} />
@@ -122,7 +191,7 @@ export function Form3CD() {
         <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
           <Metric label="Mandatory / Critical Items" value={totals.mandatory} tone="high" />
           <Metric label="Net Max Quantified Risk" value={formatMoney(totals.maxRisk)} tone="high" />
-          <Metric label="Clause 44 GST Paid" value={formatMoney(totals.gstPaid)} tone="low" />
+          <Metric label="Clause 44 Total Expenditure" value={formatMoney(totals.clause44Expenditure)} tone="low" />
         </div>
       </div>
 
@@ -130,6 +199,7 @@ export function Form3CD() {
         <div className="flex flex-wrap gap-2">
           <Tab id="disclosures" active={activeTab} setActive={setActiveTab}>Expense Clauses</Tab>
           <Tab id="risk" active={activeTab} setActive={setActiveTab}>Risk Summary</Tab>
+          <Tab id="clause34a" active={activeTab} setActive={setActiveTab}>Clause 34(a)</Tab>
           <Tab id="gst" active={activeTab} setActive={setActiveTab}>Clause 44 GST</Tab>
         </div>
         {activeTab === "disclosures" && (
@@ -142,7 +212,49 @@ export function Form3CD() {
 
       {activeTab === "disclosures" && <DisclosureTable rows={filteredDisclosures} />}
       {activeTab === "risk" && <ReportTable title="RISK SUMMARY - POTENTIAL MAXIMUM DISALLOWANCES" columns={riskColumns} rows={report.risk_summary.filter((row) => !String(row.risk_area || "").startsWith("TDS not deducted"))} emphasizedKey="priority" />}
-      {activeTab === "gst" && <ReportTable title="CLAUSE 44 - GST EXPENDITURE BREAKUP | As Required on Portal" subtitle="Split each expenditure: GST-Registered vendors, Composition Scheme, Unregistered vendors, GST Paid" columns={gstColumns} rows={report.gst_expenditure} totalMatcher={(row) => row.expenditure_ledger === "GRAND TOTAL"} />}
+      {activeTab === "clause34a" && (
+        <div className="space-y-4">
+          <ReportTable
+            title="FORM 3CD - CLAUSE 34(a): TDS / TCS STATEMENT"
+            subtitle={`${report.meta.financial_year || "2025-26"} | As per prescribed Clause 34(a) format`}
+            columns={clause34aColumns}
+            rows={report.clause_34a?.rows || []}
+            totalMatcher={(row) => row.section === "TOTAL"}
+            minWidth="2600px"
+          />
+          <div className="rounded border border-amber/30 bg-amber/10 p-4 text-sm font-semibold leading-6 text-ink/75">
+            <div className="flex gap-2">
+              <AlertTriangle className="mt-1 shrink-0 text-amber" size={16} />
+              <span><strong>Note:</strong> {report.clause_34a?.note}</span>
+            </div>
+          </div>
+        </div>
+      )}
+      {activeTab === "gst" && (
+        <div className="space-y-4">
+          <ReportTable
+            title="CLAUSE 44 - BREAK-UP OF TOTAL EXPENDITURE"
+            subtitle="Expenditure is classified by the GST registration status of the supplier."
+            columns={gstColumns}
+            rows={clause44Rows}
+            headerAction={(
+              <button onClick={() => setShowClause44Worksheet((visible) => !visible)} className="focus-ring inline-flex h-9 items-center gap-2 rounded bg-teal px-3 text-sm font-bold text-white">
+                <FileSpreadsheet size={15} />
+                {showClause44Worksheet ? "Hide Worksheet" : "View Worksheet"}
+              </button>
+            )}
+          />
+          {showClause44Worksheet && (
+            <ReportTable
+              title="CLAUSE 44 - CALCULATION WORKSHEET"
+              subtitle="Ledger-wise working used to arrive at the Clause 44 summary above."
+              columns={gstWorksheetColumns}
+              rows={clause44WorksheetRows}
+              totalMatcher={(row) => row.expenditure_ledger === "GRAND TOTAL"}
+            />
+          )}
+        </div>
+      )}
 
       <div className="rounded border border-amber/30 bg-amber/10 p-4 text-sm font-semibold leading-6 text-ink/75">
         {report.notes.map((note) => (
@@ -188,15 +300,18 @@ function DisclosureTable({ rows }) {
   );
 }
 
-function ReportTable({ title, subtitle, columns, rows, totalMatcher, emphasizedKey }) {
+function ReportTable({ title, subtitle, columns, rows, totalMatcher, emphasizedKey, headerAction, minWidth = "1100px" }) {
   return (
     <div className="rounded border border-ink/10 bg-white">
-      <div className="border-b border-ink/10 px-4 py-3">
-        <h2 className="text-base font-black text-ink">{title}</h2>
-        {subtitle && <p className="mt-1 text-sm font-semibold text-ink/60">{subtitle}</p>}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink/10 px-4 py-3">
+        <div>
+          <h2 className="text-base font-black text-ink">{title}</h2>
+          {subtitle && <p className="mt-1 text-sm font-semibold text-ink/60">{subtitle}</p>}
+        </div>
+        {headerAction}
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-[1100px] text-left text-sm">
+        <table className="text-left text-sm" style={{ minWidth }}>
           <thead className="bg-ink text-white">
             <tr>
               {columns.map(([, label]) => (

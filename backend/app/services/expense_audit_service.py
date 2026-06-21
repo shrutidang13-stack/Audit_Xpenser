@@ -51,7 +51,7 @@ def run_expense_audit(db: Session, client_id: int) -> dict:
 
     for row in rows:
         amount_as_per_audit = _money(row.net_amount if row.net_amount is not None else row.amount)
-        amount_as_per_gl = gl_amounts.get(_ledger_key(row.ledger_name))
+        amount_as_per_gl = _structured_gl_amount(row, gl_amounts)
         difference = _difference(amount_as_per_audit, amount_as_per_gl)
         gl_recording_check = _gl_recording_check(amount_as_per_gl, difference)
         tds_review = _tds_review(reference_available, tds_amounts.get(_ledger_key(row.ledger_name)))
@@ -118,14 +118,21 @@ def _gl_amounts_by_ledger(db: Session, client_id: int) -> dict[str, float]:
         key = _ledger_key(row.ledger_name)
         if not key or _is_ignored_gl_key(key):
             continue
-        if row.debit_amount is not None or row.credit_amount is not None:
-            net_amount = float(row.debit_amount or 0) - float(row.credit_amount or 0)
-        else:
-            net_amount = float(row.amount or 0)
+        debit = float(row.debit_amount or 0)
+        credit = float(row.credit_amount or 0)
+        net_amount = debit - credit if debit or credit else float(row.amount or 0)
         totals[key] += net_amount
     if totals:
         return {key: _money(abs(amount)) for key, amount in totals.items()}
     return _gl_amounts_from_uploaded_files(db, client_id)
+
+
+def _structured_gl_amount(row: ProcessingExpense, gl_amounts: dict[str, float]) -> float | None:
+    """Use the GL amount already presented in the structured Data tab."""
+    debit_amount = float(row.debit_amount or 0)
+    if debit_amount or not float(row.net_amount or row.amount or 0):
+        return _money(abs(debit_amount))
+    return gl_amounts.get(_ledger_key(row.ledger_name))
 
 
 def _tds_amounts_by_ledger(db: Session, client_id: int) -> dict[str, float]:

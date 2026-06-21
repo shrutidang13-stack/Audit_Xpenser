@@ -22,6 +22,7 @@ export function UploadCentre() {
   const [activeClientName, setActiveClientName] = useState(window.localStorage.getItem("auditxpenser.activeClientName") || "");
   const [files, setFiles] = useState([]);
   const [message, setMessage] = useState("");
+  const [resetting, setResetting] = useState(false);
 
   const load = async (targetClientId = activeClientId) => {
     if (!targetClientId) {
@@ -60,13 +61,23 @@ export function UploadCentre() {
   }, [activeClientId]);
   useEffect(() => { load(); }, [activeClientId]);
 
-  const clearDisplay = () => {
-    setFiles([]);
-    setMessage("");
-    window.localStorage.removeItem("auditxpenser.latestUploadFileIds");
-    window.localStorage.removeItem("auditxpenser.latestUploadSessionId");
-    window.localStorage.removeItem("auditxpenser.latestUploadCategory");
-    window.localStorage.removeItem("auditxpenser.latestUploadClientId");
+  const resetWorkspace = async () => {
+    if (!activeClientId || resetting) return;
+    setResetting(true);
+    setMessage("Resetting the demo workspace...");
+    try {
+      await api.delete(`/api/clients/${activeClientId}/workspace`);
+      setFiles([]);
+      window.localStorage.removeItem("auditxpenser.latestUploadFileIds");
+      window.localStorage.removeItem("auditxpenser.latestUploadSessionId");
+      window.localStorage.removeItem("auditxpenser.latestUploadCategory");
+      window.localStorage.removeItem("auditxpenser.latestUploadClientId");
+      setMessage("Workspace reset. Upload client files to rebuild the audit results.");
+    } catch (error) {
+      setMessage(error.response?.data?.detail || "Workspace could not be reset. Please try again.");
+    } finally {
+      setResetting(false);
+    }
   };
 
   const upload = async (category, selectedFiles) => {
@@ -117,9 +128,9 @@ export function UploadCentre() {
     <section className="space-y-5">
       <div className="flex flex-col gap-3 border-b border-ink/10 pb-4 sm:flex-row sm:items-end sm:justify-between">
         <PageTitle title="Upload Client Data" compact />
-        <button onClick={clearDisplay} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-ink px-3 text-sm font-bold text-white">
-          <RefreshCcw size={16} />
-          Refresh display
+        <button onClick={resetWorkspace} disabled={resetting || !activeClientId} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-ink px-3 text-sm font-bold text-white disabled:opacity-60">
+          <RefreshCcw className={resetting ? "animate-spin" : ""} size={16} />
+          {resetting ? "Resetting..." : "Reset workspace"}
         </button>
       </div>
       <div className="rounded border border-teal/20 bg-white px-4 py-3 text-sm font-semibold text-ink/75">

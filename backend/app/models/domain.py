@@ -18,6 +18,7 @@ class Client(Base, TimestampMixin):
     pan: Mapped[str | None] = mapped_column(String(20))
     gstin: Mapped[str | None] = mapped_column(String(20))
     financial_year: Mapped[str] = mapped_column(String(20), default="2025-26")
+    form3cd_generated_at: Mapped[datetime | None] = mapped_column(DateTime)
     files = relationship("UploadedFile", back_populates="client")
     audit_runs = relationship("AuditRun", back_populates="client")
 

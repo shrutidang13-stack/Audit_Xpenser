@@ -110,16 +110,14 @@ def patch_audit_exception(client_id: int, exception_id: int, payload: ReviewPatc
     if payload.comment is not None:
         item.ca_remarks = payload.comment
     db.commit()
-    generate_queries_from_exceptions(db, client_id, item.audit_run_id)
     db.refresh(item)
     return _exception(item)
 
 
 @router.post("/{client_id}/queries/generate")
 def generate_queries(client_id: int, db: Session = Depends(get_db)):
-    run = latest_audit_run(db, client_id)
-    created = generate_queries_from_exceptions(db, client_id, run.id if run else None)
-    return {"created": len(created)}
+    created = generate_queries_from_exceptions(db, client_id)
+    return {"created": len(created), "source": "Potential Client Query Register"}
 
 
 @router.get("/{client_id}/queries")
@@ -128,7 +126,7 @@ def list_queries(client_id: int, status: str | None = None, page: int = Query(1,
     if status:
         query = query.filter(ClientQuery.status == status)
     total = query.count()
-    items = query.order_by(ClientQuery.id.desc()).offset((page - 1) * page_size).limit(page_size).all()
+    items = query.order_by(ClientQuery.query_number.asc()).offset((page - 1) * page_size).limit(page_size).all()
     return {
         "total": total,
         "page": page,
@@ -142,6 +140,8 @@ def list_queries(client_id: int, status: str | None = None, page: int = Query(1,
                 "ledger": item.ledger,
                 "transaction_date": item.transaction_date,
                 "amount": item.amount,
+                "issue_detected": item.issue_detected,
+                "priority": item.priority,
                 "documents_required": item.documents_required or item.required_document,
                 "client_response": item.client_response,
                 "ca_note": item.ca_note,
@@ -162,7 +162,6 @@ def send_queries_email(client_id: int, payload: QueryEmailRequest, db: Session =
     if not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", to_email):
         raise HTTPException(400, "Enter a valid recipient email address.")
 
-    generate_queries_from_exceptions(db, client_id)
     output = generate_query_letter_docx(db, client_id, payload.status)
     subject = payload.subject or f"Tax Audit Queries - {client.name} FY {client.financial_year}"
     body = payload.message or (
