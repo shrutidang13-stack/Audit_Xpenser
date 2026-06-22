@@ -1,21 +1,21 @@
-import { BookOpen, ClipboardCheck, ClipboardList, FileSearch, FileText, FolderUp, History, Landmark, LayoutDashboard, ReceiptText, Scale, ShieldCheck } from "lucide-react";
+import { BookOpen, ClipboardCheck, ClipboardList, FileSearch, FileText, FolderUp, Landmark, LayoutDashboard, ReceiptText, Scale, ShieldCheck } from "lucide-react";
 import { NavLink, Outlet, useParams } from "react-router-dom";
 
 const navItems = [
+  ["Complete CA Dashboard", "/ca-dashboard", ShieldCheck],
+  ["Audit Dashboard", "/audit-dashboard", LayoutDashboard],
   ["Upload Centre", "/", FolderUp],
   ["Mapping", "/mapping", ClipboardList],
   ["Data", "/processing", Scale],
+  ["Fixed Asset Schedule- Companies Act", "/fixed-assets", Landmark],
+  ["Fixed Asset Schedule - Income Tax Act", "/fixed-assets-income-tax", Landmark],
   ["Audit Worksheet", "/audit-worksheet", ClipboardCheck],
-  ["Audit Dashboard", "/audit-dashboard", LayoutDashboard],
-  ["Complete CA Dashboard", "/ca-dashboard", ShieldCheck],
   ["GST Reco", "/gst-reco", ReceiptText],
-  ["Fixed Asset Schedule", "/fixed-assets", Landmark],
   ["Bill Matching", "/bill-matching", FileSearch],
-  ["Rules", "/rules", BookOpen],
   ["Form 3CD", "/form3cd", ClipboardList],
   ["Client Queries", "/queries", FileText],
   ["Working Paper", "/working-paper", FileText],
-  ["Audit Trail", "/audit-trail", History]
+  ["Rules", "/rules", BookOpen]
 ];
 
 export function Layout() {

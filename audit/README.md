@@ -131,6 +131,21 @@ npm install
 npm run dev
 ```
 
+### Optional MSME Guard Integration
+
+AuditXpenser remains fully usable when MSME Guard is offline. To enable the
+Complete CA Dashboard integration, add these values to `backend/.env`:
+
+```env
+MSME_ENABLED=true
+MSME_API_BASE_URL=http://127.0.0.1:3001
+MSME_TIMEOUT_SECONDS=30
+MSME_API_TOKEN=
+```
+
+The browser calls only AuditXpenser. Its backend performs the MSME Guard API
+requests and returns a normalized response from `GET /api/ca-dashboard/{client_id}`.
+
 ## Upload Areas
 
 The current hackathon screen focuses on:

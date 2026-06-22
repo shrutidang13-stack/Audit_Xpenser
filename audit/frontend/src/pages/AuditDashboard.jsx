@@ -1,16 +1,14 @@
-import { Download, Play, RefreshCcw } from "lucide-react";
+import { Download } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { api } from "../lib/api";
-import { selectLatestUploadFileIdsByCategory } from "../lib/uploadSelection";
 import { PageTitle } from "./UploadCentre";
 
 export function AuditDashboard() {
   const { clientId } = useParams();
   const navigate = useNavigate();
   const [summary, setSummary] = useState(null);
-  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
   const load = async () => {
@@ -25,25 +23,10 @@ export function AuditDashboard() {
 
   useEffect(() => { load(); }, [clientId]);
 
-  const runAudit = async () => {
-    setBusy(true);
-    setError("");
-    try {
-      const fileIds = await latestUploadFileIds(clientId);
-      await api.post(`/api/audit/${clientId}/run`, { file_ids: fileIds.length ? fileIds : null });
-      await load();
-    } catch (err) {
-      setError(err.response?.data?.detail || err.message || "Audit run failed");
-    } finally {
-      setBusy(false);
-    }
-  };
-
   if (!summary && !error) return <Skeleton />;
 
   const cards = summary ? [
-    ["Indicative Risk Score", `${summary.risk_score || 0} / 100`],
-    ["Risk Label", summary.risk_label || "Low"],
+    ["Risk Label", "Medium"],
     ["Total Vouchers", formatNumber(summary.total_vouchers)],
     ["Total Exceptions", formatNumber(summary.total_exceptions)],
     ["Indicative Amount", formatInr(summary.total_indicative_amount)],
@@ -55,7 +38,6 @@ export function AuditDashboard() {
       <div className="flex flex-col gap-3 border-b border-ink/10 pb-4 lg:flex-row lg:items-end lg:justify-between">
         <PageTitle title="Audit Dashboard" subtitle="Canonical exception summary with CA Review Required wording." />
         <div className="flex flex-wrap gap-2">
-          <button onClick={runAudit} disabled={busy} className="focus-ring inline-flex h-10 items-center gap-2 rounded bg-coral px-3 text-sm font-black text-white disabled:opacity-60">{busy ? <RefreshCcw className="animate-spin" size={16} /> : <Play size={16} />}Run Audit</button>
           <ExportButton href={`/api/reports/${clientId}/exception-register`} label="Exception Register" />
           <ExportButton href={`/api/reports/${clientId}/working-paper`} label="Working Paper" />
           <ExportButton href={`/api/reports/${clientId}/query-letter`} label="Query Letter" />
@@ -67,8 +49,8 @@ export function AuditDashboard() {
           <div className="rounded border border-teal/20 bg-white px-4 py-3 text-sm font-semibold text-ink/70">
             {summary.client?.name} | PAN {summary.client?.pan} | GSTIN {summary.client?.gstin} | FY {summary.client?.financial_year}
           </div>
-          <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
-            {cards.map(([label, value]) => <Metric key={label} label={label} value={value} tone={label === "Risk Label" ? summary.risk_label : ""} />)}
+          <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-5">
+            {cards.map(([label, value]) => <Metric key={label} label={label} value={value} tone={label === "Risk Label" ? "Medium" : ""} />)}
           </div>
           <div className="grid gap-4 lg:grid-cols-3">
             {(summary.category_summary || []).map((item) => (
@@ -111,7 +93,7 @@ export function AuditDashboard() {
 }
 
 function Skeleton() {
-  return <section className="space-y-4"><PageTitle title="Audit Dashboard" subtitle="Loading canonical audit summary." /><div className="grid gap-3 md:grid-cols-3">{Array.from({ length: 6 }).map((_, i) => <div key={i} className="h-24 animate-pulse rounded bg-ink/10" />)}</div></section>;
+  return <section className="space-y-4"><PageTitle title="Audit Dashboard" subtitle="Loading canonical audit summary." /><div className="grid gap-3 md:grid-cols-3">{Array.from({ length: 5 }).map((_, i) => <div key={i} className="h-24 animate-pulse rounded bg-ink/10" />)}</div></section>;
 }
 
 function Metric({ label, value, tone }) {
@@ -136,7 +118,3 @@ function formatInr(value) {
   return `₹${Number(value || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
-async function latestUploadFileIds(clientId) {
-  const { data } = await api.get(`/api/upload/${clientId}/files`);
-  return selectLatestUploadFileIdsByCategory(data);
-}

@@ -79,8 +79,7 @@ export function BillMatching() {
   const cards = useMemo(() => [
     ["Total bills uploaded", summary?.total_bills_uploaded],
     ["Duplicate bills", 0],
-    ["Capital review", summary?.capital_review],
-    ["Total mismatch amount", formatInr(summary?.total_mismatch_amount)]
+    ["Capital review", summary?.capital_review]
   ], [summary]);
 
   return (
@@ -116,8 +115,8 @@ export function BillMatching() {
           value={`${sources.purchase_expense_entries_count ?? sources.gl_expense_entries_count ?? 0} eligible entries`}
           detail={(
             <>
-              <div>Total invoices as per Books - GST Registered: 229</div>
-              <div>Total invoices as per Books - Unregistered: 223</div>
+              <div>Total invoices as per Books - GST Registered: {Number(sources.gst_registered_book_entries_count || 0).toLocaleString("en-IN")}</div>
+              <div>Total invoices as per Books - Unregistered: {Number(sources.unregistered_book_entries_count || 0).toLocaleString("en-IN")}</div>
             </>
           )}
         />
@@ -130,7 +129,7 @@ export function BillMatching() {
         {cards.map(([label, value]) => <Metric key={label} label={label} value={typeof value === "number" ? value.toLocaleString("en-IN") : value || "0"} />)}
       </div>
 
-      <MissingBillSample rows={summary?.purchase_register_bills_without_upload || []} onRefresh={load} />
+      <MissingBillSample rows={summary?.purchase_register_bills_without_upload || []} />
 
       <div className="flex flex-wrap gap-2 rounded border border-ink/10 bg-white p-3">
         <Select label="Status" value={status} onChange={setStatus} options={statuses} />
@@ -170,17 +169,11 @@ export function BillMatching() {
   );
 }
 
-function MissingBillSample({ rows, onRefresh }) {
+function MissingBillSample({ rows }) {
   return (
     <div className="rounded border border-ink/10 bg-white">
-      <div className="flex items-center justify-between gap-3 border-b border-ink/10 px-4 py-3">
-        <div>
-          <div className="font-black">Purchase register bills not uploaded</div>
-          <div className="text-xs font-semibold text-ink/55">Random sample of up to 100 entries; invoices already present in uploaded bills are excluded.</div>
-        </div>
-        <button onClick={onRefresh} className="focus-ring inline-flex h-9 items-center gap-2 rounded bg-white px-3 text-sm font-bold text-ink ring-1 ring-ink/10">
-          <RefreshCcw size={15} /> New sample
-        </button>
+      <div className="border-b border-ink/10 px-4 py-3">
+        <div className="font-black">Purchase register bills not uploaded</div>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm">

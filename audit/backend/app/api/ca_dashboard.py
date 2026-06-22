@@ -21,7 +21,8 @@ def ca_dashboard(client_id: int, db: Session = Depends(get_db)):
         raise HTTPException(404, "Client not found")
 
     auditxpenser = {
-        "expense_audit": _safe(lambda: get_expense_audit_results(db, client_id), {"summary": {}, "rows": []}),
+        "expense_audit": _safe(lambda: _expense_audit_snapshot(db, client_id), {"summary": {}, "rows": []}),
+        "dashboard_summary": _safe(lambda: _dashboard_summary(db, client_id), {}),
         "gst_tds": _gst_tds_snapshot(db, client_id),
         "form3cd": _safe(lambda: get_form3cd_report(client, db), {}),
         "client_queries": _client_queries(db, client_id),
@@ -30,6 +31,7 @@ def ca_dashboard(client_id: int, db: Session = Depends(get_db)):
     msme_guard = get_msme_dashboard_data()
     return {
         "client_id": client_id,
+        "financial_year": client.financial_year,
         "client": {
             "id": client.id,
             "name": client.name,
@@ -48,6 +50,27 @@ def _safe(func, fallback):
         return func()
     except Exception:
         return fallback
+
+
+def _dashboard_summary(db: Session, client_id: int) -> dict:
+    # Import lazily to avoid a router import cycle during FastAPI startup.
+    from app.api.routes import dashboard_summary
+
+    return dashboard_summary(client_id, db)
+
+
+def _expense_audit_snapshot(db: Session, client_id: int) -> dict:
+    data = get_expense_audit_results(db, client_id)
+    rows = data.get("rows") or []
+    data["summary"] = {
+        **(data.get("summary") or {}),
+        "payment_40a3_review_items": len([
+            row
+            for row in rows
+            if row.get("payment_40a3_review") != "No difference noted from available data"
+        ]),
+    }
+    return data
 
 
 def _gst_tds_snapshot(db: Session, client_id: int) -> dict:
@@ -95,18 +118,30 @@ def _client_queries(db: Session, client_id: int) -> list[dict]:
 def _analytics(auditxpenser: dict, msme_guard: dict) -> dict:
     audit_summary = auditxpenser.get("audit_summary") or {}
     expense_summary = (auditxpenser.get("expense_audit") or {}).get("summary") or {}
-    msme_risk = ((msme_guard.get("msme_compliance") or {}).get("risk_score") or {}).get("score", 0)
+    msme_available = msme_guard.get("status") == "available"
+    msme_risk_value = ((msme_guard.get("msme_compliance") or {}).get("risk_score") or {}).get("score")
     tax = msme_guard.get("tax_disallowance_43bh") or {}
     disallowance_rows = tax.get("taxDisallowanceSummary") or []
-    tax_impact = sum(float(row.get("principalDisallowance") or row.get("interestPermanentDisallowance") or 0) for row in disallowance_rows if isinstance(row, dict))
+    tax_impact = sum(
+        float(row.get("principalDisallowance") or 0) + float(row.get("interestPermanentDisallowance") or 0)
+        for row in disallowance_rows
+        if isinstance(row, dict)
+    )
     critical = int(audit_summary.get("pending_query_count") or 0) + len(msme_guard.get("form3cd", {}).get("clause26", []) or [])
     expense_risk = int(audit_summary.get("audit_run", {}).get("risk_score") or audit_summary.get("latest_run", {}).get("risk_score") or 0)
     if not expense_risk and expense_summary:
         expense_risk = min(int(expense_summary.get("ca_review_required_count") or 0) * 10, 100)
+    expense_risk = max(expense_risk, 30)
+    msme_risk = int(msme_risk_value or 0) if msme_available else None
+    domain_scores = [expense_risk]
+    if msme_risk is not None:
+        domain_scores.append(msme_risk)
     return {
         "total_expense_risk": expense_risk,
-        "total_msme_risk": int(msme_risk or 0),
+        "total_msme_risk": msme_risk,
         "total_tax_impact": round(tax_impact, 2),
         "critical_issues_count": critical,
-        "risk_score": min(100, int((expense_risk + int(msme_risk or 0)) / 2)),
+        "risk_score": min(100, max(domain_scores)),
+        "risk_basis": "highest_domain",
+        "msme_risk_available": msme_available,
     }

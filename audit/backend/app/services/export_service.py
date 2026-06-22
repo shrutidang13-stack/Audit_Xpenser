@@ -73,7 +73,7 @@ def _add_bill_matching_summary(doc: Document, db: Session, client_id: int) -> No
 def _add_module_review_summary(doc: Document, db: Session, client_id: int) -> None:
     depreciation = db.query(FixedAssetDepreciation).filter(FixedAssetDepreciation.client_id == client_id).all()
     alerts = db.query(FixedAssetReviewAlert).filter(FixedAssetReviewAlert.client_id == client_id).all()
-    doc.add_paragraph(f"Fixed asset depreciation summary: current year depreciation Rs. {sum(row.depreciation_for_year or 0 for row in depreciation):,.2f}; closing WDV Rs. {sum(row.closing_wdv or 0 for row in depreciation):,.2f}.")
+    doc.add_paragraph(f"Fixed asset depreciation summary: current year depreciation Rs. {sum(row.depreciation_for_year or 0 for row in depreciation):,.2f}; Closing Net Block Rs. {sum(row.closing_wdv or 0 for row in depreciation):,.2f}.")
     doc.add_paragraph(f"Fixed asset review alerts: {len(alerts)}. Language is indicative and subject to CA verification.")
     bill_reviews = db.query(BillMatchingResult).filter(BillMatchingResult.client_id == client_id, BillMatchingResult.match_status.in_(["only_in_bill", "only_in_books", "amount_mismatch", "gst_mismatch", "capital_review"])).count()
     doc.add_paragraph(f"Bill matching potential Form 3CD / expense evidence review items: {bill_reviews}. Possible impact only; final reporting requires CA verification.")

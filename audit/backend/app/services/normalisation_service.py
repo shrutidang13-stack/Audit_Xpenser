@@ -33,13 +33,15 @@ FIELD_ALIASES = {
 
 
 def normalise_client_uploads(db: Session, client_id: int, file_ids: list[int] | None = None) -> dict:
-    db.execute(delete(ExpenseTransaction).where(ExpenseTransaction.client_id == client_id))
-    db.execute(delete(Vendor).where(Vendor.client_id == client_id))
-    db.execute(delete(Bill).where(Bill.client_id == client_id))
-    db.execute(delete(TDSRecord).where(TDSRecord.client_id == client_id))
-    db.execute(delete(GSTRecord).where(GSTRecord.client_id == client_id))
-    db.execute(delete(BankTransaction).where(BankTransaction.client_id == client_id))
-    db.execute(delete(TrialBalanceLine).where(TrialBalanceLine.client_id == client_id))
+    models = (ExpenseTransaction, Vendor, Bill, TDSRecord, GSTRecord, BankTransaction, TrialBalanceLine)
+    for model in models:
+        query = delete(model).where(model.client_id == client_id)
+        if file_ids:
+            # A scoped processing run must only replace rows produced by those
+            # files. Clearing the whole client here made every later upload
+            # erase previously extracted bills and GST records.
+            query = query.where(model.source_file_id.in_(file_ids))
+        db.execute(query)
     db.commit()
 
     counts = {"expenses": 0, "vendors": 0, "bills": 0, "tds": 0, "gst": 0, "bank": 0, "trial_balance": 0}

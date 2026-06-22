@@ -123,6 +123,26 @@ async function getLatestCompletedImport(req, res, next) {
   }
 }
 
+async function getLatestCompletedImportSummary(req, res, next) {
+  try {
+    const result = tallyImportService.getLatestCompletedImportSummary();
+    if (!result) return res.status(404).json({ success: false, error: "No completed Tally import found" });
+    res.json({ success: true, ...result });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function getStatementSummary(req, res, next) {
+  try {
+    const result = tallyImportService.getStatementSummary(req.params.id, req.query || {});
+    if (!result) return res.status(404).json({ success: false, error: "Import run not found" });
+    res.json({ success: true, ...result });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getLedgerVouchers(req, res, next) {
   try {
     const result = tallyImportService.getLedgerVouchers(req.params.id, req.query || {});
@@ -148,6 +168,8 @@ module.exports = {
   importStatus,
   importTally,
   getLatestCompletedImport,
+  getLatestCompletedImportSummary,
+  getStatementSummary,
   getImport,
   getLedgerVouchers,
   getDaybook,

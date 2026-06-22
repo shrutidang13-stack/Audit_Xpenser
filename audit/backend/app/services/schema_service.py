@@ -6,6 +6,9 @@ from app.core.database import engine
 def ensure_reporting_schema() -> None:
     inspector = inspect(engine)
     table_names = set(inspector.get_table_names())
+    _ensure_columns(table_names, "clients", {
+        "form3cd_generated_at": "DATETIME",
+    })
     _ensure_columns(table_names, "client_queries", {
         "exception_id": "INTEGER",
         "category": "VARCHAR(120)",

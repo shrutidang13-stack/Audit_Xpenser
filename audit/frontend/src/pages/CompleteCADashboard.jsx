@@ -32,12 +32,20 @@ export function CompleteCADashboard() {
   const audit = data?.auditxpenser || {};
   const msme = data?.msme_guard || {};
   const expenseSummary = audit.expense_audit?.summary || {};
+  const dashboardSummary = audit.dashboard_summary || {};
   const sundryCreditors = getRows(msme.sundry_creditors);
+  const voucherEvidence = getRows(msme.voucher_evidence || msme.payments);
+  const compliance = msme.msme_compliance || {};
+  const importSummary = compliance.import_summary || {};
+  const verificationSummary = compliance.verification_summary || {};
+  const msmeRisk = compliance.risk_score || {};
+  const expenseRisk = Math.max(Number(analytics.total_expense_risk || 0), 30);
+  const overallRisk = Math.max(Number(analytics.risk_score || 0), expenseRisk);
   const riskData = useMemo(() => [
-    { name: "Expense", value: analytics.total_expense_risk || 0 },
-    { name: "MSME", value: analytics.total_msme_risk || 0 },
-    { name: "Combined", value: analytics.risk_score || 0 },
-  ], [analytics]);
+    { name: "Expense", value: expenseRisk },
+    { name: "MSME", value: analytics.total_msme_risk },
+    { name: "Overall", value: overallRisk },
+  ].filter((item) => item.value != null), [analytics, expenseRisk, overallRisk]);
   const statutoryData = useMemo(() => [
     { name: "TDS", value: audit.gst_tds?.tds_alerts || 0 },
     { name: "GST", value: audit.gst_tds?.gst_alerts || 0 },
@@ -62,9 +70,9 @@ export function CompleteCADashboard() {
       {data && (
         <>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-            <Metric label="Combined Risk" value={`${analytics.risk_score || 0} / 100`} />
-            <Metric label="Expense Risk" value={`${analytics.total_expense_risk || 0} / 100`} />
-            <Metric label="MSME Risk" value={`${analytics.total_msme_risk || 0} / 100`} />
+            <Metric label="Overall Risk" value={formatRisk(overallRisk)} detail="Highest available domain" />
+            <Metric label="Expense Risk" value={formatRisk(expenseRisk)} />
+            <Metric label="MSME Risk" value={formatRisk(analytics.total_msme_risk)} detail={analytics.msme_risk_available ? "Connected" : "MSME Guard unavailable"} />
             <Metric label="Tax Impact" value={formatInr(analytics.total_tax_impact)} />
             <Metric label="Critical Issues" value={analytics.critical_issues_count || 0} />
           </div>
@@ -100,10 +108,17 @@ export function CompleteCADashboard() {
               <Fact label="Ledgers audited" value={expenseSummary.total_ledgers_audited || 0} />
               <Fact label="Amount audited" value={formatInr(expenseSummary.total_amount_audited)} />
               <Fact label="GL differences" value={expenseSummary.gl_differences || 0} />
+              <Fact label="40A(3) review items" value={expenseSummary.payment_40a3_review_items || 0} />
               <Fact label="CA review required" value={expenseSummary.ca_review_required_count || 0} />
+              <Fact label="Missing bills" value={dashboardSummary.missing_bills || 0} />
+              <Fact label="Files uploaded" value={dashboardSummary.files_uploaded || 0} />
             </Panel>
             <Panel title="MSME Compliance">
               <Fact label="Sundry creditors" value={sundryCreditors.length} />
+              <Fact label="Vouchers imported" value={importSummary.vouchersParsed || importSummary.vouchersPersisted || 0} />
+              <Fact label="Verified MSMEs" value={verificationSummary.verifiedMSME || 0} />
+              <Fact label="Pending verification" value={verificationSummary.pending || verificationSummary.pendingVerification || 0} />
+              <Fact label="Compliance score" value={msmeRisk.score != null ? `${msmeRisk.score} / 100` : "Not available"} />
               <Fact label="Status" value={statusLabel(msme.status)} />
               <Fact label="Import run" value={msme.import_run_id || "Not available"} />
               <Fact label="Report" value={msme.report_id || "Not available"} />
@@ -114,6 +129,33 @@ export function CompleteCADashboard() {
               <Fact label="MSME Clause 26" value={(msme.form3cd?.clause26 || []).length || 0} />
               <Fact label="Client queries" value={(audit.client_queries || []).length} />
             </Panel>
+          </div>
+
+          <div className="grid gap-5 xl:grid-cols-2">
+            <TablePanel
+              title="Payment / Voucher Evidence"
+              rows={voucherEvidence.slice(0, 8)}
+              columns={[
+                ["vendorName", "Vendor"],
+                ["invoiceNumber", "Invoice"],
+                ["paymentDate", "Payment Date"],
+                ["principalAmount", "Principal", formatInr],
+                ["interestAmount", "Interest", formatInr],
+              ]}
+              empty="No payment or voucher evidence is available from MSME Guard."
+            />
+            <TablePanel
+              title="Client Queries"
+              rows={(audit.client_queries || []).slice(0, 8)}
+              columns={[
+                ["query_number", "Query"],
+                ["ledger", "Ledger"],
+                ["priority", "Priority"],
+                ["status", "Status"],
+                ["amount", "Amount", formatInr],
+              ]}
+              empty="No client queries are currently open."
+            />
           </div>
 
           <div className="grid gap-5 xl:grid-cols-2">
@@ -143,20 +185,10 @@ export function CompleteCADashboard() {
 
           <div className="grid gap-5 xl:grid-cols-2">
             <TablePanel
-              title="Trial Balance"
-              rows={getRows(msme.trial_balance).slice(0, 8)}
-              columns={[
-                ["ledgerName", "Ledger"],
-                ["parent", "Group"],
-                ["debit", "Debit", formatInr],
-                ["credit", "Credit", formatInr],
-              ]}
-              empty="No MSME trial balance rows available."
-            />
-            <TablePanel
               title="MSME Interest"
               rows={getRows(msme.interest?.section23).slice(0, 8)}
               columns={[
+                ["financialYear", "FY"],
                 ["vendorName", "Vendor"],
                 ["invoiceNumber", "Invoice"],
                 ["interestPayable", "Interest Payable", formatInr],
@@ -167,8 +199,28 @@ export function CompleteCADashboard() {
           </div>
 
           <div className="grid gap-5 xl:grid-cols-2">
-            <StatementPanel title="Profit & Loss" statement={msme.profit_loss} />
-            <StatementPanel title="Balance Sheet" statement={msme.balance_sheet} />
+            <TablePanel
+              title="Form 3CD — MSME Clause 22"
+              rows={getRows(msme.form3cd?.clause22).slice(0, 8)}
+              columns={[
+                ["supplier", "Supplier"],
+                ["amountInadmissible", "Inadmissible", formatInr],
+                ["interestPayable", "Interest", formatInr],
+                ["remarks", "Remarks"],
+              ]}
+              empty="No MSME Clause 22 rows are available."
+            />
+            <TablePanel
+              title="Form 3CD — Section 43B(h) / Clause 26"
+              rows={getRows(msme.form3cd?.clause26).slice(0, 8)}
+              columns={[
+                ["supplier", "Supplier"],
+                ["invoiceNumber", "Invoice"],
+                ["disallowanceAmount", "Disallowance", formatInr],
+                ["status", "Status"],
+              ]}
+              empty="No MSME Clause 26 rows are available."
+            />
           </div>
         </>
       )}
@@ -199,11 +251,12 @@ function MSMEStatus({ status, message, importRunId, reportId }) {
   );
 }
 
-function Metric({ label, value }) {
+function Metric({ label, value, detail }) {
   return (
     <div className="rounded border border-ink/10 bg-white p-4">
       <div className="flex items-center gap-2 text-xs font-bold uppercase text-ink/55"><ShieldCheck size={14} />{label}</div>
       <div className="mt-2 text-2xl font-black">{value}</div>
+      {detail && <div className="mt-1 text-xs font-semibold text-ink/50">{detail}</div>}
     </div>
   );
 }
@@ -235,47 +288,10 @@ function TablePanel({ title, rows, columns, empty }) {
   );
 }
 
-function StatementPanel({ title, statement }) {
-  const rows = getStatementRows(statement);
-  return (
-    <TablePanel
-      title={title}
-      rows={rows.slice(0, 8)}
-      columns={[
-        ["name", "Particular"],
-        ["ledgerName", "Ledger"],
-        ["amount", "Amount", formatInr],
-      ]}
-      empty={`${title} data is not available from MSME Guard.`}
-    />
-  );
-}
-
 function getRows(value) {
   if (Array.isArray(value)) return value;
   if (Array.isArray(value?.rows)) return value.rows;
   return [];
-}
-
-function getStatementRows(statement) {
-  const rows = getRows(statement);
-  if (rows.length) return rows;
-  const groups = Array.isArray(statement?.groups) ? statement.groups : [];
-  return groups.flatMap((group) => {
-    const ledgers = Array.isArray(group.ledgers) ? group.ledgers : [];
-    if (!ledgers.length) {
-      return [{
-        name: group.groupName,
-        ledgerName: group.groupName,
-        amount: Math.abs(group.closingBalance || group.credit || group.debit || 0),
-      }];
-    }
-    return ledgers.map((ledger) => ({
-      ...ledger,
-      name: group.groupName,
-      amount: Math.abs(ledger.derivedClosingBalance ?? ledger.closingBalance ?? ledger.credit ?? ledger.debit ?? 0),
-    }));
-  });
 }
 
 function statusLabel(status) {
@@ -290,4 +306,8 @@ function statusLabel(status) {
 
 function formatInr(value) {
   return `Rs. ${Number(value || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
+}
+
+function formatRisk(value) {
+  return value == null ? "Not available" : `${value} / 100`;
 }

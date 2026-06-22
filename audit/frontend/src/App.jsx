@@ -8,6 +8,7 @@ import { CompleteCADashboard } from "./pages/CompleteCADashboard";
 import { Dashboard } from "./pages/Dashboard";
 import { Exceptions } from "./pages/Exceptions";
 import { FixedAssets } from "./pages/FixedAssets";
+import { FixedAssetsIncomeTax } from "./pages/FixedAssetsIncomeTax";
 import { Form3CD } from "./pages/Form3CD";
 import { GSTReco } from "./pages/GSTReco";
 import { Mapping } from "./pages/Mapping";
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
         { path: "clients/:clientId/ca-dashboard", element: <CompleteCADashboard /> },
         { path: "client/:clientId/gst-reco", element: <GSTReco /> },
         { path: "client/:clientId/fixed-assets", element: <FixedAssets /> },
+        { path: "client/:clientId/fixed-assets-income-tax", element: <FixedAssetsIncomeTax /> },
         { path: "client/:clientId/bill-matching", element: <BillMatching /> },
         { path: "client/:clientId/rules", element: <ReferenceLibrary /> },
         { path: "client/:clientId/reference-library", element: <ReferenceLibrary /> },

@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from datetime import datetime
 from difflib import SequenceMatcher
+from pathlib import Path
 import random
 import re
 
@@ -25,7 +26,9 @@ from app.models import (
 )
 from app.services.audit_pipeline_service import _match_bills as legacy_match_bills
 from app.services.bill_extraction_service import extract_bills, latest_bill_uploads
-from app.services.utils import clean_text
+from app.services.file_parser_service import _extract_tally_vouchers_from_path
+from app.services.gst_reco_service import _combined_book_invoices, _latest_books_file
+from app.services.utils import clean_text, parse_amount, parse_date
 
 
 AMOUNT_TOLERANCE = 10
@@ -33,21 +36,27 @@ GST_TOLERANCE = 1
 ASSET_TERMS = ("laptop", "computer", "machinery", "equipment", "vehicle", "furniture", "software", "renovation", "asset", "printer", "server")
 BOOK_MATCH_CATEGORIES = {"purchase-register", "expense-ledger"}
 EXPENSE_TYPES_FOR_BILL_MATCH = {"Direct Expense", "Indirect Expense"}
+SOURCE_BOOK_PREFIX = "bill-matching-books:"
 
 
 def sources(db: Session, client_id: int) -> dict:
+    _ensure_source_book_entries(db, client_id)
     bill_files = latest_bill_uploads(db, client_id)
     bill_file_ids = [item.id for item in bill_files]
     bills = _active_bills_query(db, client_id, bill_file_ids).count()
     files = db.query(UploadedFile).filter(UploadedFile.client_id == client_id).all()
     by_category = Counter(file.category for file in files)
     eligible_books = _eligible_book_transactions(db, client_id)
+    registered_count = sum(1 for row in eligible_books if (row.source_ref or "").startswith(f"{SOURCE_BOOK_PREFIX}registered:"))
+    unregistered_count = sum(1 for row in eligible_books if (row.source_ref or "").startswith(f"{SOURCE_BOOK_PREFIX}unregistered:"))
     return {
         "uploaded_bills_count": bills,
         "bill_files_count": len(bill_files),
         "all_book_entries_count": db.query(ExpenseTransaction).filter(ExpenseTransaction.client_id == client_id).count(),
         "purchase_expense_entries_count": len(eligible_books),
         "gl_expense_entries_count": len(eligible_books),
+        "gst_registered_book_entries_count": registered_count,
+        "unregistered_book_entries_count": unregistered_count,
         "purchase_register_entries_count": by_category.get("purchase-register", 0),
         "expense_ledger_source_files_count": by_category.get("expense-ledger", 0),
         "input_register_entries_count": by_category.get("gst-data", 0),
@@ -73,6 +82,7 @@ def run_bill_matching(db: Session, client_id: int) -> dict:
     db.execute(delete(DuplicateBillFlag).where(DuplicateBillFlag.client_id == client_id))
     db.execute(delete(AuditException).where(AuditException.client_id == client_id, AuditException.exception_type == "Bill Matching"))
     db.commit()
+    _ensure_source_book_entries(db, client_id)
 
     run = BillMatchingRun(client_id=client_id, status="running", started_at=datetime.utcnow())
     db.add(run)
@@ -386,8 +396,11 @@ def _eligible_book_transactions(db: Session, client_id: int) -> list[ExpenseTran
     seen: set[int] = set()
     for tx, category in rows:
         source_category = (category or "").casefold()
+        source_ref = tx.source_ref or ""
         ledger_key = _ledger_key(tx.ledger_name)
-        if source_category == "purchase-register":
+        if source_ref.startswith(SOURCE_BOOK_PREFIX):
+            include = True
+        elif source_category == "purchase-register":
             include = True
         elif source_category == "expense-ledger":
             include = ledger_key in structured_expense_keys and _is_expense_side_entry(tx)
@@ -397,6 +410,96 @@ def _eligible_book_transactions(db: Session, client_id: int) -> list[ExpenseTran
             eligible.append(tx)
             seen.add(tx.id)
     return eligible
+
+
+def _ensure_source_book_entries(db: Session, client_id: int) -> None:
+    existing = (
+        db.query(ExpenseTransaction)
+        .filter(
+            ExpenseTransaction.client_id == client_id,
+            ExpenseTransaction.source_ref.like(f"{SOURCE_BOOK_PREFIX}%"),
+        )
+        .count()
+    )
+    if existing:
+        return
+
+    books_file = _latest_books_file(db, client_id)
+    registered_rows = _combined_book_invoices(db, client_id, books_file) if books_file else []
+    for index, row in enumerate(registered_rows, start=1):
+        db.add(ExpenseTransaction(
+            client_id=client_id,
+            source_ref=f"{SOURCE_BOOK_PREFIX}registered:{index}",
+            date=row.invoice_date,
+            voucher_number=_voucher_from_source(row.source_ref),
+            ledger_name="Purchase Register",
+            vendor_name=row.vendor_name,
+            amount=abs(row.amount if row.amount is not None else (row.taxable_value or 0) + (row.tax_amount or 0)),
+            debit_credit="Dr",
+            invoice_number=row.invoice_number,
+            gst_amount=row.tax_amount,
+        ))
+
+    for index, row in enumerate(_unregistered_expense_rows(db, client_id), start=1):
+        db.add(ExpenseTransaction(
+            client_id=client_id,
+            source_ref=f"{SOURCE_BOOK_PREFIX}unregistered:{index}",
+            date=parse_date(row.get("Date")),
+            voucher_number=clean_text(row.get("Voucher number")),
+            ledger_name=clean_text(row.get("Ledger name")),
+            vendor_name=clean_text(row.get("Vendor name")),
+            narration=clean_text(row.get("Narration")),
+            amount=abs(parse_amount(row.get("Amount")) or 0),
+            debit_credit="Dr",
+            payment_mode=clean_text(row.get("Payment mode")),
+            invoice_number=clean_text(row.get("Invoice number")),
+        ))
+    db.commit()
+
+
+def _unregistered_expense_rows(db: Session, client_id: int) -> list[dict]:
+    structured_expense_keys = {
+        _ledger_key(row.ledger_name)
+        for row in db.query(ProcessingExpense).filter(
+            ProcessingExpense.client_id == client_id,
+            ProcessingExpense.expense_type.in_(EXPENSE_TYPES_FOR_BILL_MATCH),
+        ).all()
+        if row.ledger_name
+    }
+    if not structured_expense_keys:
+        return []
+    uploaded = (
+        db.query(UploadedFile)
+        .filter(
+            UploadedFile.client_id == client_id,
+            UploadedFile.file_type == ".xml",
+            UploadedFile.filename.ilike("%Ledgerdump%"),
+        )
+        .order_by(UploadedFile.records_extracted.desc(), UploadedFile.id.desc())
+        .first()
+    )
+    if not uploaded:
+        return []
+    path = Path(uploaded.stored_path)
+    if not path.is_absolute():
+        path = Path(__file__).resolve().parents[2] / path
+    if not path.exists():
+        return []
+    rows = _extract_tally_vouchers_from_path(path)
+    return [
+        row for row in rows
+        if _ledger_key(row.get("Ledger name")) in structured_expense_keys
+        and _ledger_key(row.get("Ledger name")) != "penalty"
+        and clean_text(row.get("Debit/Credit")).casefold() in {"dr", "debit"}
+        and abs(parse_amount(row.get("Amount")) or 0) > 0
+    ]
+
+
+def _voucher_from_source(source_ref: str | None) -> str:
+    text = clean_text(source_ref)
+    marker = "voucher "
+    position = text.casefold().find(marker)
+    return text[position + len(marker):] if position >= 0 else ""
 
 
 def _is_expense_side_entry(tx: ExpenseTransaction) -> bool:

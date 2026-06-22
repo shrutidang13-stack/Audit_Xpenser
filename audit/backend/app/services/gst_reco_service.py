@@ -8,6 +8,7 @@ from pathlib import Path
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
+from app.core.config import get_settings
 from app.models import Client, ExpenseTransaction, GSTRecord, GSTRecoResult, GSTRecoRun, UploadedFile
 from app.services.normalisation_service import normalise_client_uploads
 from app.services.utils import clean_text, from_json, parse_amount, parse_date
@@ -16,6 +17,7 @@ from app.services.utils import clean_text, from_json, parse_amount, parse_date
 GST_CATEGORIES = {"gst-data", "gst", "gstr-2b", "gstr-2a"}
 BOOK_CATEGORIES = {"expense-ledger", "daybook", "books", "gl", "trial-balance"}
 BOOK_CATEGORY_PRIORITY = {"expense-ledger": 0, "daybook": 1, "books": 2, "gl": 3, "trial-balance": 4}
+BACKEND_ROOT = Path(__file__).resolve().parents[2]
 
 
 @dataclass
@@ -37,7 +39,7 @@ def source_status(db: Session, client_id: int) -> dict:
     books_file = _latest_books_file(db, client_id)
     input_register = _input_register_payload(client_id)
     input_ledger = input_register or _input_ledger_payload(books_file)
-    combined_count = len(_combined_book_invoices(db, client_id, books_file)) if books_file and (purchase_register or input_ledger) else None
+    combined_count = len(_combined_book_invoices(db, client_id, books_file)) if purchase_register or input_ledger else None
     return {
         "gstr_file": _gstr_source_payload(gstr_files),
         "gstr_files": [_file_payload(item) for item in gstr_files],
@@ -176,7 +178,7 @@ def _compare(gstr: RecoInvoice, book: RecoInvoice, amount_tolerance: float, date
     if _amount(gstr) and _amount(book) and abs(_amount(gstr) - _amount(book)) > amount_tolerance:
         return "POSSIBLE_MATCH", "Low-Medium", "Invoice number matches but taxable or gross amount differs. Review supporting invoice."
     if not exact_key_match:
-        return "POSSIBLE_MATCH", "Low-Medium", "Vendor and amount appear to match, but invoice/reference differs between books and GSTR-2A/B. CA review required."
+        return "MATCHED", "Low", "Invoice appears matched between books and GSTR-2A/B based on vendor and amount."
     return "MATCHED", "Low", "Invoice appears matched between books and GSTR-2A/B."
 
 
@@ -468,11 +470,16 @@ def _input_ledger_invoice_from_voucher(block: str, filename: str) -> RecoInvoice
 
 
 def _purchase_register_path(client_id: int) -> Path:
-    return Path("uploads") / str(client_id) / "purchase-register" / "PR.xml"
+    return _upload_root() / str(client_id) / "purchase-register" / "PR.xml"
 
 
 def _input_register_path(client_id: int) -> Path:
-    return Path("uploads") / str(client_id) / "input-register" / "Input Register.xlsx"
+    return _upload_root() / str(client_id) / "input-register" / "Input Register.xlsx"
+
+
+def _upload_root() -> Path:
+    configured = Path(get_settings().upload_dir)
+    return configured if configured.is_absolute() else BACKEND_ROOT / configured
 
 
 def _purchase_register_payload(client_id: int) -> dict | None:

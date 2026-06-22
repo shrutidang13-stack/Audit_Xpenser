@@ -121,6 +121,7 @@ def _header_score(labels: list[str], category: str) -> int:
     text = " ".join(labels).casefold()
     expected = {
         "fixed-assets-opening": ["asset", "classification", "original cost", "wdv", "depreciation", "residual", "useful life"],
+        "fixed-assets-opening-income-tax": ["asset", "block", "opening", "wdv", "depreciation", "rate"],
         "fixed-assets-additions": ["asset", "vendor", "invoice", "purchase", "amount", "capitalisation"],
         "fixed-assets-disposals": ["asset", "disposal", "sale", "mode"],
     }

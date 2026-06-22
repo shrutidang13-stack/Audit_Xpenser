@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     smtp_password: str = ""
     smtp_from_email: str = ""
     smtp_use_tls: bool = True
-    msme_enabled: bool = False
+    msme_enabled: bool = True
     msme_api_base_url: str = "http://127.0.0.1:3001"
     msme_timeout_seconds: int = 30
     msme_api_token: str = ""

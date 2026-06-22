@@ -14,12 +14,14 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A3, landscape
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.models import Client, UploadedFile
+from app.models import Client, FixedAssetDepreciation, UploadedFile
 from app.services.expense_audit_service import get_expense_audit_results
 from app.services.fixed_asset_export_service import fixed_asset_excel
 from app.services.fixed_asset_service import class_summary, export_payload
+from app.services.msme_connector_service import get_msme_dashboard_data
 
 
 COLUMNS = [
@@ -114,24 +116,38 @@ DISCLAIMER = "This worksheet contains indicative observations only and requires 
 SAMPLE_REPORTS_DIR = Path(r"C:\Users\Lenovo\Downloads\Expenses")
 FACTORY_RENT_REPORT = SAMPLE_REPORTS_DIR / "Factory_Rent_Report.xlsx"
 FREIGHT_CHARGES_REPORT = SAMPLE_REPORTS_DIR / "Freight_Charges_Report.xlsx"
+SALARY_REGISTER_REPORT = SAMPLE_REPORTS_DIR / "NXTMobility_SalaryRegister_FY2025-26.xlsx"
 DOWNLOADS_DIR = Path(r"C:\Users\Lenovo\Downloads")
 WORKSHEET_SAMPLE_REPORTS = {
-    "accounting charges": DOWNLOADS_DIR / "Accounting_Charges_Report.xlsx",
-    "business promotion": DOWNLOADS_DIR / "Business_Promotion_Report.xlsx",
-    "finance charges": DOWNLOADS_DIR / "Interest_Paid_on_Loan_Report.xlsx",
-    "interest paid on loan": DOWNLOADS_DIR / "Interest_Paid_on_Loan_Report.xlsx",
+    "accounting charges": SAMPLE_REPORTS_DIR / "Accounting_Charges_Report.xlsx",
+    "business promotion": SAMPLE_REPORTS_DIR / "Business_Promotion_Report.xlsx",
+    "finance charges": SAMPLE_REPORTS_DIR / "Interest_Paid_on_Loan_Report.xlsx",
+    "interest paid on loan": SAMPLE_REPORTS_DIR / "Interest_Paid_on_Loan_Report.xlsx",
     "job work": DOWNLOADS_DIR / "Job_Work_Report.xlsx",
     "job work for vehicle": DOWNLOADS_DIR / "Job_Work_Report.xlsx",
     "jobwork": DOWNLOADS_DIR / "Job_Work_Report.xlsx",
-    "office rent": DOWNLOADS_DIR / "Office_Rent_Report.xlsx",
+    "office rent": SAMPLE_REPORTS_DIR / "Office_Rent_Report.xlsx",
     "saumya (job work)": DOWNLOADS_DIR / "Job_Work_Report.xlsx",
-    "staff convence": DOWNLOADS_DIR / "Staff_Convence_Report.xlsx",
-    "staff welfare": DOWNLOADS_DIR / "Staff_Welfare_Report.xlsx",
-    "transportation exp": DOWNLOADS_DIR / "Transportation_Exp_Report.xlsx",
+    "staff convence": SAMPLE_REPORTS_DIR / "Staff_Convence_Report.xlsx",
+    "staff welfare": SAMPLE_REPORTS_DIR / "Staff_Welfare_Report.xlsx",
+    "transportation exp": DOWNLOADS_DIR / "Expenses" / "Transportation_Exp_Report.xlsx",
 }
 JOBWORK_LEDGER_KEYS = {"job work", "job work for vehicle", "saumya (job work)", "jobwork"}
 DEPRECIATION_WORKSHEET_ID = -9001
-DEPRECIATION_AUDIT_AMOUNT = 279067.22
+MSME_INTEREST_WORKSHEET_ID = -9002
+MSME_INTEREST_COLUMNS = [
+    "Financial Year",
+    "Vendor Name",
+    "Invoice Number",
+    "Payment Date",
+    "Delayed Principal",
+    "Days Delayed",
+    "RBI Bank Rate",
+    "Bank Rate Periods",
+    "Interest Payable",
+    "Section 23 Treatment",
+    "Evidence Reference",
+]
 
 
 def get_audit_worksheet_data(db: Session, client_id: int) -> dict:
@@ -140,7 +156,10 @@ def get_audit_worksheet_data(db: Session, client_id: int) -> dict:
         raise ValueError("Client not found")
     data = get_expense_audit_results(db, client_id)
     salary_note = _salary_register_note(db, client_id)
-    rows = [_with_worksheet(row, salary_note) for row in _add_depreciation_row(_merge_jobwork_rows(data["rows"]))]
+    depreciation_amount = _depreciation_audit_amount(db, client_id)
+    msme_data = get_msme_dashboard_data()
+    base_rows = _add_depreciation_row(_merge_jobwork_rows(data["rows"]), depreciation_amount)
+    rows = [_with_worksheet(row, salary_note) for row in _add_msme_interest_row(base_rows, msme_data)]
     summary = {
         **_worksheet_summary(rows, data["summary"]),
         "payment_40a3_review_items": len([row for row in rows if row.get("payment_40a3_review") != "No difference noted from available data"]),
@@ -164,6 +183,8 @@ def get_ledger_worksheet_data(db: Session, client_id: int, result_id: int) -> di
     if not client:
         raise ValueError("Client not found")
     row = _find_result_row(db, client_id, result_id)
+    if _is_msme_interest_row(row):
+        return generate_msme_interest_worksheet(row)
     if _is_depreciation_row(row):
         return generate_depreciation_worksheet(db, client_id, row)
     sample = _sample_report_for_row(row)
@@ -241,11 +262,16 @@ def generate_salary_worksheet(db: Session, client_id: int, audit_result: dict) -
     if salary_file:
         salary_table = _salary_register_table(salary_file)
         if salary_table:
-            return _ledger_payload(audit_result, "Salary Audit Worksheet", salary_table["columns"], salary_table["rows"], [
+            payload = _ledger_payload(audit_result, "Salary Audit Worksheet", salary_table["columns"], salary_table["rows"], [
                 "Salary worksheet uses uploaded salary register format where available.",
                 f"Amount as per Audit: {format_inr(audit_result.get('amount_as_per_audit'))}. Amount as per GL: {format_inr(audit_result.get('amount_as_per_gl'))}.",
                 "TDS u/s 192, PF and ESI review is based on available uploaded payroll data only.",
+                *(salary_table.get("notes") or []),
             ])
+            payload["report_title"] = salary_table.get("title") or "Salary Register"
+            payload["header_groups"] = salary_table.get("header_groups") or []
+            payload["source_report"] = salary_file.name
+            return payload
     return _ledger_payload(audit_result, "Salary Audit Worksheet", GENERAL_COLUMNS, [_general_row(audit_result)], [
         "Salary register data not available for matching - CA Review Required",
     ])
@@ -296,8 +322,34 @@ def generate_depreciation_worksheet(db: Session, client_id: int, audit_result: d
     ])
 
 
+def generate_msme_interest_worksheet(audit_result: dict) -> dict:
+    source_rows = audit_result.get("msme_interest_working") or []
+    rows = []
+    for source in source_rows:
+        rows.append({
+            "Financial Year": source.get("financialYear") or "",
+            "Vendor Name": source.get("vendorName") or "",
+            "Invoice Number": source.get("invoiceNumber") or "",
+            "Payment Date": source.get("paymentDate") or "Outstanding",
+            "Delayed Principal": float(source.get("delayedAmount") or source.get("unpaidAmount") or source.get("paidLateAmount") or source.get("principalAmount") or 0),
+            "Days Delayed": int(source.get("daysDelayed") or 0),
+            "RBI Bank Rate": source.get("rbiBankRate") or "",
+            "Bank Rate Periods": source.get("bankRatePeriods") or "",
+            "Interest Payable": float(source.get("interestPayable") or source.get("interestAmount") or 0),
+            "Section 23 Treatment": "Permanently disallowed",
+            "Evidence Reference": source.get("evidenceReference") or "",
+        })
+    return _ledger_payload(audit_result, "MSME Interest Working - Sections 16 and 23", MSME_INTEREST_COLUMNS, rows, [
+        "Interest is computed by MSME Guard under MSMED Act Section 16 using three times the applicable RBI Bank Rate.",
+        "Interest payable or paid under Section 16 is permanently inadmissible under MSMED Act Section 23.",
+        "Amount as per GL is intentionally shown as zero because this worksheet presents the unrecorded MSME interest liability identified by the audit.",
+    ])
+
+
 def generate_expense_worksheet_xlsx(db: Session, client_id: int, ledger_name: str | None = None, result_id: int | None = None) -> BytesIO:
     row = _selected_result_row(db, client_id, ledger_name, result_id)
+    if _is_msme_interest_row(row):
+        return _ledger_detail_xlsx(generate_msme_interest_worksheet(row))
     if _is_depreciation_row(row):
         return fixed_asset_excel(db, client_id)
     sample = _sample_report_for_row(row)
@@ -458,8 +510,10 @@ def _merge_jobwork_rows(rows: list[dict]) -> list[dict]:
     return merged
 
 
-def _add_depreciation_row(rows: list[dict]) -> list[dict]:
+def _add_depreciation_row(rows: list[dict], depreciation_amount: float | None = None) -> list[dict]:
     if any(_ledger_key(row.get("ledger_name")) == "depreciation" for row in rows):
+        return rows
+    if not depreciation_amount:
         return rows
     item = {
         "id": DEPRECIATION_WORKSHEET_ID,
@@ -467,9 +521,9 @@ def _add_depreciation_row(rows: list[dict]) -> list[dict]:
         "sr_no": len(rows) + 1,
         "ledger_name": "Depreciation",
         "expense_type": "Indirect Expense",
-        "amount_as_per_audit": DEPRECIATION_AUDIT_AMOUNT,
+        "amount_as_per_audit": depreciation_amount,
         "amount_as_per_gl": 0,
-        "difference_amount": DEPRECIATION_AUDIT_AMOUNT,
+        "difference_amount": depreciation_amount,
         "tds_review": "No TDS review triggered based on available statutory mapping",
         "gst_review": "GST RCM not triggered based on ledger nature",
         "payment_40a3_review": "No difference noted from available data",
@@ -481,6 +535,47 @@ def _add_depreciation_row(rows: list[dict]) -> list[dict]:
         "worksheet": "Fixed asset depreciation working. Download Excel for the complete Fixed Assets Schedule.",
     }
     return [*rows, item]
+
+
+def _add_msme_interest_row(rows: list[dict], msme_data: dict | None = None) -> list[dict]:
+    if any(_is_msme_interest_row(row) for row in rows):
+        return rows
+    data = msme_data or {}
+    if data.get("status") != "available":
+        return rows
+    working = ((data.get("interest") or {}).get("working") or [])
+    amount = round(sum(float(row.get("interestPayable") or row.get("interestAmount") or 0) for row in working), 2)
+    if not amount:
+        return rows
+    item = {
+        "id": MSME_INTEREST_WORKSHEET_ID,
+        "result_id": MSME_INTEREST_WORKSHEET_ID,
+        "sr_no": len(rows) + 1,
+        "ledger_name": "MSME Interest",
+        "expense_type": "Indirect Expense",
+        "amount_as_per_audit": amount,
+        "amount_as_per_gl": 0,
+        "difference_amount": amount,
+        "tds_review": "Not applicable to statutory MSMED Act interest computation",
+        "gst_review": "Not applicable to statutory MSMED Act interest computation",
+        "payment_40a3_review": "Not applicable to statutory MSMED Act interest computation",
+        "gl_recording_check": "GL difference noted for CA review",
+        "finding": "MSME interest computed under Section 16 is not recorded in GL.",
+        "risk_level": "High",
+        "ca_review_status": "CA Review Required",
+        "ca_remarks": "Review recognition and permanent disallowance under MSMED Act Section 23.",
+        "worksheet": "Complete MSME invoice-wise interest working is available under View.",
+        "msme_interest_working": working,
+    }
+    return [*rows, item]
+
+
+def _depreciation_audit_amount(db: Session, client_id: int) -> float | None:
+    amount = db.query(func.coalesce(func.sum(FixedAssetDepreciation.depreciation_for_year), 0)).filter(
+        FixedAssetDepreciation.client_id == client_id,
+    ).scalar()
+    rounded = round(float(amount or 0), 2)
+    return rounded or None
 
 
 def _worksheet_summary(rows: list[dict], fallback: dict) -> dict:
@@ -498,6 +593,10 @@ def _ledger_key(value: str | None) -> str:
 
 def _is_depreciation_row(row: dict) -> bool:
     return _ledger_key(row.get("ledger_name")) == "depreciation"
+
+
+def _is_msme_interest_row(row: dict) -> bool:
+    return int(row.get("result_id") or row.get("id") or 0) == MSME_INTEREST_WORKSHEET_ID or _ledger_key(row.get("ledger_name")) == "msme interest"
 
 
 def _find_ledger_row(rows: list[dict], ledger_name: str) -> dict:
@@ -522,11 +621,19 @@ def _selected_result_row(db: Session, client_id: int, ledger_name: str | None = 
 
 
 def _find_result_row(db: Session, client_id: int, result_id: int) -> dict:
+    if int(result_id) == MSME_INTEREST_WORKSHEET_ID:
+        rows = _add_msme_interest_row([], get_msme_dashboard_data())
+        if not rows:
+            raise ValueError("MSME interest worksheet is not available")
+        return rows[0]
     if int(result_id) == DEPRECIATION_WORKSHEET_ID:
-        return _with_worksheet(_add_depreciation_row([])[0], "")
+        rows = _add_depreciation_row([], _depreciation_audit_amount(db, client_id))
+        if not rows:
+            raise ValueError("Depreciation worksheet row not found")
+        return _with_worksheet(rows[0], "")
     data = get_expense_audit_results(db, client_id)
     salary_note = _salary_register_note(db, client_id)
-    for row in _add_depreciation_row(_merge_jobwork_rows(data["rows"])):
+    for row in _add_depreciation_row(_merge_jobwork_rows(data["rows"]), _depreciation_audit_amount(db, client_id)):
         row_id = row.get("result_id") or row.get("id")
         if row_id is not None and int(row_id) == int(result_id):
             return _with_worksheet(row, salary_note)
@@ -534,6 +641,8 @@ def _find_result_row(db: Session, client_id: int, result_id: int) -> dict:
 
 
 def _worksheet_for_row(db: Session, client_id: int, row: dict) -> dict:
+    if _is_msme_interest_row(row):
+        return generate_msme_interest_worksheet(row)
     if _is_depreciation_row(row):
         return generate_depreciation_worksheet(db, client_id, row)
     sample = _sample_report_for_row(row)
@@ -833,7 +942,7 @@ def _tds_rate_and_section(ledger_name: str) -> tuple[float, str]:
 
 def _salary_register_table(path: Path) -> dict | None:
     try:
-        workbook = openpyxl.load_workbook(path, data_only=True, read_only=True)
+        workbook = openpyxl.load_workbook(path, data_only=True, read_only=False)
     except Exception:
         return None
     try:
@@ -842,10 +951,21 @@ def _salary_register_table(path: Path) -> dict | None:
             header_index = _find_header_row(values)
             if header_index is None:
                 continue
-            headers = [str(value or "").strip() for value in values[header_index] if str(value or "").strip()]
+            header_values = list(values[header_index])
+            last_column = max((index for index, value in enumerate(header_values) if str(value or "").strip()), default=-1) + 1
+            headers = [str(value or "").strip() or f"Column {index + 1}" for index, value in enumerate(header_values[:last_column])]
             rows = []
+            notes = []
+            data_ended = False
             for source_row in values[header_index + 1:]:
                 if not source_row or not any(source_row):
+                    if rows:
+                        data_ended = True
+                    continue
+                populated = [str(value).strip() for value in source_row if value not in (None, "")]
+                if data_ended or (populated and populated[0].casefold().startswith("salary components derived")):
+                    notes.append(" ".join(populated))
+                    data_ended = True
                     continue
                 item = {}
                 for index, header in enumerate(headers):
@@ -854,7 +974,13 @@ def _salary_register_table(path: Path) -> dict | None:
                 if len(rows) >= 250:
                     break
             if headers and rows:
-                return {"columns": headers, "rows": rows}
+                return {
+                    "title": sheet.cell(1, 1).value or "Salary Register",
+                    "columns": headers,
+                    "header_groups": _header_groups_for_row(sheet, header_index, len(headers)),
+                    "rows": rows,
+                    "notes": notes,
+                }
     finally:
         workbook.close()
     return None
@@ -1071,7 +1197,22 @@ def _latest_salary_register_file(db: Session, client_id: int) -> Path | None:
         path = Path(uploaded.stored_path or "")
         if path.exists():
             return path
-    return None
+    return SALARY_REGISTER_REPORT if SALARY_REGISTER_REPORT.exists() else None
+
+
+def _header_groups_for_row(sheet, row_number: int, column_count: int) -> list[dict]:
+    groups = []
+    column = 1
+    while column <= column_count:
+        value = sheet.cell(row_number, column).value
+        span = 1
+        for merged_range in sheet.merged_cells.ranges:
+            if merged_range.min_row <= row_number <= merged_range.max_row and merged_range.min_col == column:
+                span = min(merged_range.max_col, column_count) - column + 1
+                break
+        groups.append({"label": str(value or ""), "span": span})
+        column += span
+    return groups
 
 
 def _salary_register_files(db: Session, client_id: int) -> list[UploadedFile]:

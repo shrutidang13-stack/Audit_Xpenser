@@ -1,4 +1,5 @@
 const reportService = require("../services/report.service");
+const { calculateRiskScore } = require("../services/complianceRiskScore.service");
 const carryForwardService = require("../services/carryForward.service");
 const { actorFromUser } = require("../middleware/auth");
 
@@ -25,7 +26,41 @@ async function getReport(req, res, next) {
 
 async function listReports(req, res, next) {
   try {
-    res.json({ success: true, reports: reportService.listReports() });
+    const reports = req.query?.compact === "1" || req.query?.compact === "true"
+      ? reportService.listReportHeaders()
+      : reportService.listReports();
+    res.json({ success: true, reports });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function integrationSummary(req, res, next) {
+  try {
+    const report = reportService.getReport(req.params.id);
+    if (!report) return res.status(404).json({ success: false, error: "Report not found" });
+    const schedules = report.schedules || {};
+    const voucherEvidence = schedulePayload(report, "voucherWiseDelayEvidence");
+    const evidenceRows = voucherEvidence.voucherWiseDelayEvidence || [];
+    const evidenceByInvoice = new Map(evidenceRows.map((row) => [
+      `${row.financialYear || ""}|${row.vendorName || ""}|${row.invoiceNumber || ""}`,
+      row,
+    ]));
+    const interestWorking = (schedules.msmedSection16Interest || []).map((row) => ({
+      ...(evidenceByInvoice.get(`${row.financialYear || ""}|${row.vendorName || ""}|${row.invoiceNumber || ""}`) || {}),
+      ...row,
+    }));
+    res.json({
+      success: true,
+      reportId: report.id,
+      summary: schedulePayload(report, "summary"),
+      ledgerSummary: schedulePayload(report, "creditorLedgerSummary"),
+      riskScore: calculateRiskScore(report),
+      voucherEvidence: evidenceRows.slice(0, 100),
+      interestWorking,
+      taxDisallowance: schedulePayload(report, "tax-disallowance"),
+      form3cd: schedulePayload(report, "form-3cd"),
+    });
   } catch (error) {
     next(error);
   }
@@ -148,6 +183,7 @@ module.exports = {
   createMSME,
   getReport,
   listReports,
+  integrationSummary,
   downloadCsv,
   downloadXml,
   downloadXlsx,

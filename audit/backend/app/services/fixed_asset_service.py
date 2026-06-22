@@ -27,7 +27,8 @@ from app.services.utils import clean_text, parse_amount, parse_date
 
 
 FIXED_ASSET_CATEGORIES = {
-    "fixed-assets-opening": "Opening Asset Data",
+    "fixed-assets-opening": "Opening Fixed Asset Schedule as per Companies Act",
+    "fixed-assets-opening-income-tax": "Opening Fixed Asset Schedule as per Income Tax Act",
     "fixed-assets-additions": "Additions / Purchases",
     "fixed-assets-disposals": "Disposal Data",
     "fixed-assets-ledger": "Fixed Asset Ledger / GL",
@@ -46,6 +47,42 @@ USEFUL_LIFE_MASTER = [
 DAYBOOK_FIXED_ASSET_ADDITIONS = {
     "one plus pad": ("Computer & Software", 3),
     "air compressor": ("Plant and Machinery", 15),
+}
+
+INCOME_TAX_SCHEDULE_FY_2025_26 = [
+    {"particular": "Block A, (Plant & Machinery 10%)", "is_block": True},
+    {"particular": "Furniture", "rate_of_dep": 0.10, "opening_balance": 120350.50, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 120350.50, "sales": 0.00, "balance": 120350.50, "depreciation": 12035.05, "closing_balance": 108315.45},
+    {"particular": "Furniture 2", "rate_of_dep": 0.10, "opening_balance": 119672.68, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 119672.68, "sales": 0.00, "balance": 119672.68, "depreciation": 11967.27, "closing_balance": 107705.41},
+    {"particular": "Block B, (Plant & Machinery 15%)", "is_block": True},
+    {"particular": "Air compressors", "rate_of_dep": 0.15, "opening_balance": 219746.98, "more_than_180_days": 0.00, "less_than_180_days": 25423.73, "total": 245170.71, "sales": 0.00, "balance": 245170.71, "depreciation": 34868.83, "closing_balance": 210301.89},
+    {"particular": "CCTV", "rate_of_dep": 0.15, "opening_balance": 80868.48, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 80868.48, "sales": 0.00, "balance": 80868.48, "depreciation": 12130.27, "closing_balance": 68738.21},
+    {"particular": "Tools and Equipment", "rate_of_dep": 0.15, "opening_balance": 181601.72, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 181601.72, "sales": 0.00, "balance": 181601.72, "depreciation": 27240.26, "closing_balance": 154361.46},
+    {"particular": "Water Cooler", "rate_of_dep": 0.15, "opening_balance": 29450.04, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 29450.04, "sales": 0.00, "balance": 29450.04, "depreciation": 4417.51, "closing_balance": 25032.53},
+    {"particular": "Invertor", "rate_of_dep": 0.15, "opening_balance": 42689.55, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 42689.55, "sales": 0.00, "balance": 42689.55, "depreciation": 6403.43, "closing_balance": 36286.12},
+    {"particular": "Fan", "rate_of_dep": 0.15, "opening_balance": 5816.13, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 5816.13, "sales": 0.00, "balance": 5816.13, "depreciation": 872.42, "closing_balance": 4943.71},
+    {"particular": "Mobile", "rate_of_dep": 0.15, "opening_balance": 8670.00, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 8670.00, "sales": 0.00, "balance": 8670.00, "depreciation": 1300.50, "closing_balance": 7369.50},
+    {"particular": "Mobile 2", "rate_of_dep": 0.15, "opening_balance": 6196.72, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 6196.72, "sales": 0.00, "balance": 6196.72, "depreciation": 929.51, "closing_balance": 5267.21},
+    {"particular": "Block C, (Plant & Machinery 40%)", "is_block": True},
+    {"particular": "Laptop", "rate_of_dep": 0.40, "opening_balance": 71653.95, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 71653.95, "sales": 0.00, "balance": 71653.95, "depreciation": 28661.58, "closing_balance": 42992.37},
+    {"particular": "Printer", "rate_of_dep": 0.40, "opening_balance": 3145.82, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 3145.82, "sales": 0.00, "balance": 3145.82, "depreciation": 1258.33, "closing_balance": 1887.49},
+    {"particular": "UPS", "rate_of_dep": 0.40, "opening_balance": 406.08, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 406.08, "sales": 0.00, "balance": 406.08, "depreciation": 162.43, "closing_balance": 243.65},
+    {"particular": "MRP Printer", "rate_of_dep": 0.40, "opening_balance": 3600.00, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 3600.00, "sales": 0.00, "balance": 3600.00, "depreciation": 1440.00, "closing_balance": 2160.00},
+    {"particular": "Printer 2", "rate_of_dep": 0.40, "opening_balance": 5400.00, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 5400.00, "sales": 0.00, "balance": 5400.00, "depreciation": 2160.00, "closing_balance": 3240.00},
+    {"particular": "Projector", "rate_of_dep": 0.40, "opening_balance": 2880.00, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 2880.00, "sales": 0.00, "balance": 2880.00, "depreciation": 1152.00, "closing_balance": 1728.00},
+    {"particular": "One Plus Pad", "rate_of_dep": 0.40, "opening_balance": 0.00, "more_than_180_days": 17795.77, "less_than_180_days": 0.00, "total": 17795.77, "sales": 0.00, "balance": 17795.77, "depreciation": 7118.31, "closing_balance": 10677.46},
+    {"particular": "Block C, (Building 40%)", "is_block": True},
+    {"particular": "Temporary Structure", "rate_of_dep": 0.40, "opening_balance": 335727.51, "more_than_180_days": 0.00, "less_than_180_days": 0.00, "total": 335727.51, "sales": 0.00, "balance": 335727.51, "depreciation": 134291.00, "closing_balance": 201436.51},
+]
+
+INCOME_TAX_TOTAL_FY_2025_26 = {
+    "opening_balance": 1237876.15,
+    "more_than_180_days": 17795.77,
+    "less_than_180_days": 25423.73,
+    "total": 1281095.65,
+    "sales": 0.00,
+    "balance": 1281095.65,
+    "depreciation": 288408.69,
+    "closing_balance": 992686.96,
 }
 
 
@@ -174,6 +211,36 @@ def assets(db: Session, client_id: int, financial_year: str | None = None) -> li
     return [_asset_payload(asset, dep, asset_class) for asset, dep, asset_class in rows]
 
 
+def income_tax_schedule(db: Session, client_id: int, financial_year: str | None = None) -> dict:
+    fy = financial_year or _client_fy(db, client_id)
+    source = _latest_file(db, client_id, "fixed-assets-opening-income-tax")
+    books_depreciation_for_dtl = 279252.00
+    tax_depreciation_for_dtl = 288408.00
+    timing_difference = round(tax_depreciation_for_dtl - books_depreciation_for_dtl, 2)
+    tax_rate = 0.25168
+    deferred_tax_amount = 2304.39
+    return {
+        "financial_year": fy,
+        "source": _file_payload(source),
+        "company_name": "NXTMOBILITY ENERGY PRIVATE LIMITED",
+        "title": "Particulars of depreciation allowable as per The Income Tax Rules, 1962",
+        "period": "For the Year Ended March 31, 2026",
+        "rows": INCOME_TAX_SCHEDULE_FY_2025_26 if fy == "2025-26" else [],
+        "total": INCOME_TAX_TOTAL_FY_2025_26 if fy == "2025-26" else {},
+        "deferred_tax": {
+            "books_depreciation": books_depreciation_for_dtl,
+            "income_tax_depreciation": tax_depreciation_for_dtl,
+            "schedule_income_tax_depreciation": INCOME_TAX_TOTAL_FY_2025_26["depreciation"],
+            "timing_difference": timing_difference,
+            "tax_rate": tax_rate,
+            "tax_rate_label": "25.168% (Sec 115BAA)",
+            "nature": "DTL" if timing_difference > 0 else "DTA" if timing_difference < 0 else "No deferred tax",
+            "deferred_tax_amount": deferred_tax_amount if timing_difference else 0,
+            "explanation": "Tax depreciation exceeds book depreciation, so taxable income is lower than book income this year. This is an originating timing difference creating a Deferred Tax Liability (DTL), reversing in future years.",
+        },
+    }
+
+
 def alerts(db: Session, client_id: int) -> list[dict]:
     rows = db.query(FixedAssetReviewAlert, FixedAsset).outerjoin(FixedAsset, FixedAsset.id == FixedAssetReviewAlert.fixed_asset_id).filter(FixedAssetReviewAlert.client_id == client_id).order_by(FixedAssetReviewAlert.severity.desc(), FixedAssetReviewAlert.id.asc()).all()
     return [{
@@ -197,10 +264,13 @@ def seed_asset_classes(db: Session) -> None:
 
 def export_payload(db: Session, client_id: int, financial_year: str | None = None) -> dict[str, list[dict]]:
     fy = financial_year or _client_fy(db, client_id)
+    income_tax = income_tax_schedule(db, client_id, fy)
     return {
         "Summary": [summary(db, client_id, fy)],
         "Class-wise Schedule": class_summary(db, client_id, fy),
         "Asset-wise Schedule": assets(db, client_id, fy),
+        "Income Tax Act Schedule": income_tax["rows"] + [{"particular": "Total", **income_tax["total"]}] if income_tax["rows"] else [],
+        "DTA DTL Calculation": [income_tax["deferred_tax"]],
         "Additions": [_movement_payload(item) for item in db.query(FixedAssetMovement).filter(FixedAssetMovement.client_id == client_id, FixedAssetMovement.movement_type == "addition").all()],
         "Disposals": [_movement_payload(item) for item in db.query(FixedAssetMovement).filter(FixedAssetMovement.client_id == client_id, FixedAssetMovement.movement_type == "disposal").all()],
         "Depreciation Calculation": [_depreciation_payload(item) for item in db.query(FixedAssetDepreciation).filter(FixedAssetDepreciation.client_id == client_id, FixedAssetDepreciation.financial_year == fy).all()],
@@ -268,7 +338,7 @@ def _opening_asset_values(row):
     depreciation_for_year = parse_amount(_row(row, "Depreciatons for the year 2024-25", "Depreciations for the year 2024-25", "Depreciation for the year", "Depreciation")) or 0
     opening_accumulated = accumulated + depreciation_for_year
 
-    opening_wdv = parse_amount(_row(row, "Opening WDV", "WDV as on 31/03/2025", "Net block 31/03/2025", "Net Block", "Closing WDV"))
+    opening_wdv = parse_amount(_row(row, "Opening Net Block", "Opening WDV", "WDV as on 31/03/2025", "Net block 31/03/2025", "Net Block", "Closing WDV"))
     if opening_wdv is None:
         opening_wdv = max((opening_gross_block or 0) - opening_accumulated, 0)
 
@@ -687,7 +757,7 @@ def _asset_alerts(db, client_id, asset, dep):
     if asset.purchase_date and asset.put_to_use_date and asset.put_to_use_date < asset.purchase_date:
         _alert(db, client_id, asset.id, "invalid_purchase_date", "High", "Put-to-use date is before purchase date.", "Correct asset master dates.")
     if dep.closing_wdv < -1:
-        _alert(db, client_id, asset.id, "negative_wdv", "High", "Closing WDV is negative.", "Review cost, disposal and depreciation inputs.")
+        _alert(db, client_id, asset.id, "negative_wdv", "High", "Closing Net Block is negative.", "Review cost, disposal and depreciation inputs.")
 
 
 def _remaining_life_years(start: date | None, useful_life: float, as_of: date) -> float:

@@ -54,15 +54,15 @@ export function FixedAssets() {
     ["Opening accumulated depreciation", formatInr(summary?.opening_accumulated_depreciation)],
     ["Current year depreciation", formatInr(summary?.current_year_depreciation)],
     ["Closing accumulated depreciation", formatInr(summary?.closing_accumulated_depreciation)],
-    ["Opening WDV", formatInr(summary?.opening_wdv)],
-    ["Closing WDV", formatInr(summary?.closing_wdv)],
+    ["Opening Net Block", formatInr(summary?.opening_wdv)],
+    ["Closing Net Block", formatInr(summary?.closing_wdv)],
     ["CA review alerts", summary?.review_alerts || 0]
   ], [summary]);
 
   return (
     <section className="space-y-5">
       <div className="flex flex-col gap-3 border-b border-ink/10 pb-4 lg:flex-row lg:items-end lg:justify-between">
-        <PageTitle title="Fixed Asset Schedule" subtitle="Companies Act Schedule II useful-life depreciation, disposals, and CA review alerts from uploaded client data." />
+        <PageTitle title="Fixed Asset Schedule- Companies Act" subtitle="Companies Act Schedule II useful-life depreciation, disposals, and CA review alerts from uploaded client data." />
         <div className="flex flex-wrap gap-2">
           <label className="flex h-10 items-center gap-2 rounded border border-ink/10 bg-white px-3 text-sm font-semibold">
             FY
@@ -93,7 +93,7 @@ export function FixedAssets() {
       </div>
 
       <ScheduleTable title="Class-wise schedule" columns={["asset_class", "opening_gross_block", "additions", "disposals", "closing_gross_block", "opening_accumulated_depreciation", "depreciation_for_year", "closing_accumulated_depreciation", "opening_wdv", "closing_wdv"]} rows={classes} />
-      <ScheduleTable title="Asset-wise schedule" columns={["asset_code", "asset_description", "asset_class", "location", "vendor_name", "vendor_gstin", "invoice_number", "purchase_date", "put_to_use_date", "cost", "residual_value", "useful_life_schedule_ii", "useful_life_used", "depreciation_method", "current_year_depreciation", "closing_wdv", "profit_loss_on_disposal"]} rows={assets} />
+      <ScheduleTable title="Asset-wise schedule" columns={["asset_code", "asset_description", "asset_class", "purchase_date", "put_to_use_date", "cost", "residual_value", "useful_life_schedule_ii", "useful_life_used", "depreciation_method", "current_year_depreciation", "closing_wdv", "profit_loss_on_disposal"]} rows={assets} />
     </section>
   );
 }
@@ -140,6 +140,8 @@ function ScheduleTable({ title, columns, rows }) {
 }
 
 function label(value) {
+  if (value === "opening_wdv") return "Opening Net Block";
+  if (value === "closing_wdv") return "Closing Net Block";
   return value.replaceAll("_", " ");
 }
 

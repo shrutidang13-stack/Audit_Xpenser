@@ -35,6 +35,7 @@ export const fixedAssetsApi = {
   summary: (clientId, financialYear) => api.get(`/api/fixed-assets/${clientId}/summary`, { params: compact({ financial_year: financialYear }) }),
   classSummary: (clientId, financialYear) => api.get(`/api/fixed-assets/${clientId}/class-summary`, { params: compact({ financial_year: financialYear }) }),
   assets: (clientId, financialYear) => api.get(`/api/fixed-assets/${clientId}/assets`, { params: compact({ financial_year: financialYear }) }),
+  incomeTax: (clientId, financialYear) => api.get(`/api/fixed-assets/${clientId}/income-tax`, { params: compact({ financial_year: financialYear }) }),
   alerts: (clientId) => api.get(`/api/fixed-assets/${clientId}/alerts`),
   export: (clientId) => `/api/export/${clientId}/fixed-assets`
 };

@@ -50,4 +50,21 @@ function listReports() {
   return db.prepare("SELECT * FROM compliance_reports ORDER BY created_at DESC LIMIT 50").all().map(mapReport);
 }
 
-module.exports = { createReport, getReport, listReports };
+function listReportHeaders() {
+  return db.prepare(`
+    SELECT id, import_run_id, fiscal_year, status, summary_json, created_by, created_at
+    FROM compliance_reports
+    ORDER BY created_at DESC
+    LIMIT 50
+  `).all().map((row) => ({
+    id: row.id,
+    importRunId: row.import_run_id,
+    fiscalYear: row.fiscal_year,
+    status: row.status,
+    summary: parseJson(row.summary_json, {}),
+    createdBy: row.created_by || "",
+    createdAt: row.created_at,
+  }));
+}
+
+module.exports = { createReport, getReport, listReports, listReportHeaders };

@@ -62,6 +62,12 @@ def assets(client_id: int, financial_year: str | None = None, db: Session = Depe
     return fixed_asset_service.assets(db, client_id, financial_year)
 
 
+@router.get("/{client_id}/income-tax")
+def income_tax_schedule(client_id: int, financial_year: str | None = None, db: Session = Depends(get_db)):
+    _ensure_client(db, client_id)
+    return fixed_asset_service.income_tax_schedule(db, client_id, financial_year)
+
+
 @router.get("/{client_id}/alerts")
 def alerts(client_id: int, db: Session = Depends(get_db)):
     _ensure_client(db, client_id)

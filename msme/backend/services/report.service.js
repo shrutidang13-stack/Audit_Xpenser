@@ -1301,6 +1301,10 @@ function listReports() {
   return reportRepository.listReports();
 }
 
+function listReportHeaders() {
+  return reportRepository.listReportHeaders();
+}
+
 function toCsv(report) {
   let csv = "MSME Guard - Compliance Report\n";
   csv += `Report ID,${report.id}\n`;
@@ -1843,4 +1847,4 @@ function buildEvidenceBundle(report) {
   ]);
 }
 
-module.exports = { createMSMEReport, getReport, listReports, toCsv, toXml, toPdfBuffer, toWorkbookBuffer, toExcludedCsv, toTallyReconciliationCsv, buildEvidenceBundle, buildSimpleZip, calculateReportRows, calculateExcludedRows, buildReportSchedules };
+module.exports = { createMSMEReport, getReport, listReports, listReportHeaders, toCsv, toXml, toPdfBuffer, toWorkbookBuffer, toExcludedCsv, toTallyReconciliationCsv, buildEvidenceBundle, buildSimpleZip, calculateReportRows, calculateExcludedRows, buildReportSchedules };

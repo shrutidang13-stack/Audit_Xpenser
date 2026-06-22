@@ -656,6 +656,66 @@ function getLatestCompletedImportRun(filters = {}) {
   return getImportRun(latest.id, filters);
 }
 
+function compactImportRun(run) {
+  if (!run) return run;
+  const { ledgerMetadata, ...summary } = run.summary || {};
+  return { ...run, summary };
+}
+
+function compactCreditor(row) {
+  return {
+    id: row.id,
+    party: row.party,
+    outstandingAmount: row.outstandingAmount,
+    daysOutstanding: row.daysOutstanding,
+    bucket: row.bucket,
+    delayed: row.delayed,
+    interestLiability: row.interestLiability,
+    disallowanceAmount: row.disallowanceAmount,
+    voucherCount: row.voucherCount,
+  };
+}
+
+function getLatestCompletedImportSummary() {
+  const latest = importRepository.getLatestCompletedRun();
+  if (!latest) return null;
+  const creditors = enrichCreditors(importRepository.getCreditors(latest.id));
+  return {
+    importRun: compactImportRun(latest),
+    creditors: creditors.map(compactCreditor),
+    verificationSummary: buildVerificationSummary(creditors),
+  };
+}
+
+function compactStatement(statement, rowLimit = 100) {
+  if (!statement) return {};
+  return {
+    ...statement,
+    rows: Array.isArray(statement.rows) ? statement.rows.slice(0, rowLimit) : statement.rows,
+    groups: Array.isArray(statement.groups)
+      ? statement.groups.slice(0, rowLimit).map((group) => ({
+        ...group,
+        ledgers: Array.isArray(group.ledgers) ? group.ledgers.slice(0, rowLimit) : group.ledgers,
+      }))
+      : statement.groups,
+  };
+}
+
+function getStatementSummary(importRunId, filters = {}) {
+  const run = importRepository.getRun(importRunId);
+  if (!run) return null;
+  const rows = importRepository.getLedgerVouchersForReport(importRunId, filters);
+  const bundle = buildStatementBundle(rows, ledgerMetadataForRun(run));
+  return {
+    importRun: compactImportRun(run),
+    statements: {
+      trialBalance: compactStatement(bundle.trialBalance),
+      profitLoss: compactStatement(bundle.profitLoss),
+      balanceSheet: compactStatement(bundle.balanceSheet),
+    },
+  };
+}
+
 function seedVendorMasterFromImport(importRunId, actor = "unknown") {
   const run = importRepository.getRun(importRunId);
   if (!run) throw new Error("Import run not found");
@@ -715,6 +775,8 @@ module.exports = {
   captureBaselineSnapshot,
   getImportRun,
   getLatestCompletedImportRun,
+  getLatestCompletedImportSummary,
+  getStatementSummary,
   getLedgerVouchers,
   getDaybook,
   getStatement,

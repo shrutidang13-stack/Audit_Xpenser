@@ -2,6 +2,7 @@ import re
 from datetime import date
 from pathlib import Path
 from shutil import copyfileobj
+from urllib.request import Request, urlopen
 
 import fitz
 import pdfplumber
@@ -20,6 +21,143 @@ PARSING_COMPLETED = "Parsed"
 PARSING_REVIEW_REQUIRED = "Parsing Review Required"
 INDEXED = "Indexed"
 INDEX_REVIEW_REQUIRED = "Indexing Review Required"
+
+OFFICIAL_GST_CIRCULARS = (
+    {
+        "number": "237/31/2024-GST",
+        "date": date(2024, 10, 15),
+        "subject": "Implementation of sub-sections (5) and (6) of section 16 of the CGST Act, 2017",
+        "file_name": "circular-no-237-2024.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-10/circular-no-237-2024.pdf",
+    },
+    {
+        "number": "216/10/2024-GST",
+        "date": date(2024, 6, 26),
+        "subject": "GST liability and ITC availability in cases involving warranty and extended warranty",
+        "file_name": "circular-no-216-10-2024.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-09/circular-no-216-10-2024.pdf",
+    },
+    {
+        "number": "211/05/2024-GST",
+        "date": date(2024, 6, 26),
+        "subject": "Time limit under section 16(4) for RCM supplies received from unregistered persons",
+        "file_name": "circular-no-211-05-2024.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-09/circular-no-211-05-2024.pdf",
+    },
+    {
+        "number": "198/10/2023-GST",
+        "date": date(2023, 7, 17),
+        "subject": "Clarification on issues pertaining to e-invoice",
+        "file_name": "circular-cgst-198.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-06/circular-cgst-198.pdf",
+    },
+    {
+        "number": "195/07/2023-GST",
+        "date": date(2023, 7, 17),
+        "subject": "ITC availability for warranty replacement of parts and repair services",
+        "file_name": "circular-cgst-195.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-06/circular-cgst-195.pdf",
+    },
+    {
+        "number": "193/05/2023-GST",
+        "date": date(2023, 7, 17),
+        "subject": "Difference between ITC availed in GSTR-3B and GSTR-2A for 01-04-2019 to 31-12-2021",
+        "file_name": "circular-cgst-193.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-06/circular-cgst-193.pdf",
+    },
+    {
+        "number": "183/15/2022-GST",
+        "date": date(2022, 12, 27),
+        "subject": "Difference between ITC availed in GSTR-3B and GSTR-2A for FY 2017-18 and FY 2018-19",
+        "file_name": "cir-183-15-2022-cgst.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-06/cir-183-15-2022-cgst.pdf",
+    },
+    {
+        "number": "171/03/2022-GST",
+        "date": date(2022, 7, 6),
+        "subject": "Demand and penalty provisions for transactions involving fake invoices",
+        "file_name": "cir-171-03-2022-cgst.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-06/cir-171-03-2022-cgst.pdf",
+    },
+    {
+        "number": "170/02/2022-GST",
+        "date": date(2022, 7, 6),
+        "subject": "Reporting ineligible or blocked ITC and reversals in GSTR-3B and inter-State supplies in GSTR-1",
+        "file_name": "cir-170-02-2022-cgst.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-06/cir-170-02-2022-cgst.pdf",
+    },
+    {
+        "number": "160/16/2021-GST",
+        "date": date(2021, 9, 20),
+        "subject": "Clarification on debit notes, physical invoice copies for e-invoices, and section 16(4)",
+        "file_name": "circular-no-160-16-2021-gst.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-06/circular_20no._20160_14_2021_gst.pdf",
+    },
+    {
+        "number": "Corrigendum to 160/16/2021-GST",
+        "date": date(2021, 9, 21),
+        "subject": "Corrigendum to Circular No. 160/16/2021-GST",
+        "file_name": "circular-no-160-16-2021-gst-corrigendum.pdf",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-06/circular_no_160_14_2021_gst_corri.pdf",
+    },
+)
+
+
+def sync_official_gst_circulars(db: Session) -> list[ReferenceDocument]:
+    """Add only curated, software-relevant GST circulars without altering user references."""
+    settings = get_settings()
+    library_root = Path(settings.upload_dir) / "reference-library" / "official-gst-circulars"
+    library_root.mkdir(parents=True, exist_ok=True)
+    synced = []
+
+    for item in OFFICIAL_GST_CIRCULARS:
+        title = f"Circular No. {item['number']}"
+        document = db.query(ReferenceDocument).filter(
+            ReferenceDocument.title == title,
+            ReferenceDocument.source_type == "Official GST Council Circular",
+        ).one_or_none()
+        target = library_root / item["file_name"]
+        if not target.exists():
+            _download_official_pdf(item["url"], target)
+
+        if document is None:
+            document = ReferenceDocument(
+                title=title,
+                category="Circular / Notification",
+                file_name=item["file_name"],
+                file_path=str(target),
+                file_type=".pdf",
+                effective_date=item["date"],
+                version_label=item["date"].strftime("%d-%m-%Y"),
+                source_type="Official GST Council Circular",
+                uploaded_by="system",
+                parsing_status="Pending",
+                indexed_status="Pending",
+                notes=f"{item['subject']}\nOfficial source: {item['url']}",
+            )
+            db.add(document)
+            db.commit()
+            db.refresh(document)
+        else:
+            document.file_path = str(target)
+            document.effective_date = item["date"]
+            document.version_label = item["date"].strftime("%d-%m-%Y")
+            document.notes = f"{item['subject']}\nOfficial source: {item['url']}"
+            db.commit()
+
+        if document.parsing_status != PARSING_COMPLETED or not document.chunks:
+            document = parse_reference_document(db, document.id)
+        synced.append(document)
+    return synced
+
+
+def _download_official_pdf(url: str, target: Path) -> None:
+    request = Request(url, headers={"User-Agent": "AuditXpenser/1.0 statutory-reference-sync"})
+    with urlopen(request, timeout=45) as response:
+        content = response.read()
+    if not content.startswith(b"%PDF"):
+        raise ValueError(f"Official GST circular did not return a PDF: {url}")
+    target.write_bytes(content)
 
 
 def save_reference_document(
