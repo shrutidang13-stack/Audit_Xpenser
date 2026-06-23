@@ -56,7 +56,7 @@ from app.services.reference_library_service import (
     search_reference_library,
 )
 from app.services.retention_service import delete_uploaded_files
-from app.services.upload_service import store_upload
+from app.services.upload_service import queue_bill_upload_processing, store_bill_upload_pending, store_upload
 from app.services.msme_import_service import import_latest_tally_xml, latest_msme_import_insights
 from app.services.utils import from_json, parse_date, to_json
 from app.services.workspace_reset_service import reset_client_workspace
@@ -158,6 +158,7 @@ def msme_import_insights(client_id: int, db: Session = Depends(get_db)):
 
 @router.post("/upload/{client_id}/{category}")
 def upload_file(
+    background_tasks: BackgroundTasks,
     client_id: int,
     category: str,
     replace_existing: bool = False,
@@ -171,6 +172,10 @@ def upload_file(
         raise HTTPException(404, "Client not found")
     if replace_existing:
         _clear_uploaded_category(db, client_id, category)
+    if category == "bills":
+        uploaded = store_bill_upload_pending(db, client_id, file, upload_session_id=upload_session_id)
+        background_tasks.add_task(queue_bill_upload_processing, uploaded.id)
+        return _file(uploaded)
     uploaded = store_upload(db, client_id, category, file, upload_session_id=upload_session_id)
     if category in {"fixed-assets-opening", "fixed-assets-additions", "fixed-assets-disposals"}:
         import_fixed_asset_upload(db, client_id, uploaded)

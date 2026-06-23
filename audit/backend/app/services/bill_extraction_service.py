@@ -27,28 +27,35 @@ def extract_bills(db: Session, client_id: int) -> dict:
     files = latest_bill_uploads(db, client_id)
     processed = 0
     for uploaded in files:
-        bill = db.query(Bill).filter(Bill.client_id == client_id, Bill.source_file_id == uploaded.id).first()
-        if not bill:
-            bill = Bill(client_id=client_id, source_file_id=uploaded.id, source_ref=uploaded.filename)
-            db.add(bill)
-        payload = _extract_from_upload(uploaded)
-        for key, value in payload.items():
-            setattr(bill, key, value)
-        bill.vendor_name = bill.vendor_name or bill.extracted_vendor_name
-        bill.gstin = bill.gstin or bill.extracted_vendor_gstin
-        bill.invoice_number = bill.invoice_number or bill.extracted_invoice_number
-        bill.invoice_date = bill.invoice_date or bill.extracted_invoice_date
-        bill.amount = bill.extracted_total_amount
-        bill.readable = payload["extraction_status"] != "OCR Review Required"
+        if uploaded.parse_status in {"Pending", "Processing"}:
+            continue
+        extract_bill_from_upload(db, uploaded)
         processed += 1
     db.commit()
     return {"status": "completed", "processed": processed}
 
 
-def _extract_from_upload(uploaded: UploadedFile) -> dict:
+def extract_bill_from_upload(db: Session, uploaded: UploadedFile, force_parse_missing_text: bool = True) -> Bill:
+    bill = db.query(Bill).filter(Bill.client_id == uploaded.client_id, Bill.source_file_id == uploaded.id).first()
+    if not bill:
+        bill = Bill(client_id=uploaded.client_id, source_file_id=uploaded.id, source_ref=uploaded.filename)
+        db.add(bill)
+    payload = _extract_from_upload(uploaded, force_parse_missing_text=force_parse_missing_text)
+    for key, value in payload.items():
+        setattr(bill, key, value)
+    bill.vendor_name = bill.vendor_name or bill.extracted_vendor_name
+    bill.gstin = bill.gstin or bill.extracted_vendor_gstin
+    bill.invoice_number = bill.invoice_number or bill.extracted_invoice_number
+    bill.invoice_date = bill.invoice_date or bill.extracted_invoice_date
+    bill.amount = bill.extracted_total_amount
+    bill.readable = payload["extraction_status"] != "OCR Review Required"
+    return bill
+
+
+def _extract_from_upload(uploaded: UploadedFile, force_parse_missing_text: bool = True) -> dict:
     path = Path(uploaded.stored_path)
     parsed = {}
-    if not clean_text(uploaded.raw_text) and path.exists():
+    if force_parse_missing_text and not clean_text(uploaded.raw_text) and path.exists():
         parsed = parse_file(path, "bills")
     text = " ".join([
         clean_text(uploaded.filename),
