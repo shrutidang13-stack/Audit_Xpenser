@@ -14,8 +14,6 @@ const categories = [
   ["supporting-documents", "Supporting Documents"]
 ];
 const MAX_FILES_PER_BATCH = 5000;
-const BILL_UPLOAD_CONCURRENCY = 4;
-const BILL_PROCESSING_STATUSES = new Set(["Pending", "Processing"]);
 
 export function UploadCentre() {
   const { clientId } = useParams();
@@ -107,17 +105,13 @@ export function UploadCentre() {
     }
     const uploadedIds = [];
     const uploadSessionId = makeUploadSessionId();
-    if (category === "bills") {
-      uploadedIds.push(...await uploadBillsBatch(uploadClientId, batch, uploadSessionId));
-    } else {
-      for (const [index, file] of batch.entries()) {
-        const body = new FormData();
-        body.append("file", file);
-        setMessage(`Uploading ${index + 1} of ${batch.length}: ${file.name}`);
-        const query = `?upload_session_id=${encodeURIComponent(uploadSessionId)}`;
-        const { data: uploaded } = await api.post(`/api/upload/${uploadClientId}/${category}${query}`, body);
-        uploadedIds.push(uploaded.id);
-      }
+    for (const [index, file] of batch.entries()) {
+      const body = new FormData();
+      body.append("file", file);
+      setMessage(`Uploading ${index + 1} of ${batch.length}: ${file.name}`);
+      const query = `?upload_session_id=${encodeURIComponent(uploadSessionId)}`;
+      const { data: uploaded } = await api.post(`/api/upload/${uploadClientId}/${category}${query}`, body);
+      uploadedIds.push(uploaded.id);
     }
     window.localStorage.setItem("auditxpenser.latestUploadFileIds", JSON.stringify(uploadedIds));
     window.localStorage.setItem("auditxpenser.latestUploadSessionId", uploadSessionId);
@@ -131,55 +125,6 @@ export function UploadCentre() {
     }
     setMessage(`${batch.length} file${batch.length === 1 ? "" : "s"} uploaded to ${labelForCategory(category)}. Client workspace ${uploadClientName || `Client #${uploadClientId}`} is ready.`);
     await load(uploadClientId);
-    if (category === "bills") {
-      setMessage(`${batch.length} bill file${batch.length === 1 ? "" : "s"} uploaded. OCR/extraction is processing in the background.`);
-      pollBillProcessing(uploadClientId, uploadedIds);
-    }
-  };
-
-  const uploadBillsBatch = async (uploadClientId, batch, uploadSessionId) => {
-    const uploadedIds = new Array(batch.length);
-    let nextIndex = 0;
-    let completed = 0;
-    const workerCount = Math.min(BILL_UPLOAD_CONCURRENCY, batch.length);
-    const workers = Array.from({ length: workerCount }, async () => {
-      while (nextIndex < batch.length) {
-        const index = nextIndex;
-        nextIndex += 1;
-        const file = batch[index];
-        const body = new FormData();
-        body.append("file", file);
-        setMessage(`Uploading bill ${index + 1} of ${batch.length}: ${file.name}`);
-        const query = `?upload_session_id=${encodeURIComponent(uploadSessionId)}`;
-        const { data: uploaded } = await api.post(`/api/upload/${uploadClientId}/bills${query}`, body);
-        uploadedIds[index] = uploaded.id;
-        completed += 1;
-        setMessage(`Uploaded ${completed} of ${batch.length} bill files. OCR/extraction is processing in the background.`);
-      }
-    });
-    await Promise.all(workers);
-    return uploadedIds.filter(Boolean);
-  };
-
-  const pollBillProcessing = async (uploadClientId, uploadedIds, attempt = 0) => {
-    if (!uploadedIds.length || attempt > 120) return;
-    try {
-      const filesResponse = await api.get(`/api/upload/${uploadClientId}/files`);
-      const nextFiles = filesResponse.data;
-      setFiles(nextFiles);
-      const uploadedIdSet = new Set(uploadedIds);
-      const billFiles = nextFiles.filter((file) => uploadedIdSet.has(file.id));
-      const processingCount = billFiles.filter((file) => BILL_PROCESSING_STATUSES.has(file.parse_status)).length;
-      const failedCount = billFiles.filter((file) => file.parse_status === "Failed").length;
-      if (processingCount > 0) {
-        setMessage(`${processingCount} bill file${processingCount === 1 ? "" : "s"} still processing${failedCount ? `, ${failedCount} failed` : ""}.`);
-        window.setTimeout(() => pollBillProcessing(uploadClientId, uploadedIds, attempt + 1), 2000);
-        return;
-      }
-      setMessage(`${billFiles.length} bill file${billFiles.length === 1 ? "" : "s"} processed${failedCount ? `, ${failedCount} failed` : ""}.`);
-    } catch {
-      window.setTimeout(() => pollBillProcessing(uploadClientId, uploadedIds, attempt + 1), 3000);
-    }
   };
 
   const importFromMsme = async () => {
@@ -287,7 +232,7 @@ export function UploadCentre() {
             <Trash2 size={14} />{deletingFileId === f.id ? "Deleting..." : "Delete"}
           </button>
         ),
-        parse_status: <Badge tone={statusTone(f)}>{statusLabel(f)}</Badge>,
+        parse_status: <Badge tone={f.ca_review_required ? "medium" : "low"}>{f.parse_status}</Badge>,
       }))} />
     </section>
   );
@@ -305,20 +250,6 @@ function labelForCategory(category) {
 function sanitizeClientId(value) {
   if (!value || value === "undefined" || value === "null") return "";
   return String(value);
-}
-
-function statusTone(file) {
-  if (file.parse_status === "Failed") return "high";
-  if (BILL_PROCESSING_STATUSES.has(file.parse_status)) return "medium";
-  return file.ca_review_required ? "medium" : "low";
-}
-
-function statusLabel(file) {
-  if (file.category !== "bills") return file.parse_status;
-  if (file.parse_status === "Pending") return "Uploaded";
-  if (file.parse_status === "Processing") return "Processing";
-  if (file.parse_status === "Failed") return "Failed";
-  return "Completed";
 }
 
 export function PageTitle({ title, subtitle, compact = false }) {
