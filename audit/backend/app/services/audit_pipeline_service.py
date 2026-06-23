@@ -8,6 +8,7 @@ from app.models import (
     BusinessPurposeRisk,
     CapitalReview,
     Client,
+    ClientQuery,
     DuplicateBillFlag,
     ExpenseClassification,
     ExpenseTransaction,
@@ -35,23 +36,27 @@ RCM_KEYWORDS = ["legal", "gta", "director", "import of services", "security", "s
 BUSINESS_PURPOSE_CATEGORIES = {"Travelling", "Hotel / food", "Staff welfare", "Advertisement / sales promotion", "Director-related payment", "Employee cost"}
 
 
-def run_audit(db: Session, client_id: int, file_ids: list[int] | None = None) -> dict:
+def run_audit(db: Session, client_id: int, file_ids: list[int] | None = None, strict_file_scope: bool = False) -> dict:
     client = db.get(Client, client_id)
     if not client:
         raise ValueError("Client not found")
     _clear_outputs(db, client_id)
-    processing = generate_processing_data(db, client_id, file_ids)
+    processing = generate_processing_data(db, client_id, file_ids, strict_file_scope=strict_file_scope)
     normalised = processing.get("normalised", {})
     processing_rows = db.query(ProcessingExpense).filter(ProcessingExpense.client_id == client_id).all()
     processing_ledgers = {_ledger_key(row.ledger_name) for row in processing_rows}
     processing_type_by_ledger = {_ledger_key(row.ledger_name): row.expense_type for row in processing_rows}
-    expenses = db.query(ExpenseTransaction).filter(ExpenseTransaction.client_id == client_id).all()
+    expense_query = db.query(ExpenseTransaction).filter(ExpenseTransaction.client_id == client_id)
+    if strict_file_scope and file_ids:
+        expense_query = expense_query.filter(ExpenseTransaction.source_file_id.in_(file_ids))
+    expenses = expense_query.all()
     if processing_ledgers:
         expenses = [tx for tx in expenses if _ledger_key(tx.ledger_name) in processing_ledgers]
-    bills = db.query(Bill).filter(Bill.client_id == client_id).all()
-    vendors = db.query(Vendor).filter(Vendor.client_id == client_id).all()
-    tds = db.query(TDSRecord).filter(TDSRecord.client_id == client_id).all()
-    gst = db.query(GSTRecord).filter(GSTRecord.client_id == client_id).all()
+    source_scope = file_ids if strict_file_scope else None
+    bills = _scoped_source_query(db, Bill, client_id, source_scope)
+    vendors = _scoped_source_query(db, Vendor, client_id, source_scope)
+    tds = _scoped_source_query(db, TDSRecord, client_id, source_scope)
+    gst = _scoped_source_query(db, GSTRecord, client_id, source_scope)
 
     classifications = {}
     for tx in expenses:
@@ -117,6 +122,13 @@ def _clear_outputs(db: Session, client_id: int) -> None:
 
 def _ledger_key(value: str | None) -> str:
     return normalise_ledger_name(value).casefold()
+
+
+def _scoped_source_query(db: Session, model, client_id: int, file_ids: list[int] | None):
+    query = db.query(model).filter(model.client_id == client_id)
+    if file_ids:
+        query = query.filter(model.source_file_id.in_(file_ids))
+    return query.all()
 
 
 def _match_bills(db, client_id, expenses, bills):

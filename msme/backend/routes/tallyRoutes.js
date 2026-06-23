@@ -10,6 +10,7 @@ router.get("/tally/import/status", tallyController.importStatus);
 router.post("/tally/import", tallyController.importTally);
 router.get("/tally/imports", tallyController.listImports);
 router.get("/tally/imports/latest/summary", tallyController.getLatestCompletedImportSummary);
+router.get("/tally/imports/latest/download.xml", tallyController.downloadLatestCompletedImportXml);
 router.get("/tally/imports/latest", tallyController.getLatestCompletedImport);
 router.get("/tally/imports/:id/statements/summary", tallyController.getStatementSummary);
 router.get("/tally/imports/:id/daybook", tallyController.getDaybook);

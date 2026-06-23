@@ -12,6 +12,15 @@ function roundMoney(value) {
   return Math.round(Number(value || 0) * 100) / 100;
 }
 
+function summarizeRows(rows = []) {
+  return {
+    openingDisallowance: roundMoney(rows.reduce((sum, row) => sum + Number(row.openingDisallowance || 0), 0)),
+    deductibleCurrentYear: roundMoney(rows.reduce((sum, row) => sum + Number(row.deductibleCurrentYear || 0), 0)),
+    closingCarryForward: roundMoney(rows.reduce((sum, row) => sum + Number(row.closingCarryForward || 0), 0)),
+    rowCount: rows.length,
+  };
+}
+
 function parseJson(value, fallback = null) {
   try {
     return value ? JSON.parse(value) : fallback;
@@ -122,7 +131,30 @@ function computeRows({ currentReport, priorReport = null }) {
   });
 }
 
-function replaceRegister(reportId, rows = []) {
+function saveGeneration(reportId, priorReportId, summary) {
+  db.prepare(`
+    INSERT INTO msme_carry_forward_generations (
+      report_id, prior_report_id, summary_json, generated_at
+    ) VALUES (?, ?, ?, ?)
+    ON CONFLICT(report_id) DO UPDATE SET
+      prior_report_id = excluded.prior_report_id,
+      summary_json = excluded.summary_json,
+      generated_at = excluded.generated_at
+  `).run(reportId, priorReportId || "", JSON.stringify(summary), nowIso());
+}
+
+function getGeneration(reportId) {
+  const row = db.prepare("SELECT * FROM msme_carry_forward_generations WHERE report_id = ?").get(reportId);
+  if (!row) return null;
+  return {
+    reportId: row.report_id,
+    priorReportId: row.prior_report_id || "",
+    summary: parseJson(row.summary_json, {}),
+    generatedAt: row.generated_at,
+  };
+}
+
+function replaceRegister(reportId, rows = [], priorReportId = "", summary = summarizeRows(rows)) {
   const tx = db.transaction(() => {
     db.prepare("DELETE FROM msme_carry_forward_register WHERE report_id = ?").run(reportId);
     const insert = db.prepare(`
@@ -157,6 +189,7 @@ function replaceRegister(reportId, rows = []) {
         timestamp
       );
     }
+    saveGeneration(reportId, priorReportId, summary);
   });
   tx();
 }
@@ -195,34 +228,32 @@ function buildRegister(reportId, options = {}) {
   if (!currentReport) throw new Error("Report not found");
   const priorReport = options.priorReportId ? reportRepository.getReport(options.priorReportId) : findPriorReport(currentReport);
   const rows = computeRows({ currentReport, priorReport });
-  replaceRegister(reportId, rows);
+  const summary = summarizeRows(rows);
+  replaceRegister(reportId, rows, priorReport?.id || "", summary);
   return {
     reportId,
     priorReportId: priorReport?.id || "",
     rows,
-    summary: {
-      openingDisallowance: roundMoney(rows.reduce((sum, row) => sum + Number(row.openingDisallowance || 0), 0)),
-      deductibleCurrentYear: roundMoney(rows.reduce((sum, row) => sum + Number(row.deductibleCurrentYear || 0), 0)),
-      closingCarryForward: roundMoney(rows.reduce((sum, row) => sum + Number(row.closingCarryForward || 0), 0)),
-      rowCount: rows.length,
-    },
+    summary,
   };
 }
 
 function getOrBuildRegister(reportId, options = {}) {
   const existing = listRegister(reportId);
-  if (existing.length && !options.refresh) {
+  const generation = getGeneration(reportId);
+  if (generation && !options.refresh) {
     return {
       reportId,
-      priorReportId: existing[0]?.priorReportId || "",
+      priorReportId: generation.priorReportId,
       rows: existing,
-      summary: {
-        openingDisallowance: roundMoney(existing.reduce((sum, row) => sum + Number(row.openingDisallowance || 0), 0)),
-        deductibleCurrentYear: roundMoney(existing.reduce((sum, row) => sum + Number(row.deductibleCurrentYear || 0), 0)),
-        closingCarryForward: roundMoney(existing.reduce((sum, row) => sum + Number(row.closingCarryForward || 0), 0)),
-        rowCount: existing.length,
-      },
+      summary: generation.summary,
     };
+  }
+  if (existing.length && !options.refresh) {
+    const summary = summarizeRows(existing);
+    const priorReportId = existing[0]?.priorReportId || "";
+    saveGeneration(reportId, priorReportId, summary);
+    return { reportId, priorReportId, rows: existing, summary };
   }
   return buildRegister(reportId, options);
 }

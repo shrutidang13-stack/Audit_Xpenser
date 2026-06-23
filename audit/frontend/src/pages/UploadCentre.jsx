@@ -1,9 +1,9 @@
-import { RefreshCcw, Upload } from "lucide-react";
+import { DatabaseZap, RefreshCcw, Trash2, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Badge } from "../components/Badge";
 import { DataTable } from "../components/DataTable";
-import { api } from "../lib/api";
+import { api, getApiErrorMessage } from "../lib/api";
 
 const categories = [
   ["trial-balance", "Tally Book / Trial Balance"],
@@ -13,7 +13,7 @@ const categories = [
   ["fixed-assets-opening-income-tax", "Opening Fixed Asset Schedule as per Income Tax Act"],
   ["supporting-documents", "Supporting Documents"]
 ];
-const MAX_FILES_PER_BATCH = 500;
+const MAX_FILES_PER_BATCH = 5000;
 
 export function UploadCentre() {
   const { clientId } = useParams();
@@ -24,14 +24,16 @@ export function UploadCentre() {
   const [files, setFiles] = useState([]);
   const [message, setMessage] = useState("");
   const [resetting, setResetting] = useState(false);
+  const [importingMsme, setImportingMsme] = useState(false);
+  const [deletingFileId, setDeletingFileId] = useState(null);
 
   const load = async (targetClientId = activeClientId) => {
     if (!targetClientId) {
       setFiles([]);
       return;
     }
-    const { data } = await api.get(`/api/upload/${targetClientId}/files`);
-    setFiles(data);
+    const filesResponse = await api.get(`/api/upload/${targetClientId}/files`);
+    setFiles(filesResponse.data);
   };
   useEffect(() => {
     const routeClientId = sanitizeClientId(clientId);
@@ -125,6 +127,55 @@ export function UploadCentre() {
     await load(uploadClientId);
   };
 
+  const importFromMsme = async () => {
+    if (!activeClientId || importingMsme) return;
+    setImportingMsme(true);
+    setMessage("Importing the bundled MSME Guard Tally XML data...");
+    try {
+      let importClientId = activeClientId;
+      try {
+        await api.get(`/api/clients/${importClientId}`);
+      } catch (clientError) {
+        if (clientError.response?.status !== 404) throw clientError;
+        const { data: fallbackClient } = await api.get("/api/clients/default");
+        importClientId = String(fallbackClient.id);
+        setActiveClientId(importClientId);
+        setActiveClientName(fallbackClient.name);
+        window.localStorage.setItem("auditxpenser.activeClientId", importClientId);
+        window.localStorage.setItem("auditxpenser.activeClientName", fallbackClient.name);
+        navigate(`/client/${importClientId}/upload`, { replace: true });
+        setMessage(`Previous client workspace was unavailable. Importing MSME data into ${fallbackClient.name}...`);
+      }
+      const { data } = await api.post(`/api/upload/${importClientId}/msme/import`);
+      const fileId = data.file.id;
+      window.localStorage.setItem("auditxpenser.latestUploadFileIds", JSON.stringify([fileId]));
+      window.localStorage.setItem("auditxpenser.latestUploadSessionId", data.file.upload_session_id);
+      window.localStorage.setItem("auditxpenser.latestUploadCategory", "expense-ledger");
+      window.localStorage.setItem("auditxpenser.latestUploadClientId", importClientId);
+      setMessage("Imported 3828 Tally ledger rows from the MSME Guard XML.");
+      await load(importClientId);
+    } catch (error) {
+      setMessage(getApiErrorMessage(error, "The bundled MSME Guard Tally XML could not be imported."));
+    } finally {
+      setImportingMsme(false);
+    }
+  };
+
+  const deleteFile = async (file) => {
+    if (!activeClientId || deletingFileId) return;
+    if (!window.confirm(`Delete ${file.filename}? This also removes data extracted from this upload.`)) return;
+    setDeletingFileId(file.id);
+    try {
+      await api.delete(`/api/upload/${activeClientId}/files/${file.id}`);
+      setFiles((current) => current.filter((item) => item.id !== file.id));
+      setMessage(`${file.filename} deleted.`);
+    } catch (error) {
+      setMessage(getApiErrorMessage(error, `${file.filename} could not be deleted.`));
+    } finally {
+      setDeletingFileId(null);
+    }
+  };
+
   return (
     <section className="space-y-5">
       <div className="flex flex-col gap-3 border-b border-ink/10 pb-4 sm:flex-row sm:items-end sm:justify-between">
@@ -136,6 +187,16 @@ export function UploadCentre() {
       </div>
       <div className="rounded border border-teal/20 bg-white px-4 py-3 text-sm font-semibold text-ink/75">
         Active client: {activeClientId ? <span className="text-teal">{activeClientName || `Client #${activeClientId}`}</span> : <span className="text-coral">Loading seeded client workspace</span>}
+      </div>
+      <div className="flex flex-col gap-3 rounded border border-teal/25 bg-teal/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <div className="text-sm font-black text-ink">Import Tally Data from MSME</div>
+          <p className="mt-1 text-xs leading-5 text-ink/60">Optional. Imports the bundled MSME Guard Tally XML data when you click import.</p>
+        </div>
+        <button onClick={importFromMsme} disabled={importingMsme || !activeClientId} className="focus-ring inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded bg-teal px-3 text-sm font-bold text-white disabled:opacity-60">
+          {importingMsme ? <RefreshCcw className="animate-spin" size={16} /> : <DatabaseZap size={16} />}
+          {importingMsme ? "Importing Tally XML..." : "Import Tally Data from MSME Guard"}
+        </button>
       </div>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         {categories.map(([key, label]) => (
@@ -150,6 +211,7 @@ export function UploadCentre() {
       </div>
       {message && <div className="rounded border border-teal/20 bg-teal/10 px-3 py-2 text-sm font-semibold text-teal">{message}</div>}
       <DataTable columns={[
+        { key: "actions", label: "Action" },
         { key: "filename", label: "File Name" },
         { key: "category", label: "Category" },
         { key: "upload_session_id", label: "Run" },
@@ -158,7 +220,20 @@ export function UploadCentre() {
         { key: "records_extracted", label: "Records" },
         { key: "ca_review_required", label: "CA Review Required" },
         { key: "error_message", label: "Error" }
-      ]} data={files.map((f) => ({ ...f, parse_status: <Badge tone={f.ca_review_required ? "medium" : "low"}>{f.parse_status}</Badge> }))} />
+      ]} data={files.map((f) => ({
+        ...f,
+        actions: (
+          <button
+            type="button"
+            onClick={() => deleteFile(f)}
+            disabled={deletingFileId === f.id}
+            className="focus-ring inline-flex items-center gap-1 rounded border border-coral/30 px-2 py-1 text-xs font-bold text-coral hover:bg-coral/10 disabled:opacity-50"
+          >
+            <Trash2 size={14} />{deletingFileId === f.id ? "Deleting..." : "Delete"}
+          </button>
+        ),
+        parse_status: <Badge tone={f.ca_review_required ? "medium" : "low"}>{f.parse_status}</Badge>,
+      }))} />
     </section>
   );
 }

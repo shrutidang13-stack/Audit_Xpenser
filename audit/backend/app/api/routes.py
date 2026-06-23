@@ -57,6 +57,7 @@ from app.services.reference_library_service import (
 )
 from app.services.retention_service import delete_uploaded_files
 from app.services.upload_service import store_upload
+from app.services.msme_import_service import import_latest_tally_xml, latest_msme_import_insights
 from app.services.utils import from_json, parse_date, to_json
 from app.services.workspace_reset_service import reset_client_workspace
 
@@ -138,6 +139,23 @@ def reset_workspace(client_id: int, db: Session = Depends(get_db)):
     return reset_client_workspace(db, client_id)
 
 
+@router.post("/upload/{client_id}/msme/import")
+def import_msme_report(client_id: int, db: Session = Depends(get_db)):
+    if not db.get(Client, client_id):
+        raise HTTPException(404, "Client not found")
+    try:
+        return import_latest_tally_xml(db, client_id)
+    except ValueError as exc:
+        raise HTTPException(400, str(exc)) from exc
+
+
+@router.get("/upload/{client_id}/msme/insights")
+def msme_import_insights(client_id: int, db: Session = Depends(get_db)):
+    if not db.get(Client, client_id):
+        raise HTTPException(404, "Client not found")
+    return latest_msme_import_insights(db, client_id)
+
+
 @router.post("/upload/{client_id}/{category}")
 def upload_file(
     client_id: int,
@@ -162,6 +180,19 @@ def upload_file(
 @router.get("/upload/{client_id}/files")
 def list_files(client_id: int, db: Session = Depends(get_db)):
     return [_file(item) for item in db.query(UploadedFile).filter(UploadedFile.client_id == client_id).order_by(UploadedFile.created_at.desc()).all()]
+
+
+@router.delete("/upload/{client_id}/files/{file_id}")
+def delete_uploaded_file(client_id: int, file_id: int, db: Session = Depends(get_db)):
+    uploaded = db.query(UploadedFile).filter(
+        UploadedFile.id == file_id,
+        UploadedFile.client_id == client_id,
+    ).first()
+    if not uploaded:
+        raise HTTPException(404, "Uploaded file not found")
+    filename = uploaded.filename
+    result = delete_uploaded_files(db, [uploaded])
+    return {"status": "deleted", "file_id": file_id, "filename": filename, **result}
 
 
 @router.get("/mapping/{file_id}/preview")

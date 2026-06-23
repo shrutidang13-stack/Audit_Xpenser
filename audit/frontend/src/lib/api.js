@@ -56,6 +56,20 @@ export const caDashboardApi = {
   dashboard: (clientId) => api.get(`/api/ca-dashboard/${clientId}`)
 };
 
+export function getApiErrorMessage(error, fallback = "Request could not be completed") {
+  const detail = error?.response?.data?.detail;
+  if (Array.isArray(detail)) {
+    const messages = detail.map((item) => {
+      if (typeof item === "string") return item;
+      const location = Array.isArray(item?.loc) ? item.loc.join(" → ") : "request";
+      return item?.msg ? `${location}: ${item.msg}` : safeText(item);
+    }).filter(Boolean);
+    if (messages.length) return messages.join("; ");
+  }
+  if (detail && typeof detail === "object") return detail.msg || safeText(detail);
+  return detail || error?.message || fallback;
+}
+
 function uploadFile(url, file) {
   const form = new FormData();
   form.append("file", file);
@@ -64,4 +78,12 @@ function uploadFile(url, file) {
 
 function compact(value) {
   return Object.fromEntries(Object.entries(value).filter(([, item]) => item));
+}
+
+function safeText(value) {
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
 }

@@ -1,5 +1,5 @@
-import { AlertTriangle, CheckCircle2, CircleSlash, RefreshCcw, ShieldCheck, TrendingUp } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { AlertTriangle, CheckCircle2, CircleSlash, RefreshCcw, ShieldCheck, Terminal, TrendingUp } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { caDashboardApi } from "../lib/api";
@@ -12,17 +12,45 @@ export function CompleteCADashboard() {
   const [data, setData] = useState(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [fetchLogs, setFetchLogs] = useState([]);
+  const requestRef = useRef(0);
 
   const load = async () => {
+    const requestId = requestRef.current + 1;
+    requestRef.current = requestId;
+    const startedAt = Date.now();
+    setFetchLogs([
+      makeLog("info", "Starting Complete CA Dashboard refresh"),
+      makeLog("api", "Requesting latest MSME report through the MSME API connector"),
+    ]);
     setBusy(true);
     setError("");
+    const waitingLog = window.setInterval(() => {
+      if (requestRef.current !== requestId) return;
+      const elapsed = Math.max(1, Math.round((Date.now() - startedAt) / 1000));
+      appendLog(setFetchLogs, "wait", `Waiting for MSME API response... ${elapsed}s`);
+    }, 2000);
     try {
       const response = await caDashboardApi.dashboard(clientId);
+      if (requestRef.current !== requestId) return;
       setData(response.data);
+      const msmeResult = response.data?.msme_guard || {};
+      const creditors = getRows(msmeResult.sundry_creditors).length;
+      const vouchers = getRows(msmeResult.voucher_evidence || msmeResult.payments).length;
+      appendLog(setFetchLogs, "ok", `Dashboard API responded in ${Date.now() - startedAt}ms`);
+      appendLog(setFetchLogs, msmeResult.status === "available" ? "ok" : "warn", `MSME connector status: ${statusLabel(msmeResult.status)}`);
+      if (msmeResult.import_run_id) appendLog(setFetchLogs, "data", `Import run received: ${msmeResult.import_run_id}`);
+      if (msmeResult.report_id) appendLog(setFetchLogs, "data", `Generated report received: ${msmeResult.report_id}`);
+      appendLog(setFetchLogs, "data", `Fetched ${creditors} creditor row${creditors === 1 ? "" : "s"} and ${vouchers} voucher row${vouchers === 1 ? "" : "s"}`);
+      appendLog(setFetchLogs, "done", "MSME fetch completed; dashboard data is live");
     } catch (err) {
-      setError(err.response?.data?.detail || err.message || "Could not load Complete CA Dashboard");
+      if (requestRef.current !== requestId) return;
+      const errorMessage = apiErrorMessage(err, "Could not load Complete CA Dashboard");
+      setError(errorMessage);
+      appendLog(setFetchLogs, "error", `Fetch failed: ${errorMessage}`);
     } finally {
-      setBusy(false);
+      window.clearInterval(waitingLog);
+      if (requestRef.current === requestId) setBusy(false);
     }
   };
 
@@ -52,10 +80,6 @@ export function CompleteCADashboard() {
     { name: "RCM", value: audit.gst_tds?.rcm_alerts || 0 },
   ], [audit]);
 
-  if (!data && !error) {
-    return <PageTitle title="Complete CA Dashboard" subtitle="Loading combined audit and MSME compliance view." />;
-  }
-
   return (
     <section className="space-y-5">
       <div className="flex flex-col gap-3 border-b border-ink/10 pb-4 lg:flex-row lg:items-end lg:justify-between">
@@ -67,6 +91,15 @@ export function CompleteCADashboard() {
 
       {error && <div className="rounded border border-coral/20 bg-coral/10 px-3 py-2 text-sm font-semibold text-coral">{error}</div>}
 
+      <div className={`grid gap-5 ${data ? "xl:grid-cols-[minmax(0,1fr)_20rem]" : ""}`}>
+        {data ? <MSMEStatus status={msme.status} message={msme.message} importRunId={msme.import_run_id} reportId={msme.report_id} /> : (
+          <div className="rounded border border-teal/20 bg-white px-4 py-3 text-sm font-semibold text-ink/65">
+            Loading combined audit and MSME compliance view.
+          </div>
+        )}
+        <LiveFetchLog logs={fetchLogs} busy={busy} />
+      </div>
+
       {data && (
         <>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
@@ -76,8 +109,6 @@ export function CompleteCADashboard() {
             <Metric label="Tax Impact" value={formatInr(analytics.total_tax_impact)} />
             <Metric label="Critical Issues" value={analytics.critical_issues_count || 0} />
           </div>
-
-          <MSMEStatus status={msme.status} message={msme.message} importRunId={msme.import_run_id} reportId={msme.report_id} />
 
           <div className="grid gap-5 lg:grid-cols-2">
             <Panel title="Risk Analytics">
@@ -261,12 +292,53 @@ function Metric({ label, value, detail }) {
   );
 }
 
+function LiveFetchLog({ logs, busy }) {
+  return (
+    <section className="aspect-square w-full max-w-80 overflow-hidden rounded border border-ink/20 bg-[#101817] text-white shadow-sm xl:justify-self-end" aria-live="polite" aria-label="MSME API live fetch log">
+      <div className="flex h-11 items-center justify-between border-b border-white/10 bg-white/5 px-3">
+        <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide"><Terminal size={15} />MSME API Live Log</div>
+        <span className={`h-2.5 w-2.5 rounded-full ${busy ? "animate-pulse bg-amber" : "bg-teal"}`} title={busy ? "Fetching" : "Idle"} />
+      </div>
+      <div className="h-[calc(100%-2.75rem)] space-y-2 overflow-y-auto p-3 font-mono text-[11px] leading-4">
+        {logs.length ? logs.map((entry) => (
+          <div key={entry.id} className="grid grid-cols-[4.5rem_minmax(0,1fr)] gap-2">
+            <span className="text-white/40">{entry.time}</span>
+            <span className={logTone(entry.level)}><span className="mr-1 text-white/35">›</span>{entry.message}</span>
+          </div>
+        )) : <div className="text-white/45">Waiting for fetch activity...</div>}
+        {busy && <div className="animate-pulse text-amber">› receiving MSME data_</div>}
+      </div>
+    </section>
+  );
+}
+
+function appendLog(setter, level, message) {
+  setter((current) => [...current, makeLog(level, message)].slice(-30));
+}
+
+function makeLog(level, message) {
+  return {
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    time: new Date().toLocaleTimeString("en-IN", { hour12: false }),
+    level,
+    message,
+  };
+}
+
+function logTone(level) {
+  if (level === "error") return "text-[#ff8a7a]";
+  if (level === "warn" || level === "wait") return "text-amber";
+  if (level === "ok" || level === "done") return "text-[#67d8c7]";
+  if (level === "data") return "text-[#9cc8ff]";
+  return "text-white/75";
+}
+
 function Panel({ title, children }) {
   return <div className="rounded border border-ink/10 bg-white p-4"><h2 className="flex items-center gap-2 font-black"><TrendingUp size={17} />{title}</h2><div className="mt-3">{children}</div></div>;
 }
 
 function Fact({ label, value }) {
-  return <div className="flex items-center justify-between border-b border-ink/10 py-2 text-sm"><span className="font-semibold text-ink/60">{label}</span><span className="font-black">{value}</span></div>;
+  return <div className="flex items-center justify-between border-b border-ink/10 py-2 text-sm"><span className="font-semibold text-ink/60">{label}</span><span className="font-black">{displayValue(value)}</span></div>;
 }
 
 function TablePanel({ title, rows, columns, empty }) {
@@ -278,7 +350,7 @@ function TablePanel({ title, rows, columns, empty }) {
           <tbody>
             {rows.length ? rows.map((row, index) => (
               <tr key={index} className="border-b">
-                {columns.map(([key, , formatter]) => <td key={key} className="py-2 pr-3 font-semibold text-ink/75">{formatter ? formatter(row[key]) : row[key] || "-"}</td>)}
+                {columns.map(([key, , formatter]) => <td key={key} className="py-2 pr-3 font-semibold text-ink/75">{displayValue(formatter ? formatter(row[key]) : row[key])}</td>)}
               </tr>
             )) : <tr><td className="py-3 font-semibold text-ink/55" colSpan={columns.length}>{empty}</td></tr>}
           </tbody>
@@ -310,4 +382,34 @@ function formatInr(value) {
 
 function formatRisk(value) {
   return value == null ? "Not available" : `${value} / 100`;
+}
+
+function apiErrorMessage(error, fallback) {
+  const detail = error?.response?.data?.detail;
+  if (Array.isArray(detail)) {
+    const messages = detail.map((item) => {
+      if (typeof item === "string") return item;
+      const location = Array.isArray(item?.loc) ? item.loc.join(" → ") : "request";
+      return item?.msg ? `${location}: ${item.msg}` : displayValue(item);
+    }).filter(Boolean);
+    if (messages.length) return messages.join("; ");
+  }
+  if (detail && typeof detail === "object") return detail.msg || displayValue(detail);
+  return detail || error?.message || fallback;
+}
+
+function displayValue(value) {
+  if (value == null || value === "") return "-";
+  if (typeof value === "string" || typeof value === "number") return value;
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  if (Array.isArray(value)) return value.map(displayValue).join(", ");
+  if (typeof value === "object") {
+    if (value.msg) return String(value.msg);
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  }
+  return String(value);
 }

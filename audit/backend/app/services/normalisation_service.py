@@ -52,7 +52,7 @@ def normalise_client_uploads(db: Session, client_id: int, file_ids: list[int] | 
     for uploaded in files:
         rows = from_json(uploaded.preview_json, [])
         mapping = _mapping_for_file(db, uploaded)
-        if uploaded.category in {"expense-ledger", "purchase-register"}:
+        if uploaded.category in {"expense-ledger", "purchase-register", "msme-report"}:
             counts["expenses"] += _normalise_expenses(db, client_id, uploaded, rows, mapping)
         elif uploaded.category == "vendor-master":
             counts["vendors"] += _normalise_vendors(db, client_id, uploaded, rows, mapping)

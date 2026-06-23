@@ -133,6 +133,22 @@ async function getLatestCompletedImportSummary(req, res, next) {
   }
 }
 
+async function downloadLatestCompletedImportXml(req, res, next) {
+  try {
+    const result = tallyImportService.latestCompletedImportXml();
+    if (!result) return res.status(404).json({ success: false, error: "No completed Tally import found" });
+    const safeRunId = String(result.run.id || "latest").replace(/[^a-zA-Z0-9_-]/g, "-");
+    res.setHeader("Content-Type", "application/xml; charset=utf-8");
+    res.setHeader("Content-Disposition", `attachment; filename="tally-import-${safeRunId}.xml"`);
+    res.setHeader("X-Tally-Import-Run-Id", String(result.run.id || ""));
+    res.setHeader("X-Tally-Voucher-Count", String(result.voucherCount));
+    res.setHeader("X-Tally-Creditor-Count", String(result.creditorCount));
+    res.send(result.xml);
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getStatementSummary(req, res, next) {
   try {
     const result = tallyImportService.getStatementSummary(req.params.id, req.query || {});
@@ -169,6 +185,7 @@ module.exports = {
   importTally,
   getLatestCompletedImport,
   getLatestCompletedImportSummary,
+  downloadLatestCompletedImportXml,
   getStatementSummary,
   getImport,
   getLedgerVouchers,

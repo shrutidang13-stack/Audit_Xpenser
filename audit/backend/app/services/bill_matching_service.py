@@ -48,7 +48,7 @@ def sources(db: Session, client_id: int) -> dict:
     by_category = Counter(file.category for file in files)
     eligible_books = _eligible_book_transactions(db, client_id)
     registered_count = sum(1 for row in eligible_books if (row.source_ref or "").startswith(f"{SOURCE_BOOK_PREFIX}registered:"))
-    unregistered_count = sum(1 for row in eligible_books if (row.source_ref or "").startswith(f"{SOURCE_BOOK_PREFIX}unregistered:"))
+    unregistered_count = len(eligible_books) - registered_count
     return {
         "uploaded_bills_count": bills,
         "bill_files_count": len(bill_files),

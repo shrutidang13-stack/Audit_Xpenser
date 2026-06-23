@@ -320,8 +320,6 @@ def _extract_tally_vouchers_from_path(path: Path) -> list[dict]:
                 end += len("</VOUCHER>")
                 rows.extend(_rows_from_voucher(_sanitize_xml_text(buffer[start:end])))
                 buffer = buffer[end:]
-                if len(rows) >= 5000:
-                    return rows
     return rows
 
 

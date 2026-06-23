@@ -1818,6 +1818,39 @@ test("Clause 26(A) carry-forward register deducts prior-year 43B(h) on actual cu
   assert.equal(register.summary.deductibleCurrentYear, 600);
 });
 
+test("zero-row Clause 26(A) carry-forward remains a valid generated cache", () => {
+  const runId = importRepository.createRun({
+    fiscalYear: "2027-28",
+    fromDate: "20270401",
+    toDate: "20280331",
+    asOn: "2028-03-31",
+    companyName: "Empty Carry Forward Test Co",
+    actor: "unit-test",
+  });
+  importRepository.completeRun(runId, {
+    summary: { fiscalYear: "2027-28", companyName: "Empty Carry Forward Test Co" },
+    creditors: [],
+    ledgerVouchers: [],
+  });
+  const report = reportRepository.createReport({
+    importRunId: runId,
+    fiscalYear: "2027-28",
+    summary: {},
+    report: { included: [], excluded: [], schedules: {} },
+    actor: "unit-test",
+  });
+
+  const generated = carryForwardService.buildRegister(report.id);
+  assert.equal(generated.rows.length, 0);
+  db.prepare("UPDATE msme_carry_forward_generations SET generated_at = 'cache-sentinel' WHERE report_id = ?").run(report.id);
+
+  const cached = carryForwardService.getOrBuildRegister(report.id);
+  const marker = db.prepare("SELECT generated_at FROM msme_carry_forward_generations WHERE report_id = ?").get(report.id);
+  assert.equal(cached.rows.length, 0);
+  assert.equal(cached.summary.rowCount, 0);
+  assert.equal(marker.generated_at, "cache-sentinel");
+});
+
 test("report warns and lists pending vendors when no verified MSME vendors exist", () => {
   const runId = importRepository.createRun({
     fiscalYear: "2025-26",

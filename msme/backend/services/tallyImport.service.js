@@ -656,6 +656,47 @@ function getLatestCompletedImportRun(filters = {}) {
   return getImportRun(latest.id, filters);
 }
 
+function xmlEscape(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;");
+}
+
+function latestCompletedImportXml() {
+  const run = importRepository.getLatestCompletedRun();
+  if (!run) return null;
+  const creditors = enrichCreditors(importRepository.getCreditors(run.id));
+  const vouchers = importRepository.getAllDaybookVouchers(run.id);
+  const ledgerMessages = creditors.map((creditor) => [
+    `<TALLYMESSAGE><LEDGER NAME="${xmlEscape(creditor.party)}">`,
+    `<NAME>${xmlEscape(creditor.party)}</NAME>`,
+    `<PARENT>${xmlEscape(creditor.parent || "Sundry Creditors")}</PARENT>`,
+    `<CLOSINGBALANCE>${xmlEscape(creditor.outstandingAmount || 0)}</CLOSINGBALANCE>`,
+    `<GSTIN>${xmlEscape(creditor.gstin || "")}</GSTIN>`,
+    `<INCOMETAXNUMBER>${xmlEscape(creditor.panNumber || "")}</INCOMETAXNUMBER>`,
+    `</LEDGER></TALLYMESSAGE>`,
+  ].join(""));
+  const voucherMessages = vouchers.map((voucher) => {
+    const party = voucher.partyLedgerName || voucher.vendorName || voucher.ledgerName;
+    return [
+      `<TALLYMESSAGE><VOUCHER>`,
+      `<DATE>${xmlEscape(voucher.date)}</DATE>`,
+      `<VOUCHERTYPENAME>${xmlEscape(voucher.voucherType)}</VOUCHERTYPENAME>`,
+      `<VOUCHERNUMBER>${xmlEscape(voucher.voucherNumber)}</VOUCHERNUMBER>`,
+      `<REFERENCE>${xmlEscape(voucher.billReference)}</REFERENCE>`,
+      `<PARTYLEDGERNAME>${xmlEscape(party)}</PARTYLEDGERNAME>`,
+      `<NARRATION>${xmlEscape(voucher.particulars || voucher.voucherSource)}</NARRATION>`,
+      `<ALLLEDGERENTRIES.LIST><LEDGERNAME>${xmlEscape(voucher.ledgerName)}</LEDGERNAME><AMOUNT>${xmlEscape(voucher.amount)}</AMOUNT></ALLLEDGERENTRIES.LIST>`,
+      `</VOUCHER></TALLYMESSAGE>`,
+    ].join("");
+  });
+  const xml = `<?xml version="1.0" encoding="UTF-8"?><ENVELOPE><HEADER><TALLYREQUEST>Export Data</TALLYREQUEST></HEADER><BODY><IMPORT_RUN><ID>${xmlEscape(run.id)}</ID><COMPANY>${xmlEscape(run.companyName)}</COMPANY><FROMDATE>${xmlEscape(run.fromDate)}</FROMDATE><TODATE>${xmlEscape(run.toDate)}</TODATE></IMPORT_RUN><DATA>${ledgerMessages.join("")}${voucherMessages.join("")}</DATA></BODY></ENVELOPE>`;
+  return { xml, run, creditorCount: creditors.length, voucherCount: vouchers.length };
+}
+
 function compactImportRun(run) {
   if (!run) return run;
   const { ledgerMetadata, ...summary } = run.summary || {};
@@ -775,6 +816,7 @@ module.exports = {
   captureBaselineSnapshot,
   getImportRun,
   getLatestCompletedImportRun,
+  latestCompletedImportXml,
   getLatestCompletedImportSummary,
   getStatementSummary,
   getLedgerVouchers,

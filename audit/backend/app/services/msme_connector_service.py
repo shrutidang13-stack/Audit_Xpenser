@@ -1,10 +1,15 @@
 from __future__ import annotations
 
+import logging
+from time import perf_counter
 from typing import Any
 
 import httpx
 
 from app.core.config import get_settings
+
+
+logger = logging.getLogger(__name__)
 
 
 MSME_EMPTY = {
@@ -39,13 +44,14 @@ class MSMEConnector:
         if not self.enabled:
             return {**MSME_EMPTY, "status": "not_configured", "message": "MSME Guard is not connected."}
 
+        dashboard_started = perf_counter()
         try:
             with httpx.Client(base_url=self.base_url, timeout=self.timeout, headers=self._headers()) as client:
-                health = self._safe_get(client, "/api/health", auth_required=False)
+                health = self._timed_get(client, "/api/health", "health", auth_required=False)
                 if not health["ok"]:
                     return self._offline("offline", health["message"])
 
-                latest = self._safe_get(client, "/api/tally/imports/latest/summary")
+                latest = self._timed_get(client, "/api/tally/imports/latest/summary", "latest_import")
                 if not latest["ok"]:
                     return self._offline(self._status_from_error(latest), latest["message"])
 
@@ -69,16 +75,8 @@ class MSMEConnector:
                 }
                 self._apply_latest_import_fallbacks(payload, latest_data)
 
-                if import_run_id:
-                    statements = self._statement_summary(client, import_run_id)
-                    payload["profit_loss"] = statements.get("profitLoss") or {}
-                    payload["trial_balance"] = statements.get("trialBalance") or {}
-                    payload["balance_sheet"] = statements.get("balanceSheet") or {}
-
                 if report_id:
                     integration = self._integration_report(client, report_id)
-                    tax_disallowance = self._tax_disallowance_report(client, report_id)
-                    form3cd = self._form3cd_report(client, report_id)
                     payload["msme_compliance"] = {
                         **payload["msme_compliance"],
                         "summary": integration.get("summary") or {},
@@ -87,11 +85,26 @@ class MSMEConnector:
                     }
                     payload["payments"] = integration.get("voucherEvidence") or []
                     payload["voucher_evidence"] = payload["payments"]
-                    payload["tax_disallowance_43bh"] = tax_disallowance or integration.get("taxDisallowance") or {}
-                    payload["form3cd"] = self._normalise_form3cd(form3cd or integration.get("form3cd") or {})
+                    payload["tax_disallowance_43bh"] = {
+                        "success": True,
+                        "reportId": report_id,
+                        **(integration.get("taxDisallowance") or {}),
+                    }
+                    payload["form3cd"] = self._normalise_form3cd({
+                        "success": True,
+                        "reportId": report_id,
+                        **(integration.get("form3cd") or {}),
+                    })
                     payload["interest"] = self._interest_from_sections(payload, integration)
                     self._apply_latest_import_fallbacks(payload, latest_data)
 
+                logger.info(
+                    "msme_connector call=dashboard_total elapsed_ms=%.1f status=%s import_run_id=%s report_id=%s",
+                    (perf_counter() - dashboard_started) * 1000,
+                    payload["status"],
+                    import_run_id,
+                    report_id,
+                )
                 return payload
         except httpx.ConnectError:
             return self._offline("offline", "MSME Guard is not connected.")
@@ -99,6 +112,34 @@ class MSMEConnector:
             return self._offline("offline", "MSME Guard is not connected.")
         except Exception:
             return self._offline("error", "MSME Guard service is unavailable on port 3001.")
+
+    def latest_tally_xml(self) -> dict[str, Any]:
+        if not self.enabled:
+            return {"status": "not_configured", "message": "MSME Guard is not connected."}
+        try:
+            with httpx.Client(base_url=self.base_url, timeout=max(self.timeout, 60), headers=self._headers()) as client:
+                response = client.get("/api/tally/imports/latest/download.xml")
+                if response.status_code == 401:
+                    return {"status": "auth_failed", "message": "MSME Guard authentication failed."}
+                response.raise_for_status()
+                disposition = response.headers.get("content-disposition", "")
+                filename = "tally-import-latest.xml"
+                if 'filename="' in disposition:
+                    filename = disposition.split('filename="', 1)[1].split('"', 1)[0] or filename
+                return {
+                    "status": "available",
+                    "content": response.content,
+                    "filename": filename,
+                    "import_run_id": response.headers.get("x-tally-import-run-id"),
+                    "voucher_count": int(response.headers.get("x-tally-voucher-count") or 0),
+                    "creditor_count": int(response.headers.get("x-tally-creditor-count") or 0),
+                }
+        except httpx.HTTPStatusError as exc:
+            return {"status": "error", "message": self._error_message(exc.response)}
+        except (httpx.ConnectError, httpx.TimeoutException):
+            return {"status": "offline", "message": "MSME Guard is not connected."}
+        except Exception as exc:
+            return {"status": "error", "message": str(exc)}
 
     def _headers(self) -> dict[str, str]:
         return {"Authorization": f"Bearer {self.token}"} if self.token else {}
@@ -119,8 +160,27 @@ class MSMEConnector:
         except Exception as exc:
             return {"ok": False, "status_code": None, "message": str(exc), "data": None}
 
+    def _timed_get(
+        self,
+        client: httpx.Client,
+        path: str,
+        label: str,
+        auth_required: bool = True,
+        timeout: float | None = None,
+    ) -> dict[str, Any]:
+        started = perf_counter()
+        result = self._safe_get(client, path, auth_required=auth_required, timeout=timeout)
+        logger.info(
+            "msme_connector call=%s elapsed_ms=%.1f ok=%s status_code=%s",
+            label,
+            (perf_counter() - started) * 1000,
+            result.get("ok"),
+            result.get("status_code"),
+        )
+        return result
+
     def _latest_report_id(self, client: httpx.Client, import_run_id: Any) -> Any:
-        reports = self._safe_get(client, "/api/reports?compact=1", timeout=self.report_timeout)
+        reports = self._timed_get(client, "/api/reports?compact=1", "report_lookup", timeout=self.report_timeout)
         if not reports["ok"]:
             return None
         rows = (reports["data"] or {}).get("reports") or []
@@ -136,12 +196,6 @@ class MSMEConnector:
             return {"status": "unavailable", "message": data["message"], "statement": {}}
         return (data["data"] or {}).get("statement") or data["data"] or {}
 
-    def _statement_summary(self, client: httpx.Client, import_run_id: Any) -> dict[str, Any]:
-        data = self._safe_get(client, f"/api/tally/imports/{import_run_id}/statements/summary", timeout=self.optional_timeout)
-        if not data["ok"]:
-            return {}
-        return (data["data"] or {}).get("statements") or {}
-
     def _report_section(self, client: httpx.Client, report_id: Any, section: str) -> dict[str, Any]:
         data = self._safe_get(client, f"/api/reports/{report_id}/{section}", timeout=self.optional_timeout)
         if not data["ok"]:
@@ -149,19 +203,12 @@ class MSMEConnector:
         return data["data"] or {}
 
     def _integration_report(self, client: httpx.Client, report_id: Any) -> dict[str, Any]:
-        data = self._safe_get(client, f"/api/reports/{report_id}/integration-summary", timeout=self.report_timeout)
-        if not data["ok"]:
-            return {}
-        return data["data"] or {}
-
-    def _tax_disallowance_report(self, client: httpx.Client, report_id: Any) -> dict[str, Any]:
-        data = self._safe_get(client, f"/api/reports/{report_id}/tax-disallowance", timeout=self.report_timeout)
-        if not data["ok"]:
-            return {}
-        return data["data"] or {}
-
-    def _form3cd_report(self, client: httpx.Client, report_id: Any) -> dict[str, Any]:
-        data = self._safe_get(client, f"/api/reports/{report_id}/form-3cd", timeout=self.report_timeout)
+        data = self._timed_get(
+            client,
+            f"/api/reports/{report_id}/integration-summary",
+            "integration_summary",
+            timeout=self.report_timeout,
+        )
         if not data["ok"]:
             return {}
         return data["data"] or {}
@@ -313,3 +360,7 @@ class MSMEConnector:
 
 def get_msme_dashboard_data() -> dict[str, Any]:
     return MSMEConnector().dashboard()
+
+
+def get_latest_msme_tally_xml() -> dict[str, Any]:
+    return MSMEConnector().latest_tally_xml()

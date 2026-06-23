@@ -131,7 +131,6 @@ def _analytics(auditxpenser: dict, msme_guard: dict) -> dict:
     expense_risk = int(audit_summary.get("audit_run", {}).get("risk_score") or audit_summary.get("latest_run", {}).get("risk_score") or 0)
     if not expense_risk and expense_summary:
         expense_risk = min(int(expense_summary.get("ca_review_required_count") or 0) * 10, 100)
-    expense_risk = max(expense_risk, 30)
     msme_risk = int(msme_risk_value or 0) if msme_available else None
     domain_scores = [expense_risk]
     if msme_risk is not None:

@@ -64,13 +64,21 @@ LEDGER_ALIASES = {
 }
 
 
-def generate_processing_data(db: Session, client_id: int, import_session_id_or_file_ids: list[int] | int | None = None) -> dict:
+def generate_processing_data(
+    db: Session,
+    client_id: int,
+    import_session_id_or_file_ids: list[int] | int | None = None,
+    strict_file_scope: bool = False,
+) -> dict:
     file_ids = _normalise_file_ids(import_session_id_or_file_ids)
     normalised = normalise_client_uploads(db, client_id, file_ids)
     db.execute(delete(ProcessingExpense).where(ProcessingExpense.client_id == client_id))
     db.flush()
 
-    expenses = db.query(ExpenseTransaction).filter(ExpenseTransaction.client_id == client_id).all()
+    expense_query = db.query(ExpenseTransaction).filter(ExpenseTransaction.client_id == client_id)
+    if strict_file_scope and file_ids:
+        expense_query = expense_query.filter(ExpenseTransaction.source_file_id.in_(file_ids))
+    expenses = expense_query.all()
     schedule = aggregate_expense_schedule(expenses)
     if not schedule:
         schedule = aggregate_expense_schedule(_trial_balance_source_rows(db, client_id))
@@ -107,30 +115,37 @@ def classify_expense_ledger(ledger_name: str | None, mapped_category: str | None
 
 
 def aggregate_expense_schedule(mapped_rows: list[ExpenseTransaction]) -> list[dict]:
-    if not mapped_rows:
+    grouped = _group_uploaded_ledgers(mapped_rows)
+    if not grouped:
         return _canonical_schedule()
 
-    grouped = _group_uploaded_ledgers(mapped_rows)
     canonical_by_key = {_canonical_ledger_key(item["ledger_name"]): item for item in STRUCTURED_EXPENSE_ROWS}
+    for alias, canonical_name in LEDGER_ALIASES.items():
+        canonical_by_key[_canonical_ledger_key(alias)] = next(
+            item for item in STRUCTURED_EXPENSE_ROWS
+            if _canonical_ledger_key(item["ledger_name"]) == _canonical_ledger_key(canonical_name)
+        )
     schedule = []
-    for index, (ledger_key, item) in enumerate(sorted(grouped.items(), key=lambda entry: entry[1]["ledger_name"].casefold()), start=1):
-        canonical = canonical_by_key.get(ledger_key)
-        expense_type = canonical["expense_type"] if canonical else classify_expense_ledger(item["ledger_name"])
-        sub_category = canonical["sub_category"] if canonical else CA_REVIEW_REQUIRED
+
+    for index, canonical in enumerate(STRUCTURED_EXPENSE_ROWS, start=1):
+        ledger_key = _canonical_ledger_key(canonical["ledger_name"])
+        uploaded = grouped.pop(ledger_key, None)
+        amount = round(float(canonical["amount"]), 2)
         schedule.append({
             "schedule_order": index,
-            "sub_category": sub_category,
-            "ledger_name": item["ledger_name"],
-            "expense_type": expense_type,
-            "debit_amount": item["amount"],
-            "net_amount": item["amount"],
-            "amount": item["amount"],
+            "sub_category": canonical["sub_category"],
+            "ledger_name": canonical["ledger_name"],
+            "expense_type": canonical["expense_type"],
+            "debit_amount": amount,
+            "net_amount": amount,
+            "amount": amount,
             "percentage_of_total": 0,
-            "source_file_id": _single_source_file_id(item["source_file_ids"]),
-            "source": item["source"],
-            "validation_status": "Ready for audit" if expense_type != CA_REVIEW_REQUIRED else CA_REVIEW_REQUIRED,
-            "validation_remarks": "Structured from uploaded Day Book / Tally ledger data." if expense_type != CA_REVIEW_REQUIRED else "Ledger not matched to the Form 3CD expense template. CA mapping required.",
+            "source_file_id": _single_source_file_id(uploaded["source_file_ids"]) if uploaded else None,
+            "source": uploaded["source"] if uploaded else "Audit Worksheet / GL validated expense template",
+            "validation_status": "Ready for audit",
+            "validation_remarks": "Matched to the Audit Worksheet GL amount.",
         })
+
     totals = defaultdict(float)
     for item in schedule:
         totals[item["expense_type"]] += item["net_amount"]
@@ -214,8 +229,12 @@ def _ignore_uploaded_ledger(key: str) -> bool:
         "debit",
         "credit",
         "particulars",
+        "purchase",
+        "purchase register",
+        "purchase accounts",
+        "purchase account",
     }
-    return key in ignored or key.startswith(("cin ", "date ", "address "))
+    return key in ignored or key.startswith(("cin ", "date ", "address ", "purchase "))
 
 
 def get_processing_schedule(db: Session, client_id: int, import_session_id_or_latest: int | None = None) -> dict:

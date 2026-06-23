@@ -224,6 +224,14 @@ function migrate() {
       FOREIGN KEY(report_id) REFERENCES compliance_reports(id)
     );
 
+    CREATE TABLE IF NOT EXISTS msme_carry_forward_generations (
+      report_id TEXT PRIMARY KEY,
+      prior_report_id TEXT NOT NULL DEFAULT '',
+      summary_json TEXT NOT NULL DEFAULT '{}',
+      generated_at TEXT NOT NULL,
+      FOREIGN KEY(report_id) REFERENCES compliance_reports(id)
+    );
+
     CREATE TABLE IF NOT EXISTS mca_msme1_supplier_rows (
       id TEXT PRIMARY KEY,
       filing_id TEXT NOT NULL,
@@ -556,6 +564,22 @@ function migrate() {
     CREATE INDEX IF NOT EXISTS idx_tax_audit_validation_report
       ON tax_audit_validation_errors(report_id, severity);
   `);
+
+  db.prepare(`
+    INSERT OR IGNORE INTO msme_carry_forward_generations (
+      report_id, prior_report_id, summary_json, generated_at
+    )
+    SELECT
+      report.id,
+      '',
+      '{"openingDisallowance":0,"deductibleCurrentYear":0,"closingCarryForward":0,"rowCount":0}',
+      report.created_at
+    FROM compliance_reports AS report
+    WHERE NOT EXISTS (
+      SELECT 1 FROM msme_carry_forward_register AS register
+      WHERE register.report_id = report.id
+    )
+  `).run();
 }
 
 migrate();

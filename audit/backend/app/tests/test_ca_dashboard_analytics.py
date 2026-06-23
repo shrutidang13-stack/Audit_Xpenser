@@ -15,9 +15,9 @@ def test_overall_risk_uses_highest_domain_without_dilution():
         },
     )
 
-    assert result["total_expense_risk"] == 30
+    assert result["total_expense_risk"] == 0
     assert result["total_msme_risk"] == 20
-    assert result["risk_score"] == 30
+    assert result["risk_score"] == 20
     assert result["risk_basis"] == "highest_domain"
 
 
